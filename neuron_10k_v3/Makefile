@@ -1,11 +1,13 @@
 genome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/GRCm38.primary_assembly.genome.fa
 gtf := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf
 ref10x := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/ref10x_spliced/cellranger3_0_2_GRCm38.primary_assembly_gencodeM21_spliced
+tx2genefull := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
-salmon_new := /tungstenfs/groups/gbioinfo/sonechar/Software/salmon-latest_linux_x86_64_20191009/bin/salmon
+salmon_new := /tungstenfs/groups/gbioinfo/sonechar/Software/salmon-latest_linux_x86_64_20191027/bin/salmon
 
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/10xGenomics_neuron_10k_v3/neuron_10k_v3_fastqs
+topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity
 
 all: reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz \
 reference/busparse_gencodevM21_isoseparate_exonfull_cDNA_introns.kidx \
@@ -25,13 +27,16 @@ quants/salmon_gencodevM21_cDNA_introns/lib_format_counts.json \
 quants/salmon_gencodevM21_spliced_unspliced/lib_format_counts.json \
 quants/salmon_gencodevM21_spliced/lib_format_counts.json \
 quants/salmon_gencodevM21_cDNA_intronsasdecoy/lib_format_counts.json \
-quants/salmon_gencodevM21_introns_cDNAasdecoy/lib_format_counts.json
+quants/salmon_gencodevM21_introns_cDNAasdecoy/lib_format_counts.json \
+quants/cellranger/neuron_10k_v3/outs/web_summary.html \
+quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
+output/summarize_spliced_unspliced.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
 ## -----------------------------------------------------------------------------------------------------
 ## Run CellRanger
-quants/cellranger/neuron_10k_v3/web_summary.html: $(ref10x)/reference.json \
+quants/cellranger/neuron_10k_v3/outs/web_summary.html: $(ref10x)/reference.json \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
 	mkdir -p quants/cellranger
@@ -42,7 +47,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 
 ## Run velocyto
 quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom: \
-quants/cellranger/neuron_10k_v3/web_summary.html $(gtf)
+quants/cellranger/neuron_10k_v3/outs/web_summary.html $(gtf)
 	module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
 	velocyto run10x --samtools-threads 16 quants/cellranger/neuron_10k_v3 $(gtf) && \
@@ -173,7 +178,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
-	--chromiumV3 --dumpFeatures
+	--chromiumV3 --dumpFeatures --dumpBfh
 
 ## cDNA, introns as decoy sequences
 quants/salmon_gencodevM21_cDNA_intronsasdecoy/lib_format_counts.json: \
@@ -185,7 +190,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
-	--chromiumV3 --dumpFeatures
+	--chromiumV3 --dumpFeatures --dumpBfh
 
 ## introns, cDNA as decoy sequences
 quants/salmon_gencodevM21_introns_cDNAasdecoy/lib_format_counts.json: \
@@ -197,7 +202,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
-	--chromiumV3 --dumpFeatures
+	--chromiumV3 --dumpFeatures --dumpBfh
 
 ## spliced + unspliced transcripts
 quants/salmon_gencodevM21_spliced_unspliced/lib_format_counts.json: \
@@ -209,7 +214,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
-	--chromiumV3 --dumpFeatures
+	--chromiumV3 --dumpFeatures --dumpBfh
 
 ## spliced transcripts only (regular annotation)
 quants/salmon_gencodevM21_spliced/lib_format_counts.json: \
@@ -221,9 +226,24 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
-	--chromiumV3 --dumpFeatures
+	--chromiumV3 --dumpFeatures --dumpBfh
 
-
+## -----------------------------------------------------------------------------------------------------
+## Analysis
+## -----------------------------------------------------------------------------------------------------
+output/summarize_spliced_unspliced.rds: quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.mtx \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.mtx \
+quants/salmon_gencodevM21_cDNA_introns/lib_format_counts.json \
+quants/salmon_gencodevM21_spliced_unspliced/lib_format_counts.json \
+quants/salmon_gencodevM21_spliced/lib_format_counts.json \
+quants/salmon_gencodevM21_cDNA_intronsasdecoy/lib_format_counts.json \
+quants/salmon_gencodevM21_introns_cDNAasdecoy/lib_format_counts.json \
+scripts/summarize_spliced_unspliced.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/devel-ostoolchain && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' tx2gene='$(tx2genefull)' outrds='$@'" scripts/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 
 

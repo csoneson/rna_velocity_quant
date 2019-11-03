@@ -9,14 +9,25 @@ salmon_new := /tungstenfs/groups/gbioinfo/sonechar/Software/salmon-latest_linux_
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/10xGenomics_neuron_10k_v3/neuron_10k_v3_fastqs
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3
 
-all: reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz \
+methods := velocyto cdna_introns_decoy cdna_introns cdna_intronscollapsed spliced_unspliced kallistobus_separate \
+kallistobus_collapse kallistobus_sep_permissive kallistobus_coll_permissive
+
+all: quantific veloc
+
+quantific: reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz \
 reference/busparse_gencodevM21_isoseparate_exonfull_cDNA_introns.kidx \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/run_info.json \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/output.correct.sort.bus \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.bus \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.txt \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.bus \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.txt \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.mtx \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.mtx \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.bus \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.bus \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.mtx \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.mtx \
 reference/salmon_gencodevM21_cDNA_introns.sidx/seq.bin \
 reference/salmon_gencodevM21_spliced_unspliced.sidx/seq.bin \
 reference/salmon_gencodevM21_spliced.sidx/seq.bin \
@@ -38,11 +49,22 @@ reference/busparse_gencodevM21_isocollapse_exonfull_cDNA_introns.kidx \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/run_info.json \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/output.correct.sort.bus \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.bus \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.txt \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.bus \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.txt \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.mtx \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.mtx \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.bus \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.bus \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.mtx \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.mtx \
 reference/salmon_gencodevM21_cDNA_intronscollapsed.sidx/seq.bin \
-quants/salmon_gencodevM21_cDNA_intronscollapsed/lib_format_counts.json
+quants/salmon_gencodevM21_cDNA_intronscollapsed/lib_format_counts.json \
+$(foreach x,$(methods) spliced,output/sce_$(x).rds)
+
+veloc: $(foreach x,$(methods),velocity/anndata_$(x).h5ad)
+
+plot: output/plot_spliced_unspliced.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -75,14 +97,14 @@ reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz: $(genome
 scripts/generate_cdna_intron_fa.R
 	mkdir -p Rout
 	mkdir -p $(@D)
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='separate' outdir='$(@D)'" scripts/generate_cdna_intron_fa.R Rout/generate_cdna_intron_fa_GRCm38_gencodevM21.Rout
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 reference/busparse_gencodevM21_isoseparate_exonfull/introns_cDNA.fa.gz: \
 reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz \
 scripts/swap_order_fasta_records.R
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args infa='$<' outfa='$@'" scripts/swap_order_fasta_records.R Rout/swap_order_fasta_records.Rout
 
 ## Add suffix to gene ID for introns in transcript-to-gene mapping (to avoid both 
@@ -91,7 +113,7 @@ reference/busparse_gencodevM21_isoseparate_exonfull/tr2g_modified.tsv: \
 reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_introns.fa.gz \
 scripts/identify_unspliced_genes_in_tx2gene.R
 	mkdir -p Rout
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args intsv='$(<D)/tr2g.tsv' outtsv='$@'" scripts/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene.Rout
 
 
@@ -100,14 +122,14 @@ reference/busparse_gencodevM21_isocollapse_exonfull/cDNA_introns.fa.gz: $(genome
 scripts/generate_cdna_intron_fa.R
 	mkdir -p Rout
 	mkdir -p $(@D)
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='collapse' outdir='$(@D)'" scripts/generate_cdna_intron_fa.R Rout/generate_cdna_intron_fa_GRCm38_gencodevM21_collapse.Rout
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 reference/busparse_gencodevM21_isocollapse_exonfull/introns_cDNA.fa.gz: \
 reference/busparse_gencodevM21_isocollapse_exonfull/cDNA_introns.fa.gz \
 scripts/swap_order_fasta_records.R
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args infa='$<' outfa='$@'" scripts/swap_order_fasta_records.R Rout/swap_order_fasta_records_isocollapse.Rout
 
 ## Add suffix to gene ID for introns in transcript-to-gene mapping (to avoid both 
@@ -116,7 +138,7 @@ reference/busparse_gencodevM21_isocollapse_exonfull/tr2g_modified.tsv: \
 reference/busparse_gencodevM21_isocollapse_exonfull/cDNA_introns.fa.gz \
 scripts/identify_unspliced_genes_in_tx2gene.R
 	mkdir -p Rout
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args intsv='$(<D)/tr2g.tsv' outtsv='$@'" scripts/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_isocollapse.Rout
 
 ## -----------------------------------------------------------------------------------------------------
@@ -147,6 +169,8 @@ reference/cellranger3.1.0-3M-february-2018.txt
 	$(bustools) sort -o $@ -t 16 -
 
 ## Generate spliced and unspliced bus files
+## Here we're taking the complement of the introns as a capture list. 
+## In other words, exclude any equivalence class that contains any of the introns
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.bus: \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/output.correct.sort.bus
 	$(bustools) capture -s -x -o $@ \
@@ -159,16 +183,49 @@ quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/output.co
 	-c reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_tx_to_capture.txt \
 	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
 
+## Also try a permissive approach, where we keep all equivalence classes that contain any of the provided features
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.bus: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/output.correct.sort.bus
+	$(bustools) capture -s -o $@ \
+	-c reference/busparse_gencodevM21_isoseparate_exonfull/cDNA_tx_to_capture.txt \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
+
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.bus: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/output.correct.sort.bus
+	$(bustools) capture -s -o $@ \
+	-c reference/busparse_gencodevM21_isoseparate_exonfull/introns_tx_to_capture.txt \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
+
 ## Generate spliced and unspliced count matrices
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.mtx: \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.bus
 	$(bustools) count -o $(<D)/unspliced -g reference/busparse_gencodevM21_isoseparate_exonfull/tr2g.tsv \
-	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $(<D)/unspliced.bus
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
 
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.mtx: \
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.bus
 	$(bustools) count -o $(<D)/spliced -g reference/busparse_gencodevM21_isoseparate_exonfull/tr2g.tsv \
-	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $(<D)/spliced.bus
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+## Permissive approach
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.mtx: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.bus
+	$(bustools) count -o $(<D)/unspliced.permissive -g reference/busparse_gencodevM21_isoseparate_exonfull/tr2g.tsv \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.mtx: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.bus
+	$(bustools) count -o $(<D)/spliced.permissive -g reference/busparse_gencodevM21_isoseparate_exonfull/tr2g.tsv \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+## convert bus files to text files
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.txt: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.bus
+	$(bustools) text -o $@ $<
+
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.txt: \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.bus
+	$(bustools) text -o $@ $<
 
 ## -----------------------------------------------------------------------------------------------------
 ## kallisto/bustools, collapsed introns
@@ -210,16 +267,50 @@ quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/output.co
 	-c reference/busparse_gencodevM21_isocollapse_exonfull/cDNA_tx_to_capture.txt \
 	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
 
+## Also try a permissive approach, where we keep all equivalence classes that contain any of the provided features
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.bus: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/output.correct.sort.bus
+	$(bustools) capture -s -o $@ \
+	-c reference/busparse_gencodevM21_isocollapse_exonfull/cDNA_tx_to_capture.txt \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
+
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.bus: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/output.correct.sort.bus
+	$(bustools) capture -s -o $@ \
+	-c reference/busparse_gencodevM21_isocollapse_exonfull/introns_tx_to_capture.txt \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt $<
+
 ## Generate spliced and unspliced count matrices
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.mtx: \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.bus
 	$(bustools) count -o $(<D)/unspliced -g reference/busparse_gencodevM21_isocollapse_exonfull/tr2g.tsv \
-	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $(<D)/unspliced.bus
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
 
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.mtx: \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.bus
 	$(bustools) count -o $(<D)/spliced -g reference/busparse_gencodevM21_isocollapse_exonfull/tr2g.tsv \
-	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $(<D)/spliced.bus
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+## Permissive approach
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.mtx: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.bus
+	$(bustools) count -o $(<D)/unspliced.permissive -g reference/busparse_gencodevM21_isocollapse_exonfull/tr2g.tsv \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.mtx: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.bus
+	$(bustools) count -o $(<D)/spliced.permissive -g reference/busparse_gencodevM21_isocollapse_exonfull/tr2g.tsv \
+	-e $(<D)/matrix.ec -t $(<D)/transcripts.txt --genecounts $<
+
+## convert bus files to text files
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.txt: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.bus
+	$(bustools) text -o $@ $<
+
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.txt: \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.bus
+	$(bustools) text -o $@ $<
+
 
 ## -----------------------------------------------------------------------------------------------------
 ## Salmon/alevin
@@ -342,6 +433,10 @@ quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced
 quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.mtx \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.mtx \
 quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.mtx \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/unspliced.permissive.mtx \
+quants/kallisto_bustools_gencodevM21_isoseparate_exonfull_cDNA_introns/spliced.permissive.mtx \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/unspliced.permissive.mtx \
+quants/kallisto_bustools_gencodevM21_isocollapse_exonfull_cDNA_introns/spliced.permissive.mtx \
 quants/salmon_gencodevM21_cDNA_introns/lib_format_counts.json \
 quants/salmon_gencodevM21_cDNA_intronscollapsed/lib_format_counts.json \
 quants/salmon_gencodevM21_spliced_unspliced/lib_format_counts.json \
@@ -351,8 +446,33 @@ quants/salmon_gencodevM21_introns_cDNAasdecoy/lib_format_counts.json \
 scripts/summarize_spliced_unspliced.R
 	mkdir -p $(@D)
 	mkdir -p Rout
-	module load R-BioC/devel-ostoolchain && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' tx2gene='$(tx2genefull)' outrds='$@'" scripts/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+
+output/plot_spliced_unspliced.rds: output/summarize_spliced_unspliced.rds \
+scripts/plot_spliced_unspliced.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' outrds='$@'" scripts/plot_spliced_unspliced.R Rout/plot_spliced_unspliced.Rout
+
+define scerule
+output/sce_$(1).rds: output/summarize_spliced_unspliced.rds
+	touch $$@
+endef
+$(foreach x,$(methods) spliced,$(eval $(call scerule,$(x))))
+
+## Convert SCE to anndata
+define anndatarule
+velocity/anndata_$(1).h5ad: output/sce_$(1).rds
+	mkdir -p velocity
+	mkdir -p pylog
+	module purge && module load Anaconda3/5.3.0 && \
+	set +u && source activate anndata2ri_1.0 && set -u && \
+	python scripts/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
+	set +u && source deactivate && set -u && module purge
+endef
+$(foreach x,$(methods),$(eval $(call anndatarule,$(x))))
 
 
 

@@ -1,0 +1,175 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(Biostrings)
++   library(devtools)
++   library(rtracklayer)
++   library(dplyr)
++ })
+> 
+> devtools::load_all("/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/Rlib/prepref")
+Loading prepref
+
+Attaching package: ‘testthat’
+
+The following object is masked from ‘package:dplyr’:
+
+    matches
+
+The following object is masked from ‘package:devtools’:
+
+    test_file
+
+> 
+> print(gtf)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf"
+> print(genome)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/GRCm38.primary_assembly.genome.fa"
+> print(isoform_action)
+[1] "separate"
+> print(outdir)
+[1] "reference/prepref_isoseparate"
+> 
+> ## Extract intronic sequences flanked by L-1 bases 
+> ## of exonic sequences where L is the biological read length of 
+> ## the single cell technology of interest
+> genome <- Biostrings::readDNAStringSet(genome)
+> names(genome) <- sapply(strsplit(names(genome), " "), .subset, 1)
+> gtfdf <- as.data.frame(rtracklayer::import(gtf))
+> 
+> tx <- extractTxSeqs(gtf = gtf, genome = genome, type = "spliced")
+Import genomic features from the file as a GRanges object ... OK
+Prepare the 'metadata' data frame ... OK
+Make the TxDb object ... OK
+Warning message:
+In .get_cds_IDX(mcols0$type, mcols0$phase) :
+  The "phase" metadata column contains non-NA values for features of type
+  stop_codon. This information was ignored.
+> intr <- extractIntronSeqs(gtf = gtf, genome = genome, type = isoform_action, 
++                           flanklength = 90)
+Import genomic features from the file as a GRanges object ... OK
+Prepare the 'metadata' data frame ... OK
+Make the TxDb object ... OK
+Warning message:
+In .get_cds_IDX(mcols0$type, mcols0$phase) :
+  The "phase" metadata column contains non-NA values for features of type
+  stop_codon. This information was ignored.
+> 
+> t2gtx <- gtfdf %>% dplyr::filter(type == "transcript") %>%
++   dplyr::select(transcript_id, gene_id)
+> if (isoform_action == "collapse") {
++   t2gin <- data.frame(intr = names(intr),
++                       gene = gsub("\\-I[0-9]*$", "", names(intr)),
++                       stringsAsFactors = FALSE)
++ } else if (isoform_action == "separate") {
++   t2gin <- data.frame(intr = names(intr),
++                       transcript_id = gsub("\\-I[0-9]*$", "", names(intr)),
++                       stringsAsFactors = FALSE) %>%
++     dplyr::left_join(t2gtx, by = "transcript_id") %>%
++     dplyr::select(intr, gene_id)
++ } else {
++   stop("Don't know what to do with this isoform_action")
++ }
+> colnames(t2gin) <- colnames(t2gtx)
+> t2g <- rbind(t2gtx, t2gin)
+> 
+> Biostrings::writeXStringSet(c(tx, intr), file.path(outdir, "cDNA_introns.fa.gz"), 
++                             compress = TRUE)
+> write.table(names(tx), file = file.path(outdir, "cDNA_tx_to_capture.txt"), 
++             row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
+> write.table(names(intr), file = file.path(outdir, "introns_tx_to_capture.txt"), 
++             row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
+> write.table(t2g, file = file.path(outdir, "tr2g.tsv"), 
++             row.names = FALSE, col.names = FALSE, quote = FALSE, sep = "\t")
+> 
+> date()
+[1] "Sun Nov  3 21:44:18 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] prepref_0.1.0        testthat_2.2.1       dplyr_0.8.3         
+ [4] rtracklayer_1.46.0   GenomicRanges_1.38.0 GenomeInfoDb_1.22.0 
+ [7] devtools_2.2.1       usethis_1.5.1        Biostrings_2.54.0   
+[10] XVector_0.26.0       IRanges_2.20.0       S4Vectors_0.24.0    
+[13] BiocGenerics_0.32.0 
+
+loaded via a namespace (and not attached):
+ [1] Biobase_2.46.0              httr_1.4.1                 
+ [3] pkgload_1.0.2               bit64_0.9-7                
+ [5] assertthat_0.2.1            askpass_1.1                
+ [7] BiocFileCache_1.10.0        blob_1.2.0                 
+ [9] BSgenome_1.54.0             GenomeInfoDbData_1.2.2     
+[11] Rsamtools_2.2.0             remotes_2.1.0              
+[13] progress_1.2.2              sessioninfo_1.1.1          
+[15] pillar_1.4.2                RSQLite_2.1.2              
+[17] backports_1.1.5             lattice_0.20-38            
+[19] glue_1.3.1                  digest_0.6.22              
+[21] Matrix_1.2-17               XML_3.98-1.20              
+[23] pkgconfig_2.0.3             biomaRt_2.42.0             
+[25] zlibbioc_1.32.0             purrr_0.3.3                
+[27] processx_3.4.1              BiocParallel_1.20.0        
+[29] tibble_2.1.3                openssl_1.4.1              
+[31] ellipsis_0.3.0              withr_2.1.2                
+[33] SummarizedExperiment_1.16.0 GenomicFeatures_1.38.0     
+[35] cli_1.1.0                   magrittr_1.5               
+[37] crayon_1.3.4                memoise_1.1.0              
+[39] ps_1.3.0                    fs_1.3.1                   
+[41] pkgbuild_1.0.6              tools_3.6.1                
+[43] prettyunits_1.0.2           hms_0.5.2                  
+[45] matrixStats_0.55.0          stringr_1.4.0              
+[47] DelayedArray_0.12.0         AnnotationDbi_1.48.0       
+[49] callr_3.3.2                 compiler_3.6.1             
+[51] rlang_0.4.1                 grid_3.6.1                 
+[53] RCurl_1.95-4.12             rstudioapi_0.10            
+[55] rappdirs_0.3.1              bitops_1.0-6               
+[57] DBI_1.0.0                   curl_4.2                   
+[59] R6_2.4.0                    GenomicAlignments_1.22.0   
+[61] bit_1.1-14                  zeallot_0.1.0              
+[63] rprojroot_1.3-2             desc_1.2.0                 
+[65] stringi_1.4.3               Rcpp_1.0.2                 
+[67] vctrs_0.2.0                 dbplyr_1.4.2               
+[69] tidyselect_0.2.5           
+> 
+> proc.time()
+   user  system elapsed 
+911.741  28.103 940.400 

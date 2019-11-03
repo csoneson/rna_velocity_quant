@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
 })
 
 print(topdir)
+print(gtf)
 print(outrds)
 
 velocyto <- readRDS(file.path(topdir, "output/sce_velocyto.rds"))
@@ -25,6 +26,10 @@ kallistobus_separate <- readRDS(file.path(topdir, "output/sce_kallistobus_separa
 kallistobus_collapse <- readRDS(file.path(topdir, "output/sce_kallistobus_collapse.rds"))
 kallistobus_sep_permissive <- readRDS(file.path(topdir, "output/sce_kallistobus_sep_permissive.rds"))
 kallistobus_coll_permissive <- readRDS(file.path(topdir, "output/sce_kallistobus_coll_permissive.rds"))
+
+gtf <- rtracklayer::import(gtf)
+plus_strand_genes <- intersect(rownames(velocyto), 
+                               unique(subset(gtf, strand == "+")$gene_name))
 
 ## ========================================================================= ##
 ## Plot
@@ -247,7 +252,82 @@ ggplot(df2, aes(x = method, y = correlation)) +
         axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
   labs(title = "Cell-wise correlation of 'spliced' counts with\ncounts obtained when only considering spliced transcripts",
        subtitle = paste0(ncells, " cells"))
-dev.off()
+
+## Only using + strand genes
+df2plus <- dplyr::bind_rows(
+  data.frame(method = "velocyto", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   velocyto_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_introns_decoy", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   cdna_introns_decoy_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_introns", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   cdna_introns_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_intronscollapsed", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   cdna_intronscollapsed_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "spliced_unspliced", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   spliced_unspliced_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_separate", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   kallistobus_separate_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_collapse", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   kallistobus_collapse_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_sep_permissive", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   kallistobus_sep_permissive_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_coll_permissive", 
+             correlation = sapply(seq_len(ncol(spliced))[1:ncells], function(i) {
+               cor(spliced_counts[plus_strand_genes, i],
+                   kallistobus_coll_permissive_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE)
+)
+
+ggplot(df2plus, aes(x = method, y = correlation)) + 
+  geom_violin(aes(fill = method), alpha = 0.5, scale = "width") + 
+  geom_boxplot(width = 0.025) + 
+  theme_bw() + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(title = "Cell-wise correlation of 'spliced' counts with\ncounts obtained when only considering spliced transcripts",
+       subtitle = paste0(ncells, " cells, only + strand genes"))
 
 ## Correlation between spliced and unspliced counts
 cdna_introns_ucounts <- assay(cdna_introns, "unspliced")
@@ -258,7 +338,7 @@ kallistobus_separate_ucounts <- assay(kallistobus_separate, "unspliced")
 kallistobus_collapse_ucounts <- assay(kallistobus_collapse, "unspliced")
 kallistobus_sep_permissive_ucounts <- assay(kallistobus_sep_permissive, "unspliced")
 kallistobus_coll_permissive_ucounts <- assay(kallistobus_coll_permissive, "unspliced")
-velocyto_ucounts <- assay(velocyto, "spliced")
+velocyto_ucounts <- assay(velocyto, "unspliced")
 ncells <- 100
 df3 <- dplyr::bind_rows(
   data.frame(method = "velocyto", 
@@ -334,9 +414,84 @@ ggplot(df3, aes(x = method, y = correlation)) +
         axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
   labs(title = "Cell-wise correlation of 'spliced' and 'unspliced' counts",
        subtitle = paste0(ncells, " cells"))
+
+## Only + strand genes
+df3plus <- dplyr::bind_rows(
+  data.frame(method = "velocyto", 
+             correlation = sapply(seq_len(ncol(velocyto))[1:ncells], function(i) {
+               cor(velocyto_ucounts[plus_strand_genes, i],
+                   velocyto_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_introns_decoy", 
+             correlation = sapply(seq_len(ncol(cdna_introns_decoy))[1:ncells], function(i) {
+               cor(cdna_introns_decoy_ucounts[plus_strand_genes, i],
+                   cdna_introns_decoy_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_introns", 
+             correlation = sapply(seq_len(ncol(cdna_introns))[1:ncells], function(i) {
+               cor(cdna_introns_ucounts[plus_strand_genes, i],
+                   cdna_introns_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "cdna_intronscollapsed", 
+             correlation = sapply(seq_len(ncol(cdna_intronscollapsed))[1:ncells], function(i) {
+               cor(cdna_intronscollapsed_ucounts[plus_strand_genes, i],
+                   cdna_intronscollapsed_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "spliced_unspliced", 
+             correlation = sapply(seq_len(ncol(spliced_unspliced))[1:ncells], function(i) {
+               cor(spliced_unspliced_ucounts[plus_strand_genes, i],
+                   spliced_unspliced_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_separate", 
+             correlation = sapply(seq_len(ncol(kallistobus_separate))[1:ncells], function(i) {
+               cor(kallistobus_separate_ucounts[plus_strand_genes, i],
+                   kallistobus_separate_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_collapse", 
+             correlation = sapply(seq_len(ncol(kallistobus_collapse))[1:ncells], function(i) {
+               cor(kallistobus_collapse_ucounts[plus_strand_genes, i],
+                   kallistobus_collapse_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_sep_permissive", 
+             correlation = sapply(seq_len(ncol(kallistobus_sep_permissive))[1:ncells], function(i) {
+               cor(kallistobus_sep_permissive_ucounts[plus_strand_genes, i],
+                   kallistobus_sep_permissive_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE),
+  data.frame(method = "kallistobus_coll_permissive", 
+             correlation = sapply(seq_len(ncol(kallistobus_coll_permissive))[1:ncells], function(i) {
+               cor(kallistobus_coll_permissive_ucounts[plus_strand_genes, i],
+                   kallistobus_coll_permissive_counts[plus_strand_genes, i],
+                   method = "spearman")
+             }),
+             stringsAsFactors = FALSE)
+)
+
+ggplot(df3plus, aes(x = method, y = correlation)) + 
+  geom_violin(aes(fill = method), alpha = 0.5, scale = "width") + 
+  geom_boxplot(width = 0.025) + 
+  theme_bw() + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(title = "Cell-wise correlation of 'spliced' and 'unspliced' counts",
+       subtitle = paste0(ncells, " cells, only + strand genes"))
+
 dev.off()
-
-
 saveRDS(NULL, file = outrds)
 
 date()

@@ -1,0 +1,372 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(tximeta)
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++ })
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
+> print(methods)
+                                        velocyto 
+                                      "velocyto" 
+  kallisto_bustools_busparse_isocollapse_exclude 
+"kallisto_bustools_busparse_isocollapse_exclude" 
+  kallisto_bustools_busparse_isoseparate_exclude 
+"kallisto_bustools_busparse_isoseparate_exclude" 
+   kallisto_bustools_prepref_isocollapse_exclude 
+ "kallisto_bustools_prepref_isocollapse_exclude" 
+   kallisto_bustools_prepref_isoseparate_exclude 
+ "kallisto_bustools_prepref_isoseparate_exclude" 
+  kallisto_bustools_busparse_isocollapse_include 
+"kallisto_bustools_busparse_isocollapse_include" 
+  kallisto_bustools_busparse_isoseparate_include 
+"kallisto_bustools_busparse_isoseparate_include" 
+   kallisto_bustools_prepref_isocollapse_include 
+ "kallisto_bustools_prepref_isocollapse_include" 
+   kallisto_bustools_prepref_isoseparate_include 
+ "kallisto_bustools_prepref_isoseparate_include" 
+        alevin_busparse_isocollapse_cdna_introns 
+      "alevin_busparse_isocollapse_cdna_introns" 
+        alevin_busparse_isoseparate_cdna_introns 
+      "alevin_busparse_isoseparate_cdna_introns" 
+         alevin_prepref_isocollapse_cdna_introns 
+       "alevin_prepref_isocollapse_cdna_introns" 
+         alevin_prepref_isoseparate_cdna_introns 
+       "alevin_prepref_isoseparate_cdna_introns" 
+  alevin_busparse_isocollapse_cdna_introns_decoy 
+"alevin_busparse_isocollapse_cdna_introns_decoy" 
+  alevin_busparse_isoseparate_cdna_introns_decoy 
+"alevin_busparse_isoseparate_cdna_introns_decoy" 
+   alevin_prepref_isocollapse_cdna_introns_decoy 
+ "alevin_prepref_isocollapse_cdna_introns_decoy" 
+   alevin_prepref_isoseparate_cdna_introns_decoy 
+ "alevin_prepref_isoseparate_cdna_introns_decoy" 
+                        alevin_spliced_unspliced 
+                      "alevin_spliced_unspliced" 
+> print(genetxt)
+[1] "output/genesets/shared_genes.txt"
+> print(outrds)
+[1] "plots/misc/plot_count_correlation.rds"
+> 
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
++ })
+> for (nm in names(sces)) {
++   metadata(sces[[nm]]) <- list(dataset = nm)
++ }
+> 
+> genes <- read.delim(genetxt, header = FALSE, as.is = TRUE)[, 1]
+> sces <- lapply(sces, function(w) w[match(genes, rownames(w)), ])
+> 
+> corrs <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods) - 1), function(j) {
++     jj <- methods[j]
++     do.call(
++       dplyr::bind_rows,  
++       lapply((j + 1):(length(methods)), function(k) {
++         kk <- methods[k]
++         message(jj, " - ", kk)
++         a <- scale(t(as.matrix(assay(sces[[jj]], "spliced"))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(assay(sces[[kk]], "spliced"))), center = TRUE, scale = TRUE)
++         corrs_spliced <- colSums(a * b)/(nrow(a) - 1)
++         a <- scale(t(as.matrix(assay(sces[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(assay(sces[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
++         corrs_unspliced <- colSums(a * b)/(nrow(a) - 1)
++         dplyr::bind_rows(
++           data.frame(method1 = jj,
++                      method2 = kk, 
++                      gene = names(corrs_spliced), 
++                      ctype = "spliced",
++                      corrs = corrs_spliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_unspliced), 
++                      ctype = "unspliced",
++                      corrs = corrs_unspliced, 
++                      stringsAsFactors = FALSE)
++         )
++       }))
++   }))
+velocyto - kallisto_bustools_busparse_isocollapse_exclude
+velocyto - kallisto_bustools_busparse_isoseparate_exclude
+velocyto - kallisto_bustools_prepref_isocollapse_exclude
+velocyto - kallisto_bustools_prepref_isoseparate_exclude
+velocyto - kallisto_bustools_busparse_isocollapse_include
+velocyto - kallisto_bustools_busparse_isoseparate_include
+velocyto - kallisto_bustools_prepref_isocollapse_include
+velocyto - kallisto_bustools_prepref_isoseparate_include
+velocyto - alevin_busparse_isocollapse_cdna_introns
+velocyto - alevin_busparse_isoseparate_cdna_introns
+velocyto - alevin_prepref_isocollapse_cdna_introns
+velocyto - alevin_prepref_isoseparate_cdna_introns
+velocyto - alevin_busparse_isocollapse_cdna_introns_decoy
+velocyto - alevin_busparse_isoseparate_cdna_introns_decoy
+velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
+velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
+velocyto - alevin_spliced_unspliced
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_busparse_isoseparate_exclude
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_exclude
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_busparse_isocollapse_include
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_busparse_isoseparate_include
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_busparse_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_busparse_isocollapse_exclude - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_busparse_isocollapse_exclude - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_busparse_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_busparse_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_busparse_isocollapse_exclude - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_exclude - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_exclude - alevin_spliced_unspliced
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_exclude
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_exclude
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_busparse_isocollapse_include
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_busparse_isoseparate_include
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_busparse_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_busparse_isoseparate_exclude - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_busparse_isoseparate_exclude - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_busparse_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_busparse_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_busparse_isoseparate_exclude - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_exclude - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_busparse_isocollapse_include
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_busparse_isoseparate_include
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_exclude - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_busparse_isocollapse_include
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_busparse_isoseparate_include
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isoseparate_exclude - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced
+kallisto_bustools_busparse_isocollapse_include - kallisto_bustools_busparse_isoseparate_include
+kallisto_bustools_busparse_isocollapse_include - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_busparse_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_busparse_isocollapse_include - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_busparse_isocollapse_include - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_busparse_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_busparse_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_busparse_isocollapse_include - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_include - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isocollapse_include - alevin_spliced_unspliced
+kallisto_bustools_busparse_isoseparate_include - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_busparse_isoseparate_include - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_busparse_isoseparate_include - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_busparse_isoseparate_include - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_busparse_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_busparse_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_busparse_isoseparate_include - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_include - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_busparse_isoseparate_include - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_include - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_include - alevin_busparse_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_busparse_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_busparse_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_busparse_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced
+alevin_busparse_isocollapse_cdna_introns - alevin_busparse_isoseparate_cdna_introns
+alevin_busparse_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns
+alevin_busparse_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
+alevin_busparse_isocollapse_cdna_introns - alevin_busparse_isocollapse_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns - alevin_busparse_isoseparate_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns - alevin_spliced_unspliced
+alevin_busparse_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns
+alevin_busparse_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns
+alevin_busparse_isoseparate_cdna_introns - alevin_busparse_isocollapse_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns - alevin_busparse_isoseparate_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
+alevin_prepref_isocollapse_cdna_introns - alevin_busparse_isocollapse_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_busparse_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isoseparate_cdna_introns - alevin_busparse_isocollapse_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_busparse_isoseparate_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
+alevin_busparse_isocollapse_cdna_introns_decoy - alevin_busparse_isoseparate_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns_decoy - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_busparse_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
+alevin_busparse_isoseparate_cdna_introns_decoy - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_busparse_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
+alevin_prepref_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> corrs$method1 <- factor(corrs$method1, levels = methods[methods %in% corrs$method1])
+> corrs$method2 <- factor(corrs$method2, levels = methods[methods %in% corrs$method2])
+> 
+> pdf(gsub("rds$", "pdf", outrds), width = 30, height = 30)
+> 
+> ggplot(corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 5),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 20)) + 
++   labs(title = "Correlation, spliced and unspliced counts",
++        subtitle = "Over genes selected by all methods")
+Warning message:
+Removed 5428 rows containing non-finite values (stat_boxplot). 
+> 
+> ggplot(corrs, aes(x = paste(method1, method2, sep = "-"), y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   theme_bw() + 
++   labs(title = "Correlation, spliced and unspliced counts",
++        subtitle = "Over genes selected by all methods", 
++        x = "", y = "Correlation") + 
++   theme(axis.text.x = element_text(size = 8, angle = 90, hjust = 1, vjust = 0.5))
+Warning message:
+Removed 5428 rows containing non-finite values (stat_boxplot). 
+> 
+> dev.off()
+null device 
+          1 
+> 
+> saveRDS(NULL, file = outrds)
+> 
+> date()
+[1] "Sun Nov 17 20:31:08 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] scater_1.14.3               SingleCellExperiment_1.8.0 
+ [3] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
+ [5] BiocParallel_1.20.0         matrixStats_0.55.0         
+ [7] Biobase_2.46.0              GenomicRanges_1.38.0       
+ [9] GenomeInfoDb_1.22.0         IRanges_2.20.0             
+[11] S4Vectors_0.24.0            BiocGenerics_0.32.0        
+[13] ggplot2_3.2.1               dplyr_0.8.3                
+[15] tximeta_1.4.0              
+
+loaded via a namespace (and not attached):
+ [1] viridis_0.5.1            httr_1.4.1               BiocSingular_1.2.0      
+ [4] viridisLite_0.3.0        bit64_0.9-7              jsonlite_1.6            
+ [7] DelayedMatrixStats_1.8.0 assertthat_0.2.1         askpass_1.1             
+[10] BiocFileCache_1.10.2     blob_1.2.0               vipor_0.4.5             
+[13] GenomeInfoDbData_1.2.2   Rsamtools_2.2.1          progress_1.2.2          
+[16] pillar_1.4.2             RSQLite_2.1.2            backports_1.1.5         
+[19] lattice_0.20-38          glue_1.3.1               digest_0.6.22           
+[22] XVector_0.26.0           colorspace_1.4-1         plyr_1.8.4              
+[25] Matrix_1.2-17            XML_3.98-1.20            pkgconfig_2.0.3         
+[28] biomaRt_2.42.0           zlibbioc_1.32.0          purrr_0.3.3             
+[31] scales_1.0.0             tibble_2.1.3             openssl_1.4.1           
+[34] AnnotationFilter_1.10.0  withr_2.1.2              GenomicFeatures_1.38.0  
+[37] lazyeval_0.2.2           magrittr_1.5             crayon_1.3.4            
+[40] memoise_1.1.0            beeswarm_0.2.3           tools_3.6.1             
+[43] prettyunits_1.0.2        hms_0.5.2                stringr_1.4.0           
+[46] munsell_0.5.0            irlba_2.3.3              AnnotationDbi_1.48.0    
+[49] ensembldb_2.10.0         Biostrings_2.54.0        compiler_3.6.1          
+[52] rsvd_1.0.2               rlang_0.4.1              grid_3.6.1              
+[55] RCurl_1.95-4.12          tximport_1.14.0          BiocNeighbors_1.4.1     
+[58] rappdirs_0.3.1           labeling_0.3             bitops_1.0-6            
+[61] gtable_0.3.0             DBI_1.0.0                curl_4.2                
+[64] reshape2_1.4.3           R6_2.4.1                 gridExtra_2.3           
+[67] GenomicAlignments_1.22.1 rtracklayer_1.46.0       bit_1.1-14              
+[70] zeallot_0.1.0            ProtGenerics_1.18.0      ggbeeswarm_0.6.0        
+[73] stringi_1.4.3            Rcpp_1.0.3               vctrs_0.2.0             
+[76] dbplyr_1.4.2             tidyselect_0.2.5        
+> 
+> proc.time()
+   user  system elapsed 
+589.513  70.315 630.337 

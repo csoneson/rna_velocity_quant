@@ -3,6 +3,11 @@ for (i in seq_len(length(args))) {
   eval(parse(text = args[[i]]))
 }
 
+suppressPackageStartupMessages({
+  library(BiocParallel)
+  library(BiocSingular)
+})
+
 source("scripts/sce_helpers.R")
 
 print(topdir)
@@ -17,8 +22,10 @@ sces <- list()
 ## Read quantifications and create SingleCellExperiment objects
 ## ========================================================================= ##
 ## CellRanger + velocyto
-sces$velocyto <- read_velocyto(loomfile = file.path(topdir, "quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom"), 
-                               sampleid = "neuron_10k_v3")
+sces$velocyto <- read_velocyto(
+  loomfile = file.path(topdir, "quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom"), 
+  sampleid = "neuron_10k_v3"
+)
 
 
 ## cDNA/introns separately (with decoys)
@@ -26,8 +33,8 @@ for (m in c("busparse", "prepref")) {
   for (v in c("separate", "collapse")) {
     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy")]] <- 
       read_alevin_with_decoys(
-        spliceddir = file.path(topdir, paste0("quants/alevin", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
-        unspliceddir = file.path(topdir, paste0("quants/alevin", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
+        spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
+        unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
         sampleid = "neuron_10k_v3", tx2gene = tx2gene
       )
   }
@@ -36,7 +43,7 @@ for (m in c("busparse", "prepref")) {
 ## cDNA/introns quantified jointly
 for (m in c("busparse", "prepref")) {
   for (v in c("separate", "collapse")) {
-    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy")]] <- 
+    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns")]] <- 
       read_alevin_cdna_introns(
         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
         sampleid = "neuron_10k_v3", tx2gene = tx2gene)
@@ -44,22 +51,28 @@ for (m in c("busparse", "prepref")) {
 }
 
 sces$alevin_spliced_unspliced <- 
-  read_alevin_spliced_unspliced(alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
-                                sampleid = "neuron_10k_v3", tx2gene = tx2gene)
+  read_alevin_spliced_unspliced(
+    alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
+    sampleid = "neuron_10k_v3", tx2gene = tx2gene
+  )
 
 sces$alevin_spliced <- 
-  read_alevin_spliced(alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
-                      sampleid = "neuron_10k_v3", tx2gene = tx2gene)
+  read_alevin_spliced(
+    alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
+    sampleid = "neuron_10k_v3", tx2gene = tx2gene
+  )
 
 
 for (m in c("busparse", "prepref")) {
   for (v in c("separate", "collapse")) {
     for (k in c("exclude", "include")) {
       sces[[paste0("kallisto_bustools_", m, "_iso", v, "_", k)]] <- 
-        read_kallisto_bustools(kallistodir = file.path(topdir, paste0("quants/kallisto_bustools_", 
-                                                                      m, "_iso", v, "_cdna_introns")),
-                               splicedname = paste0("spliced.", k),
-                               unsplicedname = paste0("unspliced.", k))
+        read_kallisto_bustools(
+          kallistodir = file.path(topdir, paste0("quants/kallisto_bustools_", 
+                                                 m, "_iso", v, "_cdna_introns")),
+          splicedname = paste0("spliced.", k),
+          unsplicedname = paste0("unspliced.", k)
+        )
     }
   }
 }
@@ -67,10 +80,79 @@ for (m in c("busparse", "prepref")) {
 ## ========================================================================= ##
 ## subset to shared cells/genes
 ## ========================================================================= ##
-shared_cells <- Reduce(intersect, lapply(sces, colnames))
-shared_genes <- Reduce(intersect, lapply(sces, rownames))
+shared_cells <- as.character(Reduce(intersect, lapply(sces, colnames)))
+shared_genes <- as.character(Reduce(intersect, lapply(sces, rownames)))
 
 sces <- lapply(sces, function(w) w[shared_genes, shared_cells])
+
+## ========================================================================= ##
+## Add reduced dimension representation + clusters
+## ========================================================================= ##
+do_dimred <- function(sce) {
+  sce <- scater::logNormCounts(sce)
+  set.seed(1)
+  sce <- scater::runPCA(sce, exprs_values = "logcounts", 
+                        ncomponents = 30,
+                        BSPARAM = BiocSingular::IrlbaParam(), 
+                        BPPARAM = BiocParallel::MulticoreParam(workers = 8))
+  sce <- scater::runTSNE(sce, dimred = "PCA", 
+                         ncomponents = 2,
+                         BPPARAM = MulticoreParam(workers = 8))
+  sce <- scater::runUMAP(sce, dimred = "PCA", 
+                         ncomponents = 2,
+                         BPPARAM = MulticoreParam(workers = 8))
+  
+  snn.gr <- scran::buildSNNGraph(sce, use.dimred = "PCA")
+  clusters <- igraph::cluster_walktrap(snn.gr)
+  sce$cluster <- factor(clusters$membership)
+  
+  sce
+}
+
+## Calculate logcounts and reduced dimensions
+for (nm in names(sces)) {
+  message(nm)
+  sces[[nm]] <- do_dimred(sces[[nm]])
+}
+
+## Add common representations to all data sets
+## From alevin_spliced
+sces <- lapply(sces, function(w) {
+  reducedDim(w, "PCA_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "PCA")
+  reducedDim(w, "TSNE_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "TSNE")
+  reducedDim(w, "UMAP_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "UMAP")
+  w$cluster_alevin_spliced <- sces[["alevin_spliced"]]$cluster
+  w
+})
+
+for (m in c("alevin_spliced_unspliced", "velocyto")) {
+  message(m)
+  ## Concatenated spliced and unspliced
+  tmp <- SingleCellExperiment(
+    assays = list(counts = rbind(assay(sces[[m]], "spliced"), 
+                                 assay(sces[[m]], "unspliced"))))
+  tmp <- do_dimred(tmp)
+  sces <- lapply(sces, function(w) {
+    reducedDim(w, paste0("PCA_", m, "_concatenated")) <- reducedDim(tmp, "PCA")
+    reducedDim(w, paste0("TSNE_", m, "_concatenated")) <- reducedDim(tmp, "TSNE")
+    reducedDim(w, paste0("UMAP_", m, "_concatenated")) <- reducedDim(tmp, "UMAP")
+    colData(w)[[paste0("cluster_", m, "_concatenated")]] <- tmp$cluster
+    w
+  })
+  
+  ## Summed spliced and unspliced
+  tmp <- SingleCellExperiment(
+    assays = list(counts = assay(sces[[m]], "spliced") +  
+                    assay(sces[[m]], "unspliced")))
+  tmp <- do_dimred(tmp)
+  sces <- lapply(sces, function(w) {
+    reducedDim(w, paste0("PCA_", m, "_summed")) <- reducedDim(tmp, "PCA")
+    reducedDim(w, paste0("TSNE_", m, "_summed")) <- reducedDim(tmp, "TSNE")
+    reducedDim(w, paste0("UMAP_", m, "_summed")) <- reducedDim(tmp, "UMAP")
+    colData(w)[[paste0("cluster_", m, "_summed")]] <- tmp$cluster
+    w
+  })
+}
 
 ## ========================================================================= ##
 ## Save

@@ -1,0 +1,253 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(tximeta)
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++ })
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
+> print(gtf)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf"
+> print(methods)
+                                        velocyto 
+                                      "velocyto" 
+  kallisto_bustools_busparse_isocollapse_exclude 
+"kallisto_bustools_busparse_isocollapse_exclude" 
+  kallisto_bustools_busparse_isoseparate_exclude 
+"kallisto_bustools_busparse_isoseparate_exclude" 
+   kallisto_bustools_prepref_isocollapse_exclude 
+ "kallisto_bustools_prepref_isocollapse_exclude" 
+   kallisto_bustools_prepref_isoseparate_exclude 
+ "kallisto_bustools_prepref_isoseparate_exclude" 
+  kallisto_bustools_busparse_isocollapse_include 
+"kallisto_bustools_busparse_isocollapse_include" 
+  kallisto_bustools_busparse_isoseparate_include 
+"kallisto_bustools_busparse_isoseparate_include" 
+   kallisto_bustools_prepref_isocollapse_include 
+ "kallisto_bustools_prepref_isocollapse_include" 
+   kallisto_bustools_prepref_isoseparate_include 
+ "kallisto_bustools_prepref_isoseparate_include" 
+        alevin_busparse_isocollapse_cdna_introns 
+      "alevin_busparse_isocollapse_cdna_introns" 
+        alevin_busparse_isoseparate_cdna_introns 
+      "alevin_busparse_isoseparate_cdna_introns" 
+         alevin_prepref_isocollapse_cdna_introns 
+       "alevin_prepref_isocollapse_cdna_introns" 
+         alevin_prepref_isoseparate_cdna_introns 
+       "alevin_prepref_isoseparate_cdna_introns" 
+  alevin_busparse_isocollapse_cdna_introns_decoy 
+"alevin_busparse_isocollapse_cdna_introns_decoy" 
+  alevin_busparse_isoseparate_cdna_introns_decoy 
+"alevin_busparse_isoseparate_cdna_introns_decoy" 
+   alevin_prepref_isocollapse_cdna_introns_decoy 
+ "alevin_prepref_isocollapse_cdna_introns_decoy" 
+   alevin_prepref_isoseparate_cdna_introns_decoy 
+ "alevin_prepref_isoseparate_cdna_introns_decoy" 
+                        alevin_spliced_unspliced 
+                      "alevin_spliced_unspliced" 
+> print(outrds)
+[1] "output/plot_spliced_unspliced.rds"
+> 
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce_", nm, ".rds")))
++ })
+> for (nm in names(sces)) {
++   metadata(sces[[nm]]) <- list(dataset = nm)
++ }
+> alevin_spliced <- readRDS(file.path(topdir, "output/sce_alevin_spliced.rds"))
+> metadata(alevin_spliced) <- list(dataset = "alevin_spliced")
+> 
+> gtf <- rtracklayer::import(gtf)
+> 
+> ## ========================================================================= ##
+> ## Plot
+> ## ========================================================================= ##
+> df0 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
++   data.frame(method = metadata(w)$dataset,
++              spliced_count = rowSums(assay(w, "spliced")),
++              unspliced_count = rowSums(assay(w, "unspliced")),
++              total_count = rowSums(assay(w, "spliced")) + 
++                rowSums(assay(w, "unspliced")),
++              stringsAsFactors = FALSE)
++ })) %>% 
++   tidyr::gather(key = "type", value = "numi", -method)
+> 
+> pdf(gsub("rds", "pdf", outrds), width = 11, height = 11)
+> ggplot(df0 %>% dplyr::mutate(
++   type = factor(type, levels = c("spliced_count", "unspliced_count", "total_count"))), 
++   aes(x = method, y = numi + 1)) + 
++   geom_violin(aes(fill = method), alpha = 0.25, scale = "width") + 
++   geom_boxplot(width = 0.025) + 
++   facet_wrap(~ type, ncol = 1) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   scale_y_log10() + 
++   ggtitle("Total count per gene, across all cells")
+> 
+> df1 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
++   data.frame(method = metadata(w)$dataset,
++              fraction_unspliced = rowSums(assay(w, "unspliced"))/
++                (rowSums(assay(w, "unspliced")) + 
++                   rowSums(assay(w, "spliced"))),
++              stringsAsFactors = FALSE)
++ }))
+> 
+> ggplot(df1, aes(x = method, y = fraction_unspliced)) + 
++   geom_violin(aes(fill = method), alpha = 0.25, scale = "width") + 
++   geom_boxplot(width = 0.025) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   ggtitle("Fraction of total gene counts that are 'unspliced'")
+Warning messages:
+1: Removed 400320 rows containing non-finite values (stat_ydensity). 
+2: Removed 400320 rows containing non-finite values (stat_boxplot). 
+> 
+> ## Correlation between "spliced" counts and counts from 
+> ## quantification using only spliced transcripts
+> alevin_spliced_counts <- assay(alevin_spliced, "counts")
+> ncells <- 100
+> df2 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
++   tmp <- assay(w, "spliced")
++   data.frame(method = metadata(w)$dataset, 
++              correlation = sapply(seq_len(ncol(alevin_spliced_counts))[1:ncells], function(i) {
++                cor(alevin_spliced_counts[, i],
++                    tmp[, i],
++                    method = "spearman")
++              }),
++              stringsAsFactors = FALSE)
++ }))
+> 
+> ggplot(df2, aes(x = method, y = correlation)) + 
++   geom_violin(aes(fill = method), alpha = 0.5, scale = "width") + 
++   geom_boxplot(width = 0.025) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   labs(title = "Cell-wise correlation of 'spliced' counts with\ncounts obtained when only considering spliced transcripts",
++        subtitle = paste0(ncells, " cells"))
+> 
+> 
+> ## Correlation between spliced and unspliced counts
+> ncells <- 100
+> df3 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
++   sct <- assay(w, "spliced")
++   uct <- assay(w, "unspliced")
++   data.frame(method = metadata(w)$dataset,
++              correlation = sapply(seq_len(ncol(w))[1:ncells], function(i) {
++                cor(sct[, i],
++                    uct[, i],
++                    method = "spearman")
++              }),
++              stringsAsFactors = FALSE)
++ }))
+> 
+> ggplot(df3, aes(x = method, y = correlation)) + 
++   geom_violin(aes(fill = method), alpha = 0.5, scale = "width") + 
++   geom_boxplot(width = 0.025) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   labs(title = "Cell-wise correlation of 'spliced' and 'unspliced' counts",
++        subtitle = paste0(ncells, " cells"))
+> 
+> 
+> dev.off()
+null device 
+          1 
+> saveRDS(NULL, file = outrds)
+> 
+> date()
+[1] "Sat Nov 16 23:56:25 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] scater_1.14.3               SingleCellExperiment_1.8.0 
+ [3] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
+ [5] BiocParallel_1.20.0         matrixStats_0.55.0         
+ [7] Biobase_2.46.0              GenomicRanges_1.38.0       
+ [9] GenomeInfoDb_1.22.0         IRanges_2.20.0             
+[11] S4Vectors_0.24.0            BiocGenerics_0.32.0        
+[13] ggplot2_3.2.1               dplyr_0.8.3                
+[15] tximeta_1.4.0              
+
+loaded via a namespace (and not attached):
+ [1] viridis_0.5.1            httr_1.4.1               tidyr_1.0.0             
+ [4] BiocSingular_1.2.0       viridisLite_0.3.0        bit64_0.9-7             
+ [7] jsonlite_1.6             DelayedMatrixStats_1.8.0 assertthat_0.2.1        
+[10] askpass_1.1              BiocFileCache_1.10.2     blob_1.2.0              
+[13] vipor_0.4.5              GenomeInfoDbData_1.2.2   Rsamtools_2.2.1         
+[16] progress_1.2.2           pillar_1.4.2             RSQLite_2.1.2           
+[19] backports_1.1.5          lattice_0.20-38          glue_1.3.1              
+[22] digest_0.6.22            XVector_0.26.0           colorspace_1.4-1        
+[25] Matrix_1.2-17            XML_3.98-1.20            pkgconfig_2.0.3         
+[28] biomaRt_2.42.0           zlibbioc_1.32.0          purrr_0.3.3             
+[31] scales_1.0.0             tibble_2.1.3             openssl_1.4.1           
+[34] AnnotationFilter_1.10.0  ellipsis_0.3.0           withr_2.1.2             
+[37] GenomicFeatures_1.38.0   lazyeval_0.2.2           magrittr_1.5            
+[40] crayon_1.3.4             memoise_1.1.0            beeswarm_0.2.3          
+[43] tools_3.6.1              prettyunits_1.0.2        hms_0.5.2               
+[46] lifecycle_0.1.0          stringr_1.4.0            munsell_0.5.0           
+[49] irlba_2.3.3              AnnotationDbi_1.48.0     ensembldb_2.10.0        
+[52] Biostrings_2.54.0        compiler_3.6.1           rsvd_1.0.2              
+[55] rlang_0.4.1              grid_3.6.1               RCurl_1.95-4.12         
+[58] tximport_1.14.0          BiocNeighbors_1.4.1      rappdirs_0.3.1          
+[61] labeling_0.3             bitops_1.0-6             gtable_0.3.0            
+[64] DBI_1.0.0                curl_4.2                 R6_2.4.1                
+[67] gridExtra_2.3            GenomicAlignments_1.22.1 rtracklayer_1.46.0      
+[70] bit_1.1-14               zeallot_0.1.0            ProtGenerics_1.18.0     
+[73] ggbeeswarm_0.6.0         stringi_1.4.3            Rcpp_1.0.3              
+[76] vctrs_0.2.0              dbplyr_1.4.2             tidyselect_0.2.5        
+> 
+> proc.time()
+   user  system elapsed 
+734.645  49.518 761.981 

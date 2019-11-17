@@ -1,0 +1,120 @@
+import sys
+import anndata
+import scvelo as scv
+import os
+import matplotlib
+import pandas as pd
+
+matplotlib.use('AGG')
+
+scv.settings.verbosity = 3  # show errors(0), warnings(1), info(2), hints(3)
+scv.settings.set_figure_params('scvelo')  # for beautified visualization
+
+# get input file from command line
+n = len(sys.argv)
+if len(sys.argv) >= 5:
+	adfile = sys.argv[1]
+	plotdir = sys.argv[2]
+	adfileout = sys.argv[3]
+	genesetfile = sys.argv[4]
+else:
+	raise ValueError("must have >=three arguments (loomfiles, h5adfile, plotdir)")
+
+print("input adfile: ", adfile)
+print("output directory: ", plotdir)
+print("output adfile: ", adfileout)
+print("gene set file: ", genesetfile)
+
+base = os.path.basename(adfile)
+base = os.path.splitext(base)[0]
+
+if genesetfile != "None":
+	basegs = os.path.basename(genesetfile)
+	basegs = "_" + os.path.splitext(basegs)[0]
+else:
+	basegs = ""
+
+# read input
+adata = anndata.read(adfile)
+scv.utils.show_proportions(adata)
+
+# preprocess the data
+# set log = False if data is already log-transformed
+# runs the following steps:
+# scv.pp.filter_genes(adata)
+# scv.pp.normalize_per_cell(adata)
+# scv.pp.filter_genes_dispersion(adata)
+# scv.pp.log1p(adata)
+# it will determine whether to log-transform X:
+# log_advised = np.allclose(adata.X[:10].sum(), adata.layers['spliced'][:10].sum())
+# if log and log_advised: log1p(adata)
+# elif log and not log_advised: logg.warn('Did not modify X as it looks preprocessed already.')
+# in other words, only if X is close to spliced will X be log-transformed (spliced and unspliced will not be transformed anyway)
+# defaults: min_counts=None, min_counts_u=None, min_cells=None, min_cells_u=None,
+#           min_shared_cells=None, flavor='seurat'
+if genesetfile == "None":
+	adata2 = scv.pp.filter_and_normalize(adata, min_shared_counts = 20, n_top_genes = 2000, copy = True, log = True)
+else:
+	geneset = [f.rstrip('\n') for f in open(genesetfile, 'r').readlines()]
+	adata2 = adata[:, geneset]
+	scv.pp.normalize_per_cell(adata2)
+
+scv.pp.moments(adata2, n_pcs = 30, n_neighbors = 30)
+
+# compute velocity and velocity graph
+#scv.tl.velocity(adata2, mode = 'steady_state')
+scv.tl.velocity(adata2, mode = 'stochastic')
+#scv.tl.recover_dynamics(adata2)
+#scv.tl.velocity(adata2, mode = 'dynamical')
+scv.tl.velocity_graph(adata2)
+
+scv.settings.figdir = plotdir + '/' + base + basegs + '/'
+scv.settings.plot_prefix = base + basegs + '_scvelo_'
+# scv.settings.set_figure_params(dpi_save = 300, vector_friendly = True)
+# color='cluster'
+scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(12,9), show=False, color='cluster')
+scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(12,9), show=False, color='cluster')
+scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(12,9), show=False, color='cluster')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_velocyto_concatenated', save="PCA_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_velocyto_concatenated', save="UMAP_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+
+#scv.pl.velocity_embedding(adata2, basis='X_pca', save="PCA.png", figsize=(12,9), show=False, color='cluster')
+#scv.pl.velocity_embedding(adata2, basis='X_tsne', save="TSNE.png", figsize=(12,9), show=False, color='cluster')
+#scv.pl.velocity_embedding(adata2, basis='X_umap', save="UMAP.png", figsize=(12,9), show=False, color='cluster')
+#scv.pl.velocity_embedding(adata2, basis='PCA_velocyto_concatenated', save="PCA_velocyto_concatenated.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+#scv.pl.velocity_embedding(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+#scv.pl.velocity_embedding(adata2, basis='UMAP_velocyto_concatenated', save="UMAP_velocyto_concatenated.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
+#scv.pl.velocity_embedding(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+#scv.pl.velocity_embedding(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+#scv.pl.velocity_embedding(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+
+scv.pl.velocity_graph(adata2, basis='TSNE_alevin_spliced', save='TSNE_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='cluster_alevin_spliced')
+
+# scv.tl.recover_latent_time(adata2)
+# top_genes = adata2.var_names[adata2.var.fit_likelihood.argsort()[::-1]][:300]
+# scv.pl.heatmap(adata2, var_names=top_genes, tkey='latent_time', n_convolve=100, col_color='clusters')
+# scv.pl.scatter(adata2, basis=top_genes[:10], legend_loc='none',
+#                size=80, frameon=False, ncols=5, fontsize=20)
+
+#scv.pl.velocity(adata2, var_names = ['Xkr4', 'Sox17'], save="genes.png")
+
+scv.tl.rank_velocity_genes(adata2, match_with = "cluster_alevin_spliced", n_genes = 10)
+generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(10)
+adata2.var.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_info.csv")
+generank.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity.csv")
+
+genes = generank.iloc[0]
+scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='cluster_alevin_spliced', basis='TSNE_alevin_spliced', show=False)
+
+scv.tl.velocity_confidence(adata2)
+adata2.obs.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_cell_info.csv")
+
+# session info
+scv.logging.print_version()
+
+# save 
+adata2.write(filename = adfileout)

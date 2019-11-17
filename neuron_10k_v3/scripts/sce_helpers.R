@@ -53,7 +53,7 @@ read_alevin_with_decoys <- function(spliceddir, unspliceddir, sampleid, tx2gene)
   introns <- introns[grep("I\\.*$", rownames(introns)), ]
   ucounts <- round(assay(introns, "counts"))
   scounts <- round(assay(cdna, "counts"))
-  rownames(ucounts) <- gsub("\\.I\\.*$", "", rownames(ucounts))
+  rownames(ucounts) <- gsub("\\.*I\\.*$", "", rownames(ucounts))
   rownames(scounts) <- gsub("\\.*$", "", rownames(scounts))
   cdna_introns_decoy <- sce_from_scounts_ucounts(scounts, ucounts)
   rownames(cdna_introns_decoy) <- scater::uniquifyFeatureNames(
@@ -69,11 +69,11 @@ read_alevin_cdna_introns <- function(alevindir, sampleid, tx2gene) {
     files = file.path(alevindir, "quants_mat.gz"),
     stringsAsFactors = FALSE
   ), type = "alevin")
-  uidx <- grep("\\.I\\.*$", rownames(cdna_introns))
-  sidx <- grep("\\.I\\.*$", rownames(cdna_introns), invert = TRUE)
+  uidx <- grep("\\.*I\\.*$", rownames(cdna_introns))
+  sidx <- grep("\\.*I\\.*$", rownames(cdna_introns), invert = TRUE)
   ucounts <- round(assay(cdna_introns, "counts")[uidx, ])
   scounts <- round(assay(cdna_introns, "counts")[sidx, ])
-  rownames(ucounts) <- gsub("\\.I\\.*$", "", rownames(ucounts))
+  rownames(ucounts) <- gsub("\\.*I\\.*$", "", rownames(ucounts))
   rownames(scounts) <- gsub("\\.*$", "", rownames(scounts))
   cdna_introns <- sce_from_scounts_ucounts(scounts, ucounts)
   rownames(cdna_introns) <- scater::uniquifyFeatureNames(
@@ -123,7 +123,7 @@ read_kallisto_bustools <- function(kallistodir, splicedname, unsplicedname) {
     read_velocity_output(spliced_dir = kallistodir,
                          spliced_name = splicedname,
                          unspliced_dir = kallistodir,
-                         unspliced_name = splicedname)
+                         unspliced_name = unsplicedname)
   rownames(spliced_bus) <- gsub("\\.*$", "", rownames(spliced_bus))
   rownames(unspliced_bus) <- gsub("\\.*$", "", rownames(unspliced_bus))
   stopifnot(all(rownames(spliced_bus) == rownames(unspliced_bus)))

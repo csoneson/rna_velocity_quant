@@ -9,7 +9,7 @@ from rpy2.robjects import r
 
 anndata2ri.activate()
 
-# get input output files from command line
+# get input and output files from command line
 scefiles = None
 adfiles = None
 
@@ -34,10 +34,6 @@ for i in range(n1 - 1):
 
     # read sce and convert it to annData object
     adata = r(f'sce <- readRDS("{scefile}")')
-
-    # remark: assay(sce, 'counts') goes into adata.X
-    #         reducedDim(sce, 'PCA') goes into adata.obsm['X_pca']
-    #         reducedDim(sce, 'TSNE') goes into adata.obsm['X_tsne']
 
     # save annData object
     adata.write(f'{adfile}')

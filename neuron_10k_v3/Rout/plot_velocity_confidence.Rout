@@ -168,82 +168,6 @@ cols(
   cluster_alevin_spliced_unspliced_summed = col_double(),
   cluster_velocyto_concatenated = col_double(),
   cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
   initial_size_spliced = col_double(),
   initial_size_unspliced = col_double(),
   initial_size = col_double(),
@@ -339,46 +263,8 @@ cols(
   cluster_alevin_spliced_unspliced_summed = col_double(),
   cluster_velocyto_concatenated = col_double(),
   cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
   initial_size_spliced = col_double(),
   initial_size_unspliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
-)
-Parsed with column specification:
-cols(
-  index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
   initial_size = col_double(),
   n_counts = col_double(),
   velocity_self_transition = col_double(),
@@ -417,6 +303,120 @@ cols(
   cluster_velocyto_summed = col_double(),
   initial_size_spliced = col_double(),
   initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
   initial_size = col_double(),
   n_counts = col_double(),
   velocity_self_transition = col_double(),
@@ -716,7 +716,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Nov 17 16:47:05 2019"
+[1] "Sun Nov 17 23:36:08 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -768,4 +768,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 44.753  52.219  20.101 
+ 46.422  55.777  19.865 

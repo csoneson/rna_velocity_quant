@@ -297,7 +297,7 @@ cols(
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Sun Nov 17 16:12:09 2019"
+[1] "Sun Nov 17 23:08:55 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -348,4 +348,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  8.386   6.382   7.884 
+  9.066   6.853   9.141 

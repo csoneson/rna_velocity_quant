@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
 print(gtf)
 print(genome)
 print(isoform_action)
+print(flanklength)
 print(outdir)
 
 ## This function extracts intronic sequences flanked by L-1 bases 
@@ -19,7 +20,7 @@ print(outdir)
 genome <- Biostrings::readDNAStringSet(genome)
 names(genome) <- sapply(strsplit(names(genome), " "), .subset, 1)
 BUSpaRse::get_velocity_files(
-  X = gtf, L = 91, Genome = genome, Transcriptome = NULL, 
+  X = gtf, L = flanklength + 1, Genome = genome, Transcriptome = NULL, 
   out_path = outdir, isoform_action = isoform_action, 
   exon_option = "full", compress_fa = TRUE, 
   transcript_id = "transcript_id", gene_id = "gene_id", 

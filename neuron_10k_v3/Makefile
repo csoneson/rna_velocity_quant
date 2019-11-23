@@ -6,6 +6,7 @@ genome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/GRCm38.primar
 gtf := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf
 ref10x := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/ref10x_spliced/cellranger3_0_2_GRCm38.primary_assembly_gencodeM21_spliced
 tx2genefull := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds
+txome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.fa
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
 salmon_new := /tungstenfs/groups/gbioinfo/sonechar/Software/salmon-latest_linux_x86_64_20191027/bin/salmon
@@ -82,13 +83,14 @@ quants/cellranger/neuron_10k_v3/outs/web_summary.html $(gtf)
 ## read length (for this data set, 91)
 define farefrule
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz: $(genome) $(gtf) \
-scripts/generate_cdna_intron_fa_$(2).R
+scripts/generate_cdna_intron_fa_$(2).R $(3) $(4)
 	mkdir -p Rout
 	mkdir -p $$(@D)
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' outdir='$$(@D)'" scripts/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=90 outdir='$$(@D)'" scripts/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1).Rout
 endef
-$(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call farefrule,$(v),$(m)))))
+$(foreach v,collapse separate,$(eval $(call farefrule,$(v),busparse,,)))
+$(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,scripts/extractIntronSeqs.R,scripts/extractTxSeqs.R)))
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 define swaprule
@@ -113,6 +115,18 @@ scripts/identify_unspliced_genes_in_tx2gene.R
 endef
 $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call suffixrule,$(v),$(m)))))
 
+## Generate fasta file with spliced + unspliced transcripts
+reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
+$(gtf) $(genome) $(tx2genefull) scripts/generate_spliced_unspliced_fa.R
+	mkdir -p Rout
+	mkdir -p reference
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' tx2gene='$(tx2genefull)' outfa='$@' outt2g='$(@D)/gencode.vM21.spliced.unspliced.tx2gene.txt'" scripts/generate_spliced_unspliced_fa.R Rout/generate_spliced_unspliced_fa.Rout
+
+reference/gencode.vM21.spliced.unspliced.tx2gene.txt: \
+reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
+	touch $@
+
 ## -----------------------------------------------------------------------------------------------------
 ## Build indexes
 ## -----------------------------------------------------------------------------------------------------
@@ -129,7 +143,7 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call kidxrul
 define sidxrule1
 reference/$(2)_iso$(1)_cdna_introns.sidx/seq.bin: \
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz
-	module load Salmon/0.99.0-beta2 && \
+	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $$(@D) -t $$< --gencode -p 16 --type puff 
 endef
 $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call sidxrule1,$(v),$(m)))))
@@ -138,7 +152,7 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call sidxrul
 define sidxrule2
 reference/$(2)_iso$(1)_cdna_intronsasdecoy.sidx/seq.bin: \
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz
-	module load Salmon/0.99.0-beta2 && \
+	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $$(@D) -t $$< --gencode -p 16 --type puff \
 	-d $$(<D)/introns_tx_to_capture.txt
 endef
@@ -148,7 +162,7 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call sidxrul
 define sidxrule3
 reference/$(2)_iso$(1)_introns_cdnaasdecoy.sidx/seq.bin: \
 reference/$(2)_iso$(1)/introns_cDNA.fa.gz
-	module load Salmon/0.99.0-beta2 && \
+	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $$(@D) -t $$< --gencode -p 16 --type puff \
 	-d $$(<D)/cDNA_tx_to_capture.txt
 endef
@@ -156,14 +170,13 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call sidxrul
 
 ## From spliced + unspliced annotated transcripts
 reference/spliced_unspliced.sidx/seq.bin: \
-/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.spliced.and.unspliced.min23.fa
-	module load Salmon/0.99.0-beta2 && \
+reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
+	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $(@D) -t $< --gencode -p 16 --type puff 
 
 ## From only the regular (spliced) transcripts, for comparison
-reference/spliced.sidx/seq.bin: \
-/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.fa
-	module load Salmon/0.99.0-beta2 && \
+reference/spliced.sidx/seq.bin: $(txome)
+	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $(@D) -t $< --gencode -p 16 --type puff 
 
 ## -----------------------------------------------------------------------------------------------------

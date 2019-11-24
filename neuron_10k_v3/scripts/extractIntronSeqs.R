@@ -47,6 +47,12 @@ extractIntronSeqs <- function(gtf, genome, type = "collapse", flanklength = 90,
   names(gr) <- gsub("\\-I\\.", "-I", make.unique(paste0(names(gr), "-I")))
 
   ## Get sequence
-  return(BSgenome::getSeq(x = genome, names = gr))
+  gs <- BSgenome::getSeq(x = genome, names = gr)
+  
+  ## Manually set names of extracted sequences
+  stopifnot(all(width(gs) == width(gr)))
+  names(gs) <- names(gr)
+  
+  return(gs)
 }
 

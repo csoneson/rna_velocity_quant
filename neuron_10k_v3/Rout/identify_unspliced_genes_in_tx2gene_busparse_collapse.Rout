@@ -35,7 +35,7 @@ Type 'q()' to quit R.
 +             col.names = FALSE, sep = "\t", quote = FALSE)
 > 
 > date()
-[1] "Sun Nov  3 21:18:55 2019"
+[1] "Sat Nov 23 16:37:13 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -60,4 +60,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  4.338   6.113   1.460 
+  4.335   6.187   1.253 

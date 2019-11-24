@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library(rtracklayer)
   library(dplyr)
   library(GenomicFeatures)
+  library(BSgenome)
 })
 
 source("scripts/extractTxSeqs.R")

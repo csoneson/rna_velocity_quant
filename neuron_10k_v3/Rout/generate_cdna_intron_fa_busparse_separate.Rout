@@ -33,6 +33,8 @@ Type 'q()' to quit R.
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/GRCm38.primary_assembly.genome.fa"
 > print(isoform_action)
 [1] "separate"
+> print(flanklength)
+[1] 90
 > print(outdir)
 [1] "reference/busparse_isoseparate"
 > 
@@ -42,7 +44,7 @@ Type 'q()' to quit R.
 > genome <- Biostrings::readDNAStringSet(genome)
 > names(genome) <- sapply(strsplit(names(genome), " "), .subset, 1)
 > BUSpaRse::get_velocity_files(
-+   X = gtf, L = 91, Genome = genome, Transcriptome = NULL, 
++   X = gtf, L = flanklength + 1, Genome = genome, Transcriptome = NULL, 
 +   out_path = outdir, isoform_action = isoform_action, 
 +   exon_option = "full", compress_fa = TRUE, 
 +   transcript_id = "transcript_id", gene_id = "gene_id", 
@@ -56,7 +58,7 @@ Extracting flanked intronic sequences
 Writing outputs
 > 
 > date()
-[1] "Sun Nov  3 21:12:53 2019"
+[1] "Sat Nov 23 15:36:26 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -82,11 +84,11 @@ other attached packages:
 [4] IRanges_2.20.0      S4Vectors_0.24.0    BiocGenerics_0.32.0
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2                  lattice_0.20-38            
+ [1] Rcpp_1.0.3                  lattice_0.20-38            
  [3] tidyr_1.0.0                 prettyunits_1.0.2          
- [5] Rsamtools_2.2.0             assertthat_0.2.1           
+ [5] Rsamtools_2.2.1             assertthat_0.2.1           
  [7] zeallot_0.1.0               digest_0.6.22              
- [9] BiocFileCache_1.10.0        R6_2.4.0                   
+ [9] BiocFileCache_1.10.2        R6_2.4.1                   
 [11] GenomeInfoDb_1.22.0         backports_1.1.5            
 [13] RSQLite_2.1.2               httr_1.4.1                 
 [15] pillar_1.4.2                zlibbioc_1.32.0            
@@ -94,7 +96,7 @@ loaded via a namespace (and not attached):
 [19] progress_1.2.2              lazyeval_0.2.2             
 [21] curl_4.2                    data.table_1.12.6          
 [23] blob_1.2.0                  Matrix_1.2-17              
-[25] plyranges_1.6.0             BiocParallel_1.20.0        
+[25] plyranges_1.6.3             BiocParallel_1.20.0        
 [27] stringr_1.4.0               ProtGenerics_1.18.0        
 [29] RCurl_1.95-4.12             bit_1.1-14                 
 [31] biomaRt_2.42.0              DelayedArray_0.12.0        
@@ -105,7 +107,7 @@ loaded via a namespace (and not attached):
 [41] GenomeInfoDbData_1.2.2      matrixStats_0.55.0         
 [43] XML_3.98-1.20               crayon_1.3.4               
 [45] dplyr_0.8.3                 dbplyr_1.4.2               
-[47] GenomicAlignments_1.22.0    bitops_1.0-6               
+[47] GenomicAlignments_1.22.1    bitops_1.0-6               
 [49] rappdirs_0.3.1              grid_3.6.1                 
 [51] lifecycle_0.1.0             DBI_1.0.0                  
 [53] AnnotationFilter_1.10.0     magrittr_1.5               
@@ -119,4 +121,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-922.759  14.296 999.038 
+895.404  13.479 904.295 

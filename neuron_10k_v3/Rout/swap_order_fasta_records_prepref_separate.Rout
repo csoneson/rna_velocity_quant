@@ -39,7 +39,7 @@ Type 'q()' to quit R.
 > writeXStringSet(x, file = outfa, compress = TRUE)
 > 
 > date()
-[1] "Sun Nov  3 21:57:59 2019"
+[1] "Sun Nov 24 17:12:56 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -61,7 +61,7 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
-[1] Biostrings_2.54.0   XVector_0.26.0      IRanges_2.20.0     
+[1] Biostrings_2.54.0   XVector_0.26.0      IRanges_2.20.1     
 [4] S4Vectors_0.24.0    BiocGenerics_0.32.0
 
 loaded via a namespace (and not attached):
@@ -69,4 +69,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-808.569  10.830 819.815 
+813.766   9.356 880.504 

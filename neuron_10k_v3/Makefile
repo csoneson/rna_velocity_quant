@@ -6,10 +6,10 @@ genome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/GRCm38.primar
 gtf := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf
 ref10x := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/ref10x_spliced/cellranger3_0_2_GRCm38.primary_assembly_gencodeM21_spliced
 tx2genefull := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds
+tx2gene := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene.txt
 txome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.fa
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
-salmon_new := /tungstenfs/groups/gbioinfo/sonechar/Software/salmon-latest_linux_x86_64_20191027/bin/salmon
 
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/10xGenomics_neuron_10k_v3/neuron_10k_v3_fastqs
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3
@@ -261,7 +261,8 @@ reference/$(2)_iso$(1)_cdna_introns.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
-	$(salmon_new) alevin -l ISR -i $$(<D) \
+	module load Salmon/1.0.0 && \
+	salmon alevin -l ISR -i $$(<D) \
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
@@ -275,7 +276,8 @@ reference/$(2)_iso$(1)_cdna_intronsasdecoy.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
-	$(salmon_new) alevin -l ISR -i $$(<D) \
+	module load Salmon/1.0.0 && \
+	salmon alevin -l ISR -i $$(<D) \
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
@@ -289,7 +291,8 @@ reference/$(2)_iso$(1)_introns_cdnaasdecoy.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
-	$(salmon_new) alevin -l ISR -i $$(<D) \
+	module load Salmon/1.0.0 && \
+	salmon alevin -l ISR -i $$(<D) \
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
@@ -300,10 +303,11 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call alevini
 ## spliced + unspliced transcripts
 quants/alevin_spliced_unspliced/lib_format_counts.json: \
 reference/spliced_unspliced.sidx/seq.bin \
-/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.spliced.and.unspliced.tx2gene.txt \
+reference/gencode.vM21.spliced.unspliced.tx2gene.txt \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
-	$(salmon_new) alevin -l ISR -i $(<D) \
+	module load Salmon/1.0.0 && \
+	salmon alevin -l ISR -i $(<D) \
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 24 --tgMap $(word 2,$^) \
@@ -312,10 +316,11 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 ## spliced transcripts only (regular annotation)
 quants/alevin_spliced/lib_format_counts.json: \
 reference/spliced.sidx/seq.bin \
-/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene.txt \
+$(tx2gene) \
 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
 $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
-	$(salmon_new) alevin -l ISR -i $(<D) \
+	module load Salmon/1.0.0 && \
+	salmon alevin -l ISR -i $(<D) \
 	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
@@ -373,7 +378,7 @@ scripts/convert_sce_to_anndata.py
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
-	set +u && source activate anndata2ri_1.0 && set -u && \
+	set +u && source activate scvelo_0.1.24 && set -u && \
 	python scripts/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
@@ -387,7 +392,7 @@ scripts/run_scVelo.py
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
-	set +u  && source activate scvelo_0.1.24 && set -u && \
+	set +u && source activate scvelo_0.1.24 && set -u && \
 	python scripts/run_scVelo.py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
@@ -409,7 +414,7 @@ scripts/run_scVelo.py output/genesets/shared_genes.txt
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
-	set +u  && source activate scvelo_0.1.24 && set -u && \
+	set +u && source activate scvelo_0.1.24 && set -u && \
 	python scripts/run_scVelo.py $$< plots/velocity $$@ output/genesets/shared_genes.txt >pylog/$(1).scvelo.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef

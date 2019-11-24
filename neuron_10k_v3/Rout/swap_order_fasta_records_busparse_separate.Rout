@@ -39,7 +39,7 @@ Type 'q()' to quit R.
 > writeXStringSet(x, file = outfa, compress = TRUE)
 > 
 > date()
-[1] "Sun Nov  3 21:43:50 2019"
+[1] "Sat Nov 23 16:18:57 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -69,4 +69,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-897.456  15.224 912.573 
+866.464   9.829 871.702 

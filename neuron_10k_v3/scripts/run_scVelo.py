@@ -56,8 +56,8 @@ if genesetfile == "None":
 	adata2 = scv.pp.filter_and_normalize(adata, min_shared_counts = 20, n_top_genes = 2000, copy = True, log = True)
 else:
 	geneset = [f.rstrip('\n') for f in open(genesetfile, 'r').readlines()]
+	scv.pp.normalize_per_cell(adata)
 	adata2 = adata[:, geneset]
-	scv.pp.normalize_per_cell(adata2)
 
 scv.pp.moments(adata2, n_pcs = 30, n_neighbors = 30)
 

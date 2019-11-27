@@ -1,0 +1,383 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++   library(readr)
++   library(UpSetR)
++   library(pheatmap)
++ })
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(methods)
+                                       velocyto 
+                                     "velocyto" 
+  kallisto_bustools_prepref_isocollapse_exclude 
+"kallisto_bustools_prepref_isocollapse_exclude" 
+  kallisto_bustools_prepref_isoseparate_exclude 
+"kallisto_bustools_prepref_isoseparate_exclude" 
+  kallisto_bustools_prepref_isocollapse_include 
+"kallisto_bustools_prepref_isocollapse_include" 
+  kallisto_bustools_prepref_isoseparate_include 
+"kallisto_bustools_prepref_isoseparate_include" 
+        alevin_prepref_isocollapse_cdna_introns 
+      "alevin_prepref_isocollapse_cdna_introns" 
+        alevin_prepref_isoseparate_cdna_introns 
+      "alevin_prepref_isoseparate_cdna_introns" 
+  alevin_prepref_isocollapse_cdna_introns_decoy 
+"alevin_prepref_isocollapse_cdna_introns_decoy" 
+  alevin_prepref_isoseparate_cdna_introns_decoy 
+"alevin_prepref_isoseparate_cdna_introns_decoy" 
+                       alevin_spliced_unspliced 
+                     "alevin_spliced_unspliced" 
+> print(outrds)
+[1] "plots/misc/plot_velocity_confidence.rds"
+> 
+> cellinfo <- lapply(methods, function(nm) {
++   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
++                          "_cell_info.csv")) %>%
++     dplyr::mutate(method = nm)
++ })
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  cluster = col_double(),
+  cluster_alevin_spliced = col_double(),
+  cluster_alevin_spliced_unspliced_concatenated = col_double(),
+  cluster_alevin_spliced_unspliced_summed = col_double(),
+  cluster_velocyto_concatenated = col_double(),
+  cluster_velocyto_summed = col_double(),
+  initial_size_spliced = col_double(),
+  initial_size_unspliced = col_double(),
+  initial_size = col_double(),
+  n_counts = col_double(),
+  velocity_self_transition = col_double(),
+  velocity_clusters = col_character(),
+  velocity_length = col_double(),
+  velocity_confidence = col_double(),
+  velocity_confidence_transition = col_double()
+)
+> geneinfo <- lapply(methods, function(nm) {
++   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
++                          "_gene_info.csv")) %>%
++     dplyr::mutate(method = nm)
++ })
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+Parsed with column specification:
+cols(
+  index = col_character(),
+  means = col_double(),
+  dispersions = col_double(),
+  dispersions_norm = col_double(),
+  velocity_gamma = col_double(),
+  velocity_r2 = col_double(),
+  velocity_genes = col_logical(),
+  velocity_score = col_double()
+)
+> 
+> velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
++   w %>% dplyr::select(index, method, velocity_confidence, 
++                       velocity_confidence_transition, velocity_self_transition, 
++                       velocity_length, velocity_pseudotime, latent_time)
++ }))
+Error in .f(.x[[i]], ...) : object 'velocity_pseudotime' not found
+Calls: do.call ... <Anonymous> -> vars_select_eval -> map_if -> map -> .f
+Execution halted

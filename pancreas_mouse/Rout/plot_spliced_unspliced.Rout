@@ -36,7 +36,7 @@ Type 'q()' to quit R.
 > names(methods) <- methods
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
 > print(gtf)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf"
 > print(methods)
@@ -158,7 +158,7 @@ Type 'q()' to quit R.
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
 +   ggtitle("Fraction of total gene counts that are 'unspliced'")
 Warning message:
-Removed 243204 rows containing non-finite values (stat_ydensity). 
+Removed 269233 rows containing non-finite values (stat_ydensity). 
 > 
 > ## Fraction spliced, by cell, across all gene
 > df1 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
@@ -203,7 +203,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Nov 26 17:18:00 2019"
+[1] "Tue Nov 26 21:21:43 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -265,4 +265,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1334.293  304.937 1592.528 
+ 971.026  189.359 1141.044 

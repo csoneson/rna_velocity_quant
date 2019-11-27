@@ -1,0 +1,329 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(tximeta)
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++   library(Seurat)
++ })
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(methods)
+                                       velocyto 
+                                     "velocyto" 
+  kallisto_bustools_prepref_isocollapse_exclude 
+"kallisto_bustools_prepref_isocollapse_exclude" 
+  kallisto_bustools_prepref_isoseparate_exclude 
+"kallisto_bustools_prepref_isoseparate_exclude" 
+  kallisto_bustools_prepref_isocollapse_include 
+"kallisto_bustools_prepref_isocollapse_include" 
+  kallisto_bustools_prepref_isoseparate_include 
+"kallisto_bustools_prepref_isoseparate_include" 
+        alevin_prepref_isocollapse_cdna_introns 
+      "alevin_prepref_isocollapse_cdna_introns" 
+        alevin_prepref_isoseparate_cdna_introns 
+      "alevin_prepref_isoseparate_cdna_introns" 
+  alevin_prepref_isocollapse_cdna_introns_decoy 
+"alevin_prepref_isocollapse_cdna_introns_decoy" 
+  alevin_prepref_isoseparate_cdna_introns_decoy 
+"alevin_prepref_isoseparate_cdna_introns_decoy" 
+                       alevin_spliced_unspliced 
+                     "alevin_spliced_unspliced" 
+> print(genetxt)
+[1] "output/genesets/shared_genes.txt"
+> print(outrds)
+[1] "plots/misc/plot_count_correlation.rds"
+> 
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
++ })
+> for (nm in names(sces)) {
++   metadata(sces[[nm]]) <- list(dataset = nm)
++ }
+> 
+> genes <- read.delim(genetxt, header = FALSE, as.is = TRUE)[, 1]
+> sces <- lapply(sces, function(w) w[match(genes, rownames(w)), ])
+> 
+> seurats <- lapply(methods, function(nm) {
++   w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", nm, "_shared_genes_with_velocity.h5ad")))
++   stopifnot(all(rownames(w) == genes))
++   w
++ })
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading variance_velocity into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+> 
+> gene_corrs <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods) - 1), function(j) {
++     jj <- methods[j]
++     do.call(
++       dplyr::bind_rows,  
++       lapply((j + 1):(length(methods)), function(k) {
++         kk <- methods[k]
++         message(jj, " - ", kk)
++         a <- scale(t(as.matrix(assay(sces[[jj]], "spliced"))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(assay(sces[[kk]], "spliced"))), center = TRUE, scale = TRUE)
++         corrs_spliced <- colSums(a * b)/(nrow(a) - 1)
++         a <- scale(t(as.matrix(assay(sces[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(assay(sces[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
++         corrs_unspliced <- colSums(a * b)/(nrow(a) - 1)
++         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity")))), center = TRUE, scale = TRUE)
++         corrs_velocity <- colSums(a * b)/(nrow(a) - 1)
++         a <- scale(t(as.matrix(assay(sces[[jj]], "spliced"))) + 
++                      t(as.matrix(assay(sces[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
++         b <- scale(t(as.matrix(assay(sces[[kk]], "spliced"))) + 
++                      t(as.matrix(assay(sces[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
++         corrs_total <- colSums(a * b)/(nrow(a) - 1)
++         dplyr::bind_rows(
++           data.frame(method1 = jj,
++                      method2 = kk, 
++                      gene = names(corrs_spliced), 
++                      ctype = "spliced",
++                      corrs = corrs_spliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_unspliced), 
++                      ctype = "unspliced",
++                      corrs = corrs_unspliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_velocity), 
++                      ctype = "velocity",
++                      corrs = corrs_velocity, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_total), 
++                      ctype = "total",
++                      corrs = corrs_total, 
++                      stringsAsFactors = FALSE)
++         )
++       }))
++   }))
+velocyto - kallisto_bustools_prepref_isocollapse_exclude
+velocyto - kallisto_bustools_prepref_isoseparate_exclude
+velocyto - kallisto_bustools_prepref_isocollapse_include
+velocyto - kallisto_bustools_prepref_isoseparate_include
+velocyto - alevin_prepref_isocollapse_cdna_introns
+velocyto - alevin_prepref_isoseparate_cdna_introns
+velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
+velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
+velocyto - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
+
+There were 50 or more warnings (use warnings() to see the first 50)
+Execution halted

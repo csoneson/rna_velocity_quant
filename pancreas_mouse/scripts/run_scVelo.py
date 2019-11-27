@@ -72,15 +72,21 @@ scv.settings.figdir = plotdir + '/' + base + basegs + '/'
 scv.settings.plot_prefix = base + basegs + '_scvelo_'
 # scv.settings.set_figure_params(dpi_save = 300, vector_friendly = True)
 # color='cluster'
-scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(12,9), show=False, color='cluster')
-scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(12,9), show=False, color='cluster')
-scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(12,9), show=False, color='cluster')
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_velocyto_concatenated', save="PCA_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_velocyto_concatenated', save="UMAP_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='cluster_velocyto_concatenated')
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
+scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_velocyto_concatenated', save="PCA_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_velocyto_concatenated', save="UMAP_velocyto_concatenated_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(12,9), show=False, color='clusters')
+scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream_G2M.png", figsize=(12,9), show=False, color='G2M_score')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated_stream_G2M.png", figsize=(12,9), show=False, color='G2M_score')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream_G2M.png", figsize=(12,9), show=False, color='G2M_score')
+scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream_S.png", figsize=(12,9), show=False, color='S_score')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_velocyto_concatenated', save="TSNE_velocyto_concatenated_stream_S.png", figsize=(12,9), show=False, color='S_score')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream_S.png", figsize=(12,9), show=False, color='S_score')
 
 #scv.pl.velocity_embedding(adata2, basis='X_pca', save="PCA.png", figsize=(12,9), show=False, color='cluster')
 #scv.pl.velocity_embedding(adata2, basis='X_tsne', save="TSNE.png", figsize=(12,9), show=False, color='cluster')
@@ -92,7 +98,7 @@ scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP
 #scv.pl.velocity_embedding(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
 #scv.pl.velocity_embedding(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced.png", figsize=(12,9), show=False, color='cluster_alevin_spliced')
 
-scv.pl.velocity_graph(adata2, basis='TSNE_alevin_spliced', save='TSNE_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='cluster_alevin_spliced')
+scv.pl.velocity_graph(adata2, basis='TSNE_alevin_spliced', save='TSNE_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='clusters')
 
 try:
 	scv.tl.recover_latent_time(adata2)
@@ -103,13 +109,13 @@ except:
 	print('Latent time/top genes could not be extracted')
 
 try:
-	scv.tl.rank_velocity_genes(adata2, match_with = "cluster_alevin_spliced", n_genes = 10)
+	scv.tl.rank_velocity_genes(adata2, match_with = "clusters", n_genes = 10)
 	generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(10)
 	adata2.var.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_info.csv")
 	generank.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity.csv")
 	
 	genes = generank.iloc[0]
-	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='cluster_alevin_spliced', basis='TSNE_alevin_spliced', show=False)
+	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='clusters', basis='TSNE_alevin_spliced', show=False)
 except:
 	print('Velocity genes could not be extracted')
 

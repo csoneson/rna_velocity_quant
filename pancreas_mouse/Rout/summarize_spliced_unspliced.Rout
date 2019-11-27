@@ -1,0 +1,127 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(BiocParallel)
++   library(BiocSingular)
++ })
+> 
+> source("scripts/sce_helpers.R")
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(tx2gene)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
+> print(outrds)
+[1] "output/sce/sces_spliced_unspliced.rds"
+> 
+> tx2gene <- readRDS(tx2gene)
+> cells <- read.csv("/work/gbioinfo/sonechar/Data/GSE132188/cells_kept_in_scvelo_exampledata.csv")
+> 
+> sces <- list()
+> 
+> ## ========================================================================= ##
+> ## Read quantifications and create SingleCellExperiment objects
+> ## ========================================================================= ##
+> ## CellRanger + velocyto
+> sces$velocyto <- read_velocyto(
++   loomfile = file.path(topdir, "quants/cellranger/SRR9201794/velocyto/SRR9201794.loom"), 
++   sampleid = "SRR9201794"
++ )
+reading loom file via hdf5r...
+> 
+> 
+> ## cDNA/introns separately (with decoys)
+> for (m in c("prepref")) {
++   for (v in c("separate", "collapse")) {
++     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy")]] <- 
++       read_alevin_with_decoys(
++         spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
++         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
++         sampleid = "SRR9201794", tx2gene = tx2gene
++       )
++   }
++ }
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+> 
+> ## cDNA/introns quantified jointly
+> for (m in c("prepref")) {
++   for (v in c("separate", "collapse")) {
++     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns")]] <- 
++       read_alevin_cdna_introns(
++         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
++         sampleid = "SRR9201794", tx2gene = tx2gene)
++   }
++ }
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+> 
+> sces$alevin_spliced_unspliced <- 
++   read_alevin_spliced_unspliced(
++     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
++     sampleid = "SRR9201794", tx2gene = tx2gene
++   )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+> 
+> sces$alevin_spliced <- 
++   read_alevin_spliced(
++     alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
++     sampleid = "SRR9201794", tx2gene = tx2gene
++   )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+found matching transcriptome:
+[ GENCODE - Mus musculus - release M21 ]
+loading existing TxDb created: 2019-10-24 09:43:29
+Loading required package: GenomicFeatures
+Loading required package: AnnotationDbi
+
+Attaching package: 'AnnotationDbi'
+
+The following object is masked from 'package:dplyr':
+
+    select
+
+generating gene ranges
+loading existing gene ranges created: 2019-10-24 09:44:11
+fetching genome info for GENCODE
+
+Execution halted

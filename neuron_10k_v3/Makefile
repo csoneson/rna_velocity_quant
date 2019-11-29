@@ -13,6 +13,9 @@ bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustoo
 
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/10xGenomics_neuron_10k_v3/neuron_10k_v3_fastqs
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3
+scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts
+
+flanklength := 90
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,busparse prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,busparse prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
@@ -50,16 +53,17 @@ quants/alevin_spliced/lib_format_counts.json \
 quants/cellranger/neuron_10k_v3/outs/web_summary.html \
 quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
 output/sce/sces_spliced_unspliced.rds \
-$(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds)
+$(foreach x,$(methodssub) alevin_spliced,output/sce/sce_$(x).rds)
 
-veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
-$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+veloc: $(foreach x,$(methodssub),output/anndata/anndata_$(x).h5ad) \
+$(foreach x,$(methodssub),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 output/genesets/shared_genes.txt \
-$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
+$(foreach x,$(methodssub),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
 
 plot: plots/misc/plot_spliced_unspliced.rds \
 plots/misc/plot_velocity_confidence.rds \
-plots/misc/plot_count_correlation.rds
+plots/misc/plot_count_correlation.rds \
+plots/misc/plot_busparse_prepref.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -89,23 +93,23 @@ quants/cellranger/neuron_10k_v3/outs/web_summary.html $(gtf)
 ## read length (for this data set, 91)
 define farefrule
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz: $(genome) $(gtf) \
-scripts/generate_cdna_intron_fa_$(2).R $(3) $(4)
+$(scriptdir)/generate_cdna_intron_fa_$(2).R $(3) $(4)
 	mkdir -p Rout
 	mkdir -p $$(@D)
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=90 outdir='$$(@D)'" scripts/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=$(flanklength) outdir='$$(@D)'" $(scriptdir)/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1).Rout
 endef
 $(foreach v,collapse separate,$(eval $(call farefrule,$(v),busparse,,)))
-$(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,scripts/extractIntronSeqs.R,scripts/extractTxSeqs.R)))
+$(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R)))
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 define swaprule
 reference/$(2)_iso$(1)/introns_cDNA.fa.gz: \
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
-scripts/swap_order_fasta_records.R
+$(scriptdir)/swap_order_fasta_records.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args infa='$$<' outfa='$$@'" scripts/swap_order_fasta_records.R Rout/swap_order_fasta_records_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args infa='$$<' outfa='$$@'" $(scriptdir)/swap_order_fasta_records.R Rout/swap_order_fasta_records_$(2)_$(1).Rout
 endef
 $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call swaprule,$(v),$(m)))))
 
@@ -114,24 +118,31 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call swaprul
 define suffixrule
 reference/$(2)_iso$(1)/tr2g_modified.tsv: \
 reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
-scripts/identify_unspliced_genes_in_tx2gene.R
+$(scriptdir)/identify_unspliced_genes_in_tx2gene.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args intsv='$$(<D)/tr2g.tsv' outtsv='$$@'" scripts/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args intsv='$$(<D)/tr2g.tsv' outtsv='$$@'" $(scriptdir)/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_$(2)_$(1).Rout
 endef
 $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call suffixrule,$(v),$(m)))))
 
 ## Generate fasta file with spliced + unspliced transcripts
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
-$(gtf) $(genome) $(tx2genefull) scripts/generate_spliced_unspliced_fa.R
+$(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R
 	mkdir -p Rout
 	mkdir -p reference
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' tx2gene='$(tx2genefull)' outfa='$@' outt2g='$(@D)/gencode.vM21.spliced.unspliced.tx2gene.txt'" scripts/generate_spliced_unspliced_fa.R Rout/generate_spliced_unspliced_fa.Rout
+	R CMD BATCH --no-save --no-restore "--args gtf='$(gtf)' genome='$(genome)' tx2gene='$(tx2genefull)' outfa='$@' outt2g='$(@D)/gencode.vM21.spliced.unspliced.tx2gene.txt'" $(scriptdir)/generate_spliced_unspliced_fa.R Rout/generate_spliced_unspliced_fa.Rout
 
 reference/gencode.vM21.spliced.unspliced.tx2gene.txt: \
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
 	touch $@
+
+plots/misc/plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/compare_busparse_prepref.R \
+$(foreach v,collapse separate,$(foreach m,busparse prepref,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) 
+	mkdir -p Rout
+	mkdir -p $(@D)
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args txomefa='$(txome)' gtffile='$(gtf)' refdir='reference' flanklength=$(flanklength) outrds='$(@)'" $(scriptdir)/compare_busparse_prepref.R Rout/compare_busparse_prepref.Rout
 
 ## -----------------------------------------------------------------------------------------------------
 ## Build indexes
@@ -336,7 +347,7 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 ## Analysis
 ## -----------------------------------------------------------------------------------------------------
 ## Create SCEs with shared genes/cells
-output/sce/sces_spliced_unspliced.rds: scripts/sce_helpers.R scripts/summarize_spliced_unspliced.R \
+output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/summarize_spliced_unspliced.R \
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,busparse prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).mtx)))) \
 $(foreach m,busparse prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns/lib_format_counts.json)) \
 $(foreach m,busparse prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy/lib_format_counts.json)) \
@@ -347,7 +358,7 @@ quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' tx2gene='$(tx2genefull)' outrds='$@'" scripts/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -357,35 +368,35 @@ $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 
 ## Plot summaries of spliced/unspliced counts
 plots/misc/plot_spliced_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
-scripts/plot_spliced_unspliced.R $(gtf)
+$(scriptdir)/plot_spliced_unspliced.R $(gtf)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' gtf='$(gtf)' methods='$(methodssubc)' outrds='$@'" scripts/plot_spliced_unspliced.R Rout/plot_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' gtf='$(gtf)' methods='$(methodssubc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced.R Rout/plot_spliced_unspliced.Rout
 
-plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
-scripts/plot_velocity_confidence.R
+plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methodssub),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence_neuron.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' outrds='$@'" scripts/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_neuron.R Rout/plot_velocity_confidence.Rout
 
 plots/misc/plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
-scripts/plot_count_correlation.R 
+$(scriptdir)/plot_count_correlation_neuron.R 
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' genetxt='$<' outrds='$@'" scripts/plot_count_correlation.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation_neuron.R Rout/plot_count_correlation.Rout
 
 ## Convert SCE to anndata
 define anndatarule
 output/anndata/anndata_$(1).h5ad: output/sce/sce_$(1).rds \
-scripts/convert_sce_to_anndata.py
+$(scriptdir)/convert_sce_to_anndata.py
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
-	python scripts/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
+	python $(scriptdir)/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methodssub),$(eval $(call anndatarule,$(x))))
@@ -393,35 +404,35 @@ $(foreach x,$(methodssub),$(eval $(call anndatarule,$(x))))
 ## Calculate velocity with scVelo
 define scvelorule
 output/anndata_with_velocity/anndata_$(1)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
-scripts/run_scVelo.py
+$(scriptdir)/run_scVelo_neuron.py
 	mkdir -p plots/velocity/anndata_$(1)
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
-	python scripts/run_scVelo.py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
+	python $(scriptdir)/run_scVelo_neuron.py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methodssub),$(eval $(call scvelorule,$(x))))
 
 ## Make text file with genes retained by all methods (except busparse-based)
-output/genesets/shared_genes.txt: scripts/make_gene_subsets.R \
-$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad)
+output/genesets/shared_genes.txt: $(scriptdir)/make_gene_subsets.R \
+$(foreach x,$(methodssub),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' outtxt='$@'" scripts/make_gene_subsets.R Rout/make_gene_subsets.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodssubc)' outtxt='$@'" $(scriptdir)/make_gene_subsets.R Rout/make_gene_subsets.Rout
 
 ## Velocity, based on genes selected by all methods
 define scveloruleshared
 output/anndata_with_velocity/anndata_$(1)_shared_genes_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
-scripts/run_scVelo.py output/genesets/shared_genes.txt
+$(scriptdir)/run_scVelo_neuron.py output/genesets/shared_genes.txt
 	mkdir -p plots/velocity/anndata_$(1)_shared_genes
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
-	python scripts/run_scVelo.py $$< plots/velocity $$@ output/genesets/shared_genes.txt >pylog/$(1).scvelo.log 2>&1 && \
+	python $(scriptdir)/run_scVelo_neuron.py $$< plots/velocity $$@ output/genesets/shared_genes.txt >pylog/$(1).scvelo_shared_genes.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methodssub),$(eval $(call scveloruleshared,$(x))))

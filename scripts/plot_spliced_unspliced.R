@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(SingleCellExperiment)
   library(scater)
   library(cowplot)
+  library(pheatmap)
 })
 
 methods <- strsplit(methods, ",")[[1]]
@@ -36,6 +37,30 @@ gtf <- rtracklayer::import(gtf)
 ## Plot
 ## ========================================================================= ##
 pdf(gsub("rds", "pdf", outrds), width = 11, height = 11)
+
+## Overall similarity (RMSE of count matrix)
+rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
+  do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
+    data.frame(m1 = s1, m2 = s2, 
+               RMSEspliced = sqrt(mean((assay(sces[[s1]], "spliced") - 
+                                          assay(sces[[s2]], "spliced"))^2)),
+               RMSEunspliced = sqrt(mean((assay(sces[[s1]], "unspliced") - 
+                                            assay(sces[[s2]], "unspliced"))^2)),
+               stringsAsFactors = FALSE)
+  }))
+}))
+rmsem <- rmse %>% dplyr::select(m1, m2, RMSEspliced) %>% 
+  tidyr::spread(key = m2, value = RMSEspliced) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("m1") %>%
+  as.matrix()
+pheatmap::pheatmap(rmsem, title = "Spliced")
+rmsem <- rmse %>% dplyr::select(m1, m2, RMSEunspliced) %>% 
+  tidyr::spread(key = m2, value = RMSEunspliced) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("m1") %>%
+  as.matrix()
+pheatmap::pheatmap(rmsem, title = "Unspliced")
 
 ## Total number of assigned reads
 df0 <- do.call(dplyr::bind_rows, lapply(sces, function(w) {

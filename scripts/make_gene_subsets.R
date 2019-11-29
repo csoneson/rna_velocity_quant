@@ -38,6 +38,12 @@ genes_in_all <- selgenes %>% dplyr::select(-contains("busparse")) %>%
   dplyr::filter(n == n_not_busparse) %>%
   dplyr::pull(gene)
 
+if ("Ins2" %in% genes_in_all) {
+  write.table(setdiff(genes_in_all, "Ins2"), 
+              file = gsub("\\.txt", "_without_Ins2.txt", outtxt), 
+              row.names = FALSE, col.names = FALSE,
+              quote = FALSE, sep = "\t")
+}
 write.table(genes_in_all, file = outtxt, row.names = FALSE, col.names = FALSE,
             quote = FALSE, sep = "\t")
 

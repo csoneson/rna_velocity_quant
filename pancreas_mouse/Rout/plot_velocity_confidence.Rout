@@ -69,194 +69,104 @@ Type 'q()' to quit R.
 + })
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  cluster = col_double(),
-  cluster_alevin_spliced = col_double(),
-  cluster_alevin_spliced_unspliced_concatenated = col_double(),
-  cluster_alevin_spliced_unspliced_summed = col_double(),
-  cluster_velocyto_concatenated = col_double(),
-  cluster_velocyto_summed = col_double(),
-  initial_size_spliced = col_double(),
-  initial_size_unspliced = col_double(),
-  initial_size = col_double(),
-  n_counts = col_double(),
-  velocity_self_transition = col_double(),
-  velocity_clusters = col_character(),
-  velocity_length = col_double(),
-  velocity_confidence = col_double(),
-  velocity_confidence_transition = col_double()
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character(),
+  velocity_clusters = col_character()
 )
+See spec(...) for full column specifications.
 > geneinfo <- lapply(methods, function(nm) {
 +   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
 +                          "_gene_info.csv")) %>%
@@ -264,120 +174,234 @@ cols(
 + })
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 > 
 > velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
-+   w %>% dplyr::select(index, method, velocity_confidence, 
++   w %>% dplyr::select(index, method, clusters, velocity_confidence, 
 +                       velocity_confidence_transition, velocity_self_transition, 
 +                       velocity_length, velocity_pseudotime, latent_time)
 + }))
-Error in .f(.x[[i]], ...) : object 'velocity_pseudotime' not found
-Calls: do.call ... <Anonymous> -> vars_select_eval -> map_if -> map -> .f
-Execution halted
+> velocity_confidence$clusters <- factor(as.character(velocity_confidence$clusters), 
++                                        levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
++                                                   "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
+> 
+> velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
++   w %>% dplyr::select(index, method, 
++                       velocity_score, fit_alpha, fit_beta, fit_gamma, 
++                       fit_likelihood)
++ }))
+> 
+> pdf(gsub("rds$", "pdf", outrds), width = 10, height = 10)
+> ggplot(velocity_confidence, aes(x = clusters, y = latent_time)) + 
++   geom_violin(aes(fill = clusters), alpha = 0.25) + theme_bw() + 
++   facet_wrap(~ method) + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   labs(title = "Latent time vs cluster")
+> 
+> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_length) %>%
++                tidyr::spread(key = method, value = velocity_length) %>%
++                tibble::column_to_rownames("index")), 
++          cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity length")
+> 
+> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_pseudotime) %>%
++                tidyr::spread(key = method, value = velocity_pseudotime) %>%
++                tibble::column_to_rownames("index")), 
++          cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity pseudotime")
+> 
+> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, latent_time) %>%
++                tidyr::spread(key = method, value = latent_time) %>%
++                tibble::column_to_rownames("index")), 
++          cluster_rows = TRUE, cluster_cols = TRUE, main = "Latent time")
+> 
+> ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) + 
++   geom_violin(aes(fill = method), alpha = 0.25) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Velocity confidence, per cell",
++        subtitle = paste0("The velocity confidence checks whether the velocities ", 
++                          "agree with the neighboring velocities, \ni.e. ", 
++                          "a kind of smoothness score"))
+> 
+> ggplot(velocity_confidence, aes(x = method, y = velocity_length)) + 
++   geom_violin(aes(fill = method), alpha = 0.25) + 
++   theme_bw() + 
++   scale_y_log10() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Velocity length, per cell",
++        subtitle = "")
+> 
+> ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition)) + 
++   geom_violin(aes(fill = method), alpha = 0.25) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Velocity confidence (transition), per cell",
++        subtitle = paste0("The velocity transition confidence checks whether ", 
++                          "the embedded velocities obtained from the \ntransition ", 
++                          "probabilities truly reflect the velocities ", 
++                          "in high dimensional space."))
+> 
+> ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) + 
++   geom_violin(aes(fill = method), alpha = 0.25) + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Velocity self-transition, per cell",
++        subtitle = paste0(""))
+> 
+> ggplot(velocity_genes, aes(x = method, y = velocity_score)) + 
++   geom_violin(aes(fill = method), alpha = 0.25) + 
++   scale_y_sqrt() + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Velocity score, per gene",
++        subtitle = paste0(""))
+> 
+> ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) + 
++   geom_violin(aes(fill = method), alpha = 0.25, scale = "width") + 
++   theme_bw() + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++   labs(title = "Fit likelihood, per gene",
++        subtitle = paste0(""))
+Warning message:
+Removed 6 rows containing non-finite values (stat_ydensity). 
+> 
+> allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
+> selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
+> rownames(selgenes) <- allgenes
+> selgenes <- data.frame(selgenes)
+> upset(selgenes, nsets = length(geneinfo), keep.order = TRUE, 
++       order.by = "freq", decreasing = TRUE)
+> 
+> dev.off()
+null device 
+          1 
+> 
+> saveRDS(NULL, file = outrds)
+> date()
+[1] "Thu Nov 28 16:58:55 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] pheatmap_1.0.12             UpSetR_1.4.0               
+ [3] readr_1.3.1                 scater_1.14.4              
+ [5] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
+ [7] DelayedArray_0.12.0         BiocParallel_1.20.0        
+ [9] matrixStats_0.55.0          Biobase_2.46.0             
+[11] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[13] IRanges_2.20.1              S4Vectors_0.24.0           
+[15] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[17] dplyr_0.8.3                
+
+loaded via a namespace (and not attached):
+ [1] beeswarm_0.2.3           tidyselect_0.2.5         purrr_0.3.3             
+ [4] BiocSingular_1.2.0       lattice_0.20-38          colorspace_1.4-1        
+ [7] vctrs_0.2.0              viridisLite_0.3.0        rlang_0.4.2             
+[10] pillar_1.4.2             glue_1.3.1               withr_2.1.2             
+[13] RColorBrewer_1.1-2       plyr_1.8.4               GenomeInfoDbData_1.2.2  
+[16] lifecycle_0.1.0          zlibbioc_1.32.0          munsell_0.5.0           
+[19] gtable_0.3.0             rsvd_1.0.2               labeling_0.3            
+[22] vipor_0.4.5              irlba_2.3.3              BiocNeighbors_1.4.1     
+[25] Rcpp_1.0.3               scales_1.1.0             backports_1.1.5         
+[28] XVector_0.26.0           farver_2.0.1             gridExtra_2.3           
+[31] hms_0.5.2                grid_3.6.1               bitops_1.0-6            
+[34] tools_3.6.1              magrittr_1.5             lazyeval_0.2.2          
+[37] RCurl_1.95-4.12          tibble_2.1.3             tidyr_1.0.0             
+[40] crayon_1.3.4             pkgconfig_2.0.3          zeallot_0.1.0           
+[43] Matrix_1.2-17            DelayedMatrixStats_1.8.0 ggbeeswarm_0.6.0        
+[46] assertthat_0.2.1         viridis_0.5.1            R6_2.4.1                
+[49] compiler_3.6.1          
+> 
+> proc.time()
+   user  system elapsed 
+ 35.453  51.004  25.449 

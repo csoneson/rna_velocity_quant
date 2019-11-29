@@ -33,10 +33,13 @@ geneinfo <- lapply(methods, function(nm) {
 })
 
 velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
-  w %>% dplyr::select(index, method, velocity_confidence, 
+  w %>% dplyr::select(index, method, clusters, velocity_confidence, 
                       velocity_confidence_transition, velocity_self_transition, 
                       velocity_length, velocity_pseudotime, latent_time)
 }))
+velocity_confidence$clusters <- factor(as.character(velocity_confidence$clusters), 
+                                       levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
+                                                  "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
 
 velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
   w %>% dplyr::select(index, method, 
@@ -45,6 +48,13 @@ velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
 }))
 
 pdf(gsub("rds$", "pdf", outrds), width = 10, height = 10)
+ggplot(velocity_confidence, aes(x = clusters, y = latent_time)) + 
+  geom_violin(aes(fill = clusters), alpha = 0.25) + theme_bw() + 
+  facet_wrap(~ method) + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+  labs(title = "Latent time vs cluster")
+
 pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_length) %>%
                tidyr::spread(key = method, value = velocity_length) %>%
                tibble::column_to_rownames("index")), 

@@ -8,14 +8,21 @@ suppressPackageStartupMessages({
   library(BiocSingular)
 })
 
-source("scripts/sce_helpers.R")
-
 print(topdir)
+print(helperscript)
 print(tx2gene)
+print(cellfile)
+print(samplename)
 print(outrds)
 
+source(helperscript)
+
 tx2gene <- readRDS(tx2gene)
-cells <- read.csv("/work/gbioinfo/sonechar/Data/GSE132188/cells_kept_in_scvelo_exampledata.csv")
+if (cellfile != "") {
+  cells <- read.csv(cellfile)
+} else {
+  cells <- NULL
+}
 
 sces <- list()
 
@@ -24,8 +31,8 @@ sces <- list()
 ## ========================================================================= ##
 ## CellRanger + velocyto
 sces$velocyto <- read_velocyto(
-  loomfile = file.path(topdir, "quants/cellranger/SRR9201794/velocyto/SRR9201794.loom"), 
-  sampleid = "SRR9201794"
+  loomfile = file.path(topdir, paste0("quants/cellranger/", samplename, "/velocyto/", samplename, ".loom")), 
+  sampleid = samplename
 )
 
 
@@ -36,7 +43,7 @@ for (m in c("prepref")) {
       read_alevin_with_decoys(
         spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
-        sampleid = "SRR9201794", tx2gene = tx2gene
+        sampleid = samplename, tx2gene = tx2gene
       )
   }
 }
@@ -47,20 +54,20 @@ for (m in c("prepref")) {
     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns")]] <- 
       read_alevin_cdna_introns(
         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
-        sampleid = "SRR9201794", tx2gene = tx2gene)
+        sampleid = samplename, tx2gene = tx2gene)
   }
 }
 
 sces$alevin_spliced_unspliced <- 
   read_alevin_spliced_unspliced(
     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
-    sampleid = "SRR9201794", tx2gene = tx2gene
+    sampleid = samplename, tx2gene = tx2gene
   )
 
 sces$alevin_spliced <- 
   read_alevin_spliced(
     alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
-    sampleid = "SRR9201794", tx2gene = tx2gene
+    sampleid = samplename, tx2gene = tx2gene
   )
 
 
@@ -79,18 +86,28 @@ for (m in c("prepref")) {
 }
 
 ## ========================================================================= ##
-## subset to shared cells/genes (specifically, the ones that were used in the scVelo paper)
+## subset to shared cells/genes
 ## ========================================================================= ##
-shared_cells <- intersect(as.character(Reduce(intersect, lapply(sces, colnames))),
-                          as.character(cells$index))
+shared_cells <- as.character(Reduce(intersect, lapply(sces, colnames)))
+if (!is.null(cells)) {
+  shared_cells <- intersect(shared_cells, as.character(cells$index))
+}
 shared_genes <- as.character(Reduce(intersect, lapply(sces, rownames)))
 
 sces <- lapply(sces, function(w) w[shared_genes, shared_cells])
-cells <- cells[match(shared_cells, cells$index), ]
 
-sces <- lapply(sces, function(w) {
-  colData(w) <- cbind(colData(w), DataFrame(cells))
-})
+if (!is.null(cells)) {
+  cells <- cells[match(shared_cells, cells$index), ] %>%
+    dplyr::rename(cell_index = index)
+  cells$cell_index <- as.character(cells$cell_index)
+  cells$clusters <- as.character(cells$clusters)
+  cells$clusters_coarse <- as.character(cells$clusters_coarse)
+  
+  sces <- lapply(sces, function(w) {
+    colData(w) <- cbind(colData(w), DataFrame(cells))
+    w
+  })
+}
 
 ## ========================================================================= ##
 ## Add reduced dimension representation + clusters

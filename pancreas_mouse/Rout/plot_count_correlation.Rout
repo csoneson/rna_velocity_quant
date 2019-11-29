@@ -88,11 +88,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -103,11 +106,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -118,11 +124,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -133,11 +142,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -148,11 +160,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -163,11 +178,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -178,11 +196,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -193,11 +214,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -208,11 +232,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -223,11 +250,14 @@ Assembling Seurat object
 No nearest-neighbor graph
 Reading Ms into new assay, putting data into data
 Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
 Reading logcounts into new assay, putting data into data
 Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
-Reading variance_velocity into new assay, putting data into data
 Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 > 
 > gene_corrs <- do.call(
 +   dplyr::bind_rows, 
@@ -324,6 +354,244 @@ alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_intron
 alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
-
+alevin_prepref_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
 There were 50 or more warnings (use warnings() to see the first 50)
-Execution halted
+> 
+> gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods[methods %in% gene_corrs$method1])
+> gene_corrs$method2 <- factor(gene_corrs$method2, levels = methods[methods %in% gene_corrs$method2])
+> 
+> ## Same but for cells
+> cell_corrs <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods) - 1), function(j) {
++     jj <- methods[j]
++     do.call(
++       dplyr::bind_rows,  
++       lapply((j + 1):(length(methods)), function(k) {
++         kk <- methods[k]
++         message(jj, " - ", kk)
++         a <- scale(as.matrix(assay(sces[[jj]], "spliced")), center = TRUE, scale = TRUE)
++         b <- scale(as.matrix(assay(sces[[kk]], "spliced")), center = TRUE, scale = TRUE)
++         tmp <- a * b
++         corrs_spliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++         a <- scale(as.matrix(assay(sces[[jj]], "unspliced")), center = TRUE, scale = TRUE)
++         b <- scale(as.matrix(assay(sces[[kk]], "unspliced")), center = TRUE, scale = TRUE)
++         tmp <- a * b
++         corrs_unspliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))), center = TRUE, scale = TRUE)
++         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity"))), center = TRUE, scale = TRUE)
++         tmp <- a * b
++         corrs_velocity <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++         a <- scale(as.matrix(assay(sces[[jj]], "spliced")) + 
++                      as.matrix(assay(sces[[jj]], "unspliced")), center = TRUE, scale = TRUE)
++         b <- scale(as.matrix(assay(sces[[kk]], "spliced")) + 
++                      as.matrix(assay(sces[[kk]], "unspliced")), center = TRUE, scale = TRUE)
++         tmp <- a * b
++         corrs_total <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++         dplyr::bind_rows(
++           data.frame(method1 = jj,
++                      method2 = kk, 
++                      cell = names(corrs_spliced), 
++                      cluster = sces[[jj]]$clusters,
++                      ctype = "spliced",
++                      corrs = corrs_spliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_unspliced), 
++                      cluster = sces[[jj]]$clusters,
++                      ctype = "unspliced",
++                      corrs = corrs_unspliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_velocity), 
++                      cluster = levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1],
++                      ctype = "velocity",
++                      corrs = corrs_velocity, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_total), 
++                      cluster = sces[[jj]]$clusters,
++                      ctype = "total",
++                      corrs = corrs_total, 
++                      stringsAsFactors = FALSE)
++         )
++       }))
++   }))
+velocyto - kallisto_bustools_prepref_isocollapse_exclude
+velocyto - kallisto_bustools_prepref_isoseparate_exclude
+velocyto - kallisto_bustools_prepref_isocollapse_include
+velocyto - kallisto_bustools_prepref_isoseparate_include
+velocyto - alevin_prepref_isocollapse_cdna_introns
+velocyto - alevin_prepref_isoseparate_cdna_introns
+velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
+velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
+velocyto - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
+kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced
+kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
+kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
+alevin_prepref_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods[methods %in% cell_corrs$method1])
+> cell_corrs$method2 <- factor(cell_corrs$method2, levels = methods[methods %in% cell_corrs$method2])
+> 
+> 
+> pdf(gsub("rds$", "pdf", outrds), width = 20, height = 20)
+> 
+> ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 5),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 20)) + 
++   labs(title = "Correlation, counts and velocities, by gene",
++        subtitle = "For genes selected by all methods")
+Warning message:
+Removed 5947 rows containing non-finite values (stat_boxplot). 
+> 
+> ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 5),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 20)) + 
++   labs(title = "Correlation, counts and velocities, by cell",
++        subtitle = "Over genes selected by all methods")
+> 
+> for (ct in unique(cell_corrs$ctype)) {
++   print(ggplot(cell_corrs %>% dplyr::filter(ctype == ct), 
++                aes(x = cluster, y = corrs, fill = cluster)) + 
++     geom_boxplot() + 
++     facet_grid(method1 ~ method2) + 
++     theme_bw() + 
++     theme(strip.text = element_text(size = 5),
++           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++           title = element_text(size = 20)) + 
++     labs(title = paste0("Correlation, counts and velocities, by cell (", ct, ")"),
++          subtitle = "Over genes selected by all methods"))
++ }
+> 
+> dev.off()
+null device 
+          1 
+> 
+> saveRDS(NULL, file = outrds)
+> 
+> date()
+[1] "Fri Nov 29 02:39:40 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] Seurat_3.1.1                scater_1.14.4              
+ [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
+ [5] DelayedArray_0.12.0         BiocParallel_1.20.0        
+ [7] matrixStats_0.55.0          Biobase_2.46.0             
+ [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[11] IRanges_2.20.1              S4Vectors_0.24.0           
+[13] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[15] dplyr_0.8.3                 tximeta_1.4.2              
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.5          BiocFileCache_1.10.2     plyr_1.8.4              
+  [4] igraph_1.2.4.1           lazyeval_0.2.2           splines_3.6.1           
+  [7] listenv_0.7.0            digest_0.6.23            htmltools_0.4.0         
+ [10] ensembldb_2.10.2         viridis_0.5.1            gdata_2.18.0            
+ [13] magrittr_1.5             memoise_1.1.0            cluster_2.1.0           
+ [16] ROCR_1.0-7               globals_0.12.4           Biostrings_2.54.0       
+ [19] RcppParallel_4.4.4       R.utils_2.9.0            askpass_1.1             
+ [22] prettyunits_1.0.2        colorspace_1.4-1         blob_1.2.0              
+ [25] rappdirs_0.3.1           ggrepel_0.8.1            crayon_1.3.4            
+ [28] RCurl_1.95-4.12          jsonlite_1.6             tximport_1.14.0         
+ [31] zeallot_0.1.0            survival_3.1-7           zoo_1.8-6               
+ [34] ape_5.3                  glue_1.3.1               gtable_0.3.0            
+ [37] zlibbioc_1.32.0          XVector_0.26.0           leiden_0.3.1            
+ [40] BiocSingular_1.2.0       future.apply_1.3.0       scales_1.1.0            
+ [43] DBI_1.0.0                bibtex_0.4.2             Rcpp_1.0.3              
+ [46] metap_1.1                viridisLite_0.3.0        progress_1.2.2          
+ [49] reticulate_1.13          bit_1.1-14               rsvd_1.0.2              
+ [52] SDMTools_1.1-221.1       tsne_0.1-3               htmlwidgets_1.5.1       
+ [55] httr_1.4.1               gplots_3.0.1.1           RColorBrewer_1.1-2      
+ [58] ica_1.0-2                farver_2.0.1             pkgconfig_2.0.3         
+ [61] XML_3.98-1.20            R.methodsS3_1.7.1        uwot_0.1.4              
+ [64] dbplyr_1.4.2             labeling_0.3             reshape2_1.4.3          
+ [67] tidyselect_0.2.5         rlang_0.4.2              AnnotationDbi_1.48.0    
+ [70] munsell_0.5.0            tools_3.6.1              RSQLite_2.1.2           
+ [73] ggridges_0.5.1           stringr_1.4.0            npsurv_0.4-0            
+ [76] bit64_0.9-7              fitdistrplus_1.0-14      caTools_1.17.1.2        
+ [79] purrr_0.3.3              RANN_2.6.1               AnnotationFilter_1.10.0 
+ [82] pbapply_1.4-2            future_1.15.1            nlme_3.1-142            
+ [85] R.oo_1.23.0              biomaRt_2.42.0           hdf5r_1.3.0             
+ [88] compiler_3.6.1           png_0.1-7                beeswarm_0.2.3          
+ [91] plotly_4.9.1             curl_4.2                 lsei_1.2-0              
+ [94] tibble_2.1.3             stringi_1.4.3            GenomicFeatures_1.38.0  
+ [97] lattice_0.20-38          ProtGenerics_1.18.0      Matrix_1.2-17           
+[100] vctrs_0.2.0              pillar_1.4.2             lifecycle_0.1.0         
+[103] Rdpack_0.11-0            lmtest_0.9-37            RcppAnnoy_0.0.14        
+[106] BiocNeighbors_1.4.1      data.table_1.12.6        cowplot_1.0.0           
+[109] bitops_1.0-6             irlba_2.3.3              gbRd_0.4-11             
+[112] rtracklayer_1.46.0       R6_2.4.1                 KernSmooth_2.23-16      
+[115] gridExtra_2.3            vipor_0.4.5              codetools_0.2-16        
+[118] MASS_7.3-51.4            gtools_3.8.1             assertthat_0.2.1        
+[121] openssl_1.4.1            withr_2.1.2              sctransform_0.2.0       
+[124] GenomicAlignments_1.22.1 Rsamtools_2.2.1          GenomeInfoDbData_1.2.2  
+[127] hms_0.5.2                grid_3.6.1               tidyr_1.0.0             
+[130] DelayedMatrixStats_1.8.0 Rtsne_0.15               ggbeeswarm_0.6.0        
+> 
+> proc.time()
+   user  system elapsed 
+456.683  49.847 799.183 

@@ -66,114 +66,74 @@ Type 'q()' to quit R.
 + })
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
+  .default = col_double(),
   index = col_character(),
-  means = col_double(),
-  dispersions = col_double(),
-  dispersions_norm = col_double(),
-  velocity_gamma = col_double(),
-  velocity_r2 = col_double(),
-  velocity_genes = col_logical(),
-  velocity_score = col_double()
+  velocity_genes = col_logical()
 )
+See spec(...) for full column specifications.
 > 
 > allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
 > selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
@@ -189,11 +149,15 @@ cols(
 +   dplyr::filter(n == n_not_busparse) %>%
 +   dplyr::pull(gene)
 > 
+> write.table(setdiff(genes_in_all, "Ins2"), 
++             file = gsub("\\.txt", "_without_Ins2.txt", outtxt), 
++             row.names = FALSE, col.names = FALSE,
++             quote = FALSE, sep = "\t")
 > write.table(genes_in_all, file = outtxt, row.names = FALSE, col.names = FALSE,
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Tue Nov 26 20:54:25 2019"
+[1] "Thu Nov 28 19:41:17 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -244,4 +208,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  7.073   4.610   8.827 
+ 12.214   4.872  20.696 

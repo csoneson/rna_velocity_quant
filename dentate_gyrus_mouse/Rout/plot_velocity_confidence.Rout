@@ -37,10 +37,8 @@ Type 'q()' to quit R.
 > names(methods) <- methods
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/dentate_gyrus_mouse"
 > print(methods)
-                                       velocyto 
-                                     "velocyto" 
   kallisto_bustools_prepref_isocollapse_exclude 
 "kallisto_bustools_prepref_isocollapse_exclude" 
   kallisto_bustools_prepref_isoseparate_exclude 
@@ -72,8 +70,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -82,8 +80,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -92,8 +90,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -102,8 +100,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -112,8 +110,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -122,8 +120,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -132,8 +130,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -142,8 +140,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -152,18 +150,8 @@ cols(
   .default = col_double(),
   index = col_character(),
   cell_index = col_character(),
-  clusters_coarse = col_character(),
   clusters = col_character(),
-  velocity_clusters = col_character()
-)
-See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  cell_index = col_character(),
-  clusters_coarse = col_character(),
-  clusters = col_character(),
+  clusters_enlarged = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -235,22 +223,19 @@ cols(
   velocity_genes = col_logical()
 )
 See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  velocity_genes = col_logical()
-)
-See spec(...) for full column specifications.
 > 
 > velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
 +   w %>% dplyr::select(index, method, clusters, velocity_confidence, 
 +                       velocity_confidence_transition, velocity_self_transition, 
 +                       velocity_length, velocity_pseudotime, latent_time)
 + }))
-> velocity_confidence$clusters <- factor(as.character(velocity_confidence$clusters), 
-+                                        levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
-+                                                   "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
+> velocity_confidence$clusters <- factor(
++   as.character(velocity_confidence$clusters), 
++   levels = c("nIPC", "Neuroblast", "Mossy", "Cck-Tox", 
++              "Granule immature", "Granule mature", "Microglia", 
++              "Endothelial", "Radial Glia-like", "Astrocytes",
++              "OPC", "OL", "GABA", "Cajal Retzius")
++ )
 > 
 > velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
 +   w %>% dplyr::select(index, method, 
@@ -336,7 +321,7 @@ See spec(...) for full column specifications.
 +   labs(title = "Fit likelihood, per gene",
 +        subtitle = paste0(""))
 Warning message:
-Removed 7 rows containing non-finite values (stat_ydensity). 
+Removed 9 rows containing non-finite values (stat_ydensity). 
 > 
 > allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
 > selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
@@ -351,7 +336,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sat Nov 30 18:35:44 2019"
+[1] "Sun Dec  1 13:55:14 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -404,4 +389,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 43.653  65.430  17.365 
+ 51.019  71.978  15.015 

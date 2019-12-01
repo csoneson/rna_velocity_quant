@@ -36,10 +36,8 @@ Type 'q()' to quit R.
 > names(methods) <- methods
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/dentate_gyrus_mouse"
 > print(methods)
-                                       velocyto 
-                                     "velocyto" 
   kallisto_bustools_prepref_isocollapse_exclude 
 "kallisto_bustools_prepref_isocollapse_exclude" 
   kallisto_bustools_prepref_isoseparate_exclude 
@@ -78,24 +76,6 @@ Type 'q()' to quit R.
 +   stopifnot(all(rownames(w) == genes))
 +   w
 + })
-Pulling expression matrices and metadata
-Data is unscaled
-Creating assay object
-Storing X as raw and raw as counts
-No variable feature expression found in h5ad file
-No dimensional reduction information found
-Assembling Seurat object
-No nearest-neighbor graph
-Reading Ms into new assay, putting data into data
-Reading Mu into new assay, putting data into data
-Reading fit_t into new assay, putting data into data
-Reading fit_tau into new assay, putting data into data
-Reading fit_tau_ into new assay, putting data into data
-Reading logcounts into new assay, putting data into data
-Reading spliced into new assay, putting data into data
-Reading unspliced into new assay, putting data into data
-Reading velocity into new assay, putting data into data
-Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -310,15 +290,6 @@ Reading velocity_u into new assay, putting data into data
 +         )
 +       }))
 +   }))
-velocyto - kallisto_bustools_prepref_isocollapse_exclude
-velocyto - kallisto_bustools_prepref_isoseparate_exclude
-velocyto - kallisto_bustools_prepref_isocollapse_include
-velocyto - kallisto_bustools_prepref_isoseparate_include
-velocyto - alevin_prepref_isocollapse_cdna_introns
-velocyto - alevin_prepref_isoseparate_cdna_introns
-velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
-velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
-velocyto - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -392,39 +363,34 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +           data.frame(method1 = jj,
 +                      method2 = kk, 
 +                      cell = names(corrs_spliced), 
++                      cluster = sces[[jj]]$clusters,
 +                      ctype = "spliced",
 +                      corrs = corrs_spliced, 
 +                      stringsAsFactors = FALSE),
 +           data.frame(method1 = jj,
 +                      method2 = kk,
 +                      cell = names(corrs_unspliced), 
++                      cluster = sces[[jj]]$clusters,
 +                      ctype = "unspliced",
 +                      corrs = corrs_unspliced, 
 +                      stringsAsFactors = FALSE),
 +           data.frame(method1 = jj,
 +                      method2 = kk,
 +                      cell = names(corrs_velocity), 
++                      cluster = levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1],
 +                      ctype = "velocity",
 +                      corrs = corrs_velocity, 
 +                      stringsAsFactors = FALSE),
 +           data.frame(method1 = jj,
 +                      method2 = kk,
 +                      cell = names(corrs_total), 
++                      cluster = sces[[jj]]$clusters,
 +                      ctype = "total",
 +                      corrs = corrs_total, 
 +                      stringsAsFactors = FALSE)
 +         )
 +       }))
 +   }))
-velocyto - kallisto_bustools_prepref_isocollapse_exclude
-velocyto - kallisto_bustools_prepref_isoseparate_exclude
-velocyto - kallisto_bustools_prepref_isocollapse_include
-velocyto - kallisto_bustools_prepref_isoseparate_include
-velocyto - alevin_prepref_isocollapse_cdna_introns
-velocyto - alevin_prepref_isoseparate_cdna_introns
-velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
-velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
-velocyto - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -479,7 +445,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   labs(title = "Correlation, counts and velocities, by gene",
 +        subtitle = "For genes selected by all methods")
 Warning message:
-Removed 15838 rows containing non-finite values (stat_boxplot). 
+Removed 12636 rows containing non-finite values (stat_boxplot). 
 > 
 > ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
 +   geom_boxplot() + 
@@ -491,6 +457,19 @@ Removed 15838 rows containing non-finite values (stat_boxplot).
 +   labs(title = "Correlation, counts and velocities, by cell",
 +        subtitle = "Over genes selected by all methods")
 > 
+> for (ct in unique(cell_corrs$ctype)) {
++   print(ggplot(cell_corrs %>% dplyr::filter(ctype == ct), 
++                aes(x = cluster, y = corrs, fill = cluster)) + 
++     geom_boxplot() + 
++     facet_grid(method1 ~ method2) + 
++     theme_bw() + 
++     theme(strip.text = element_text(size = 5),
++           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++           title = element_text(size = 20)) + 
++     labs(title = paste0("Correlation, counts and velocities, by cell (", ct, ")"),
++          subtitle = "Over genes selected by all methods"))
++ }
+> 
 > dev.off()
 null device 
           1 
@@ -498,7 +477,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Nov 26 17:33:17 2019"
+[1] "Sun Dec  1 13:58:03 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -557,7 +536,7 @@ loaded via a namespace (and not attached):
  [73] ggridges_0.5.1           stringr_1.4.0            npsurv_0.4-0            
  [76] bit64_0.9-7              fitdistrplus_1.0-14      caTools_1.17.1.2        
  [79] purrr_0.3.3              RANN_2.6.1               AnnotationFilter_1.10.0 
- [82] pbapply_1.4-2            future_1.15.0            nlme_3.1-142            
+ [82] pbapply_1.4-2            future_1.15.1            nlme_3.1-142            
  [85] R.oo_1.23.0              biomaRt_2.42.0           hdf5r_1.3.0             
  [88] compiler_3.6.1           png_0.1-7                beeswarm_0.2.3          
  [91] plotly_4.9.1             curl_4.2                 lsei_1.2-0              
@@ -577,4 +556,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-720.565  76.993 744.794 
+204.184  70.376 184.137 

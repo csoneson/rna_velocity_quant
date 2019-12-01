@@ -149,11 +149,17 @@ See spec(...) for full column specifications.
 +   dplyr::filter(n == n_not_busparse) %>%
 +   dplyr::pull(gene)
 > 
+> if ("Ins2" %in% genes_in_all) {
++   write.table(setdiff(genes_in_all, "Ins2"), 
++               file = gsub("\\.txt", "_without_Ins2.txt", outtxt), 
++               row.names = FALSE, col.names = FALSE,
++               quote = FALSE, sep = "\t")
++ }
 > write.table(genes_in_all, file = outtxt, row.names = FALSE, col.names = FALSE,
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Tue Nov 26 15:15:00 2019"
+[1] "Fri Nov 29 21:04:53 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -204,4 +210,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  8.453   6.319   6.771 
+  7.185   4.659   8.570 

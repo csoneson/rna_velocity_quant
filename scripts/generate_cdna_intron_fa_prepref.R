@@ -13,14 +13,15 @@ suppressPackageStartupMessages({
   library(GenomicRanges)
 })
 
-source("scripts/extractIntronSeqs.R")
-source("scripts/extractTxSeqs.R")
-
+print(scriptdir)
 print(gtf)
 print(genome)
 print(isoform_action)
 print(flanklength)
 print(outdir)
+
+source(file.path(scriptdir, "extractIntronSeqs.R"))
+source(file.path(scriptdir, "extractTxSeqs.R"))
 
 ## Extract intronic sequences flanked by L-1 bases 
 ## of exonic sequences where L is the biological read length

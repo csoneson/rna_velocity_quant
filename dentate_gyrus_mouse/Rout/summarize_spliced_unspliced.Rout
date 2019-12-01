@@ -27,16 +27,18 @@ Type 'q()' to quit R.
 +   library(BiocSingular)
 + })
 > 
+> samplenames <- strsplit(samplenames, ",")[[1]]
+> 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/dentate_gyrus_mouse"
 > print(helperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(cellfile)
-[1] "/work/gbioinfo/sonechar/Data/GSE132188/cells_kept_in_scvelo_exampledata.csv"
-> print(samplename)
-[1] "SRR9201794"
+[1] "/work/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse/cells_kept_in_scvelo_exampledata.csv"
+> print(samplenames)
+[1] "p12" "p35"
 > print(outrds)
 [1] "output/sce/sces_spliced_unspliced.rds"
 > 
@@ -55,24 +57,37 @@ Type 'q()' to quit R.
 > ## Read quantifications and create SingleCellExperiment objects
 > ## ========================================================================= ##
 > ## CellRanger + velocyto
-> sces$velocyto <- read_velocyto(
-+   loomfile = file.path(topdir, paste0("quants/cellranger/", samplename, "/velocyto/", samplename, ".loom")), 
-+   sampleid = samplename
-+ )
-reading loom file via hdf5r...
+> # sces$velocyto <- read_velocyto(
+> #   loomfile = file.path(topdir, paste0("quants/cellranger/", samplename, "/velocyto/", samplename, ".loom")), 
+> #   sampleid = samplename
+> # )
 > 
 > 
 > ## cDNA/introns separately (with decoys)
 > for (m in c("prepref")) {
 +   for (v in c("separate", "collapse")) {
 +     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy")]] <- 
-+       read_alevin_with_decoys(
-+         spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
-+         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
-+         sampleid = samplename, tx2gene = tx2gene
-+       )
++       do.call(cbind, lapply(samplenames, function(s) {
++         read_alevin_with_decoys(
++           spliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
++           unspliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
++           sampleid = s, tx2gene = tx2gene
++         )
++       }))
 +   }
 + }
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
@@ -90,9 +105,12 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 > for (m in c("prepref")) {
 +   for (v in c("separate", "collapse")) {
 +     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns")]] <- 
-+       read_alevin_cdna_introns(
-+         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
-+         sampleid = samplename, tx2gene = tx2gene)
++       do.call(cbind, lapply(samplenames, function(s) {
++         read_alevin_cdna_introns(
++           alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
++           sampleid = s, tx2gene = tx2gene
++         )
++       }))
 +   }
 + }
 importing quantifications
@@ -101,21 +119,34 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 > 
 > sces$alevin_spliced_unspliced <- 
-+   read_alevin_spliced_unspliced(
-+     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
-+     sampleid = samplename, tx2gene = tx2gene
-+   )
++   do.call(cbind, lapply(samplenames, function(s) {
++     read_alevin_spliced_unspliced(
++       alevindir = file.path(topdir, "quants/", s, "/alevin_spliced_unspliced/alevin"),
++       sampleid = s, tx2gene = tx2gene
++     )
++   }))
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 > 
 > sces$alevin_spliced <- 
-+   read_alevin_spliced(
-+     alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
-+     sampleid = samplename, tx2gene = tx2gene
-+   )
++   do.call(cbind, lapply(samplenames, function(s) {
++     read_alevin_spliced(
++       alevindir = file.path(topdir, "quants/", s, "/alevin_spliced/alevin"),
++       sampleid = s, tx2gene = tx2gene
++     )
++   }))
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 found matching transcriptome:
@@ -133,24 +164,31 @@ The following object is masked from 'package:dplyr':
 generating gene ranges
 loading existing gene ranges created: 2019-10-24 09:44:11
 fetching genome info for GENCODE
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+found matching transcriptome:
+[ GENCODE - Mus musculus - release M21 ]
+loading existing TxDb created: 2019-10-24 09:43:29
+generating gene ranges
+loading existing gene ranges created: 2019-10-24 09:44:11
+fetching genome info for GENCODE
 > 
 > 
 > for (m in c("prepref")) {
 +   for (v in c("separate", "collapse")) {
 +     for (k in c("exclude", "include")) {
 +       sces[[paste0("kallisto_bustools_", m, "_iso", v, "_", k)]] <- 
-+         read_kallisto_bustools(
-+           kallistodir = file.path(topdir, paste0("quants/kallisto_bustools_", 
-+                                                  m, "_iso", v, "_cdna_introns")),
-+           splicedname = paste0("spliced.", k),
-+           unsplicedname = paste0("unspliced.", k)
-+         )
++         do.call(cbind, lapply(samplenames, function(s) {
++           read_kallisto_bustools(
++             kallistodir = file.path(topdir, paste0("quants/", s, "/kallisto_bustools_", 
++                                                    m, "_iso", v, "_cdna_introns")),
++             splicedname = paste0("spliced.", k),
++             unsplicedname = paste0("unspliced.", k)
++           )
++         }))
 +     }
 +   }
 + }
-Error in (function (x)  : attempt to apply non-function
-Warning message:
-call dbDisconnect() when finished working with a connection 
 > 
 > ## ========================================================================= ##
 > ## subset to shared cells/genes
@@ -168,7 +206,7 @@ call dbDisconnect() when finished working with a connection
 +     dplyr::rename(cell_index = index)
 +   cells$cell_index <- as.character(cells$cell_index)
 +   cells$clusters <- as.character(cells$clusters)
-+   cells$clusters_coarse <- as.character(cells$clusters_coarse)
++   cells$clusters_enlarged <- as.character(cells$clusters_enlarged)
 +   
 +   sces <- lapply(sces, function(w) {
 +     colData(w) <- cbind(colData(w), DataFrame(cells))
@@ -188,7 +226,7 @@ call dbDisconnect() when finished working with a connection
 +   sce <- scater::runTSNE(sce, dimred = "PCA", 
 +                          ncomponents = 2)
 +   sce <- scater::runUMAP(sce, dimred = "PCA", 
-+                          ncomponents = 2)
++                          ncomponents = 2, min_dist = 0.4)
 +   
 +   snn.gr <- scran::buildSNNGraph(sce, use.dimred = "PCA")
 +   clusters <- igraph::cluster_walktrap(snn.gr)
@@ -202,7 +240,6 @@ call dbDisconnect() when finished working with a connection
 +   message(nm)
 +   sces[[nm]] <- do_dimred(sces[[nm]])
 + }
-velocyto
 alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns
@@ -224,7 +261,7 @@ kallisto_bustools_prepref_isocollapse_include
 +   w
 + })
 > 
-> for (m in c("alevin_spliced_unspliced", "velocyto")) {
+> for (m in c("alevin_spliced_unspliced")) {
 +   message(m)
 +   ## Concatenated spliced and unspliced
 +   tmp <- SingleCellExperiment(
@@ -253,7 +290,6 @@ kallisto_bustools_prepref_isocollapse_include
 +   })
 + }
 alevin_spliced_unspliced
-velocyto
 > 
 > ## ========================================================================= ##
 > ## Save
@@ -264,7 +300,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Nov 29 17:55:06 2019"
+[1] "Sun Dec  1 12:22:32 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -299,39 +335,39 @@ other attached packages:
 [21] BiocSingular_1.2.0          BiocParallel_1.20.0        
 
 loaded via a namespace (and not attached):
- [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
- [4] XVector_0.26.0           BiocNeighbors_1.4.1      bit64_0.9-7             
- [7] RSpectra_0.15-0          splines_3.6.1            tximport_1.14.0         
-[10] jsonlite_1.6             Rsamtools_2.2.1          cluster_2.1.0           
-[13] dbplyr_1.4.2             uwot_0.1.4               compiler_3.6.1          
-[16] httr_1.4.1               dqrng_0.2.1              backports_1.1.5         
-[19] assertthat_0.2.1         lazyeval_0.2.2           limma_3.42.0            
-[22] prettyunits_1.0.2        tools_3.6.1              rsvd_1.0.2              
-[25] igraph_1.2.4.1           gtable_0.3.0             glue_1.3.1              
-[28] GenomeInfoDbData_1.2.2   rappdirs_0.3.1           Rcpp_1.0.3              
-[31] vctrs_0.2.0              Biostrings_2.54.0        nlme_3.1-142            
-[34] rtracklayer_1.46.0       DelayedMatrixStats_1.8.0 stringr_1.4.0           
-[37] plyranges_1.6.4          lifecycle_0.1.0          irlba_2.3.3             
-[40] ensembldb_2.10.2         gtools_3.8.1             statmod_1.4.32          
-[43] XML_3.98-1.20            edgeR_3.28.0             zlibbioc_1.32.0         
-[46] MASS_7.3-51.4            scales_1.1.0             BSgenome_1.54.0         
-[49] pcaMethods_1.78.0        hms_0.5.2                ProtGenerics_1.18.0     
-[52] AnnotationFilter_1.10.0  curl_4.2                 memoise_1.1.0           
-[55] gridExtra_2.3            biomaRt_2.42.0           stringi_1.4.3           
-[58] RSQLite_2.1.2            scran_1.14.5             rlang_0.4.2             
-[61] pkgconfig_2.0.3          bitops_1.0-6             lattice_0.20-38         
-[64] purrr_0.3.3              GenomicAlignments_1.22.1 bit_1.1-14              
-[67] tidyselect_0.2.5         magrittr_1.5             R6_2.4.1                
-[70] fishpond_1.2.0           DBI_1.0.0                pillar_1.4.2            
-[73] withr_2.1.2              mgcv_1.8-31              RCurl_1.95-4.12         
-[76] tibble_2.1.3             crayon_1.3.4             hdf5r_1.3.0             
-[79] BiocFileCache_1.10.2     viridis_0.5.1            progress_1.2.2          
-[82] locfit_1.5-9.1           grid_3.6.1               data.table_1.12.6       
-[85] blob_1.2.0               FNN_1.1.3                digest_0.6.23           
-[88] tidyr_1.0.0              openssl_1.4.1            RcppParallel_4.4.4      
-[91] munsell_0.5.0            beeswarm_0.2.3           viridisLite_0.3.0       
-[94] vipor_0.4.5              askpass_1.1             
+ [1] nlme_3.1-142             ProtGenerics_1.18.0      bitops_1.0-6            
+ [4] bit64_0.9-7              progress_1.2.2           httr_1.4.1              
+ [7] tools_3.6.1              backports_1.1.5          R6_2.4.1                
+[10] irlba_2.3.3              vipor_0.4.5              uwot_0.1.4              
+[13] DBI_1.0.0                lazyeval_0.2.2           mgcv_1.8-31             
+[16] colorspace_1.4-1         withr_2.1.2              gridExtra_2.3           
+[19] tidyselect_0.2.5         prettyunits_1.0.2        bit_1.1-14              
+[22] curl_4.2                 compiler_3.6.1           BiocNeighbors_1.4.1     
+[25] rtracklayer_1.46.0       scales_1.1.0             askpass_1.1             
+[28] rappdirs_0.3.1           stringr_1.4.0            digest_0.6.23           
+[31] Rsamtools_2.2.1          XVector_0.26.0           pkgconfig_2.0.3         
+[34] limma_3.42.0             dbplyr_1.4.2             ensembldb_2.10.2        
+[37] BSgenome_1.54.0          rlang_0.4.2              RSQLite_2.1.2           
+[40] FNN_1.1.3                DelayedMatrixStats_1.8.0 jsonlite_1.6            
+[43] gtools_3.8.1             RCurl_1.95-4.12          magrittr_1.5            
+[46] GenomeInfoDbData_1.2.2   ggbeeswarm_0.6.0         Rcpp_1.0.3              
+[49] munsell_0.5.0            viridis_0.5.1            lifecycle_0.1.0         
+[52] edgeR_3.28.0             stringi_1.4.3            MASS_7.3-51.4           
+[55] zlibbioc_1.32.0          Rtsne_0.15               BiocFileCache_1.10.2    
+[58] grid_3.6.1               blob_1.2.0               dqrng_0.2.1             
+[61] crayon_1.3.4             lattice_0.20-38          Biostrings_2.54.0       
+[64] splines_3.6.1            hms_0.5.2                locfit_1.5-9.1          
+[67] fishpond_1.2.0           pillar_1.4.2             igraph_1.2.4.1          
+[70] biomaRt_2.42.0           XML_3.98-1.20            glue_1.3.1              
+[73] scran_1.14.5             pcaMethods_1.78.0        data.table_1.12.6       
+[76] RcppParallel_4.4.4       vctrs_0.2.0              gtable_0.3.0            
+[79] openssl_1.4.1            purrr_0.3.3              tidyr_1.0.0             
+[82] assertthat_0.2.1         rsvd_1.0.2               AnnotationFilter_1.10.0 
+[85] RSpectra_0.15-0          viridisLite_0.3.0        tibble_2.1.3            
+[88] beeswarm_0.2.3           GenomicAlignments_1.22.1 plyranges_1.6.4         
+[91] memoise_1.1.0            tximport_1.14.0          cluster_2.1.0           
+[94] statmod_1.4.32          
 > 
 > proc.time()
-    user   system  elapsed 
-1303.853  633.992 1082.067 
+   user  system elapsed 
+720.510 513.916 476.274 

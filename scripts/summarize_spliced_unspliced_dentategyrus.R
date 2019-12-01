@@ -8,11 +8,13 @@ suppressPackageStartupMessages({
   library(BiocSingular)
 })
 
+samplenames <- strsplit(samplenames, ",")[[1]]
+
 print(topdir)
 print(helperscript)
 print(tx2gene)
 print(cellfile)
-print(samplename)
+print(samplenames)
 print(outrds)
 
 source(helperscript)
@@ -30,21 +32,23 @@ sces <- list()
 ## Read quantifications and create SingleCellExperiment objects
 ## ========================================================================= ##
 ## CellRanger + velocyto
-sces$velocyto <- read_velocyto(
-  loomfile = file.path(topdir, paste0("quants/cellranger/", samplename, "/velocyto/", samplename, ".loom")), 
-  sampleid = samplename
-)
+# sces$velocyto <- read_velocyto(
+#   loomfile = file.path(topdir, paste0("quants/cellranger/", samplename, "/velocyto/", samplename, ".loom")), 
+#   sampleid = samplename
+# )
 
 
 ## cDNA/introns separately (with decoys)
 for (m in c("prepref")) {
   for (v in c("separate", "collapse")) {
     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy")]] <- 
-      read_alevin_with_decoys(
-        spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
-        unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
-        sampleid = samplename, tx2gene = tx2gene
-      )
+      do.call(cbind, lapply(samplenames, function(s) {
+        read_alevin_with_decoys(
+          spliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_intronsasdecoy/alevin")),
+          unspliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
+          sampleid = s, tx2gene = tx2gene
+        )
+      }))
   }
 }
 
@@ -52,35 +56,44 @@ for (m in c("prepref")) {
 for (m in c("prepref")) {
   for (v in c("separate", "collapse")) {
     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns")]] <- 
-      read_alevin_cdna_introns(
-        alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
-        sampleid = samplename, tx2gene = tx2gene)
+      do.call(cbind, lapply(samplenames, function(s) {
+        read_alevin_cdna_introns(
+          alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
+          sampleid = s, tx2gene = tx2gene
+        )
+      }))
   }
 }
 
 sces$alevin_spliced_unspliced <- 
-  read_alevin_spliced_unspliced(
-    alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
-    sampleid = samplename, tx2gene = tx2gene
-  )
+  do.call(cbind, lapply(samplenames, function(s) {
+    read_alevin_spliced_unspliced(
+      alevindir = file.path(topdir, "quants/", s, "/alevin_spliced_unspliced/alevin"),
+      sampleid = s, tx2gene = tx2gene
+    )
+  }))
 
 sces$alevin_spliced <- 
-  read_alevin_spliced(
-    alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
-    sampleid = samplename, tx2gene = tx2gene
-  )
+  do.call(cbind, lapply(samplenames, function(s) {
+    read_alevin_spliced(
+      alevindir = file.path(topdir, "quants/", s, "/alevin_spliced/alevin"),
+      sampleid = s, tx2gene = tx2gene
+    )
+  }))
 
 
 for (m in c("prepref")) {
   for (v in c("separate", "collapse")) {
     for (k in c("exclude", "include")) {
       sces[[paste0("kallisto_bustools_", m, "_iso", v, "_", k)]] <- 
-        read_kallisto_bustools(
-          kallistodir = file.path(topdir, paste0("quants/kallisto_bustools_", 
-                                                 m, "_iso", v, "_cdna_introns")),
-          splicedname = paste0("spliced.", k),
-          unsplicedname = paste0("unspliced.", k)
-        )
+        do.call(cbind, lapply(samplenames, function(s) {
+          read_kallisto_bustools(
+            kallistodir = file.path(topdir, paste0("quants/", s, "/kallisto_bustools_", 
+                                                   m, "_iso", v, "_cdna_introns")),
+            splicedname = paste0("spliced.", k),
+            unsplicedname = paste0("unspliced.", k)
+          )
+        }))
     }
   }
 }
@@ -101,7 +114,7 @@ if (!is.null(cells)) {
     dplyr::rename(cell_index = index)
   cells$cell_index <- as.character(cells$cell_index)
   cells$clusters <- as.character(cells$clusters)
-  cells$clusters_coarse <- as.character(cells$clusters_coarse)
+  cells$clusters_enlarged <- as.character(cells$clusters_enlarged)
   
   sces <- lapply(sces, function(w) {
     colData(w) <- cbind(colData(w), DataFrame(cells))
@@ -121,7 +134,7 @@ do_dimred <- function(sce) {
   sce <- scater::runTSNE(sce, dimred = "PCA", 
                          ncomponents = 2)
   sce <- scater::runUMAP(sce, dimred = "PCA", 
-                         ncomponents = 2)
+                         ncomponents = 2, min_dist = 0.4)
   
   snn.gr <- scran::buildSNNGraph(sce, use.dimred = "PCA")
   clusters <- igraph::cluster_walktrap(snn.gr)
@@ -146,7 +159,7 @@ sces <- lapply(sces, function(w) {
   w
 })
 
-for (m in c("alevin_spliced_unspliced", "velocyto")) {
+for (m in c("alevin_spliced_unspliced")) {
   message(m)
   ## Concatenated spliced and unspliced
   tmp <- SingleCellExperiment(

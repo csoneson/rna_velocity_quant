@@ -34,10 +34,8 @@ Type 'q()' to quit R.
 > names(methods) <- methods
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/dentate_gyrus_mouse"
 > print(methods)
-                                       velocyto 
-                                     "velocyto" 
   kallisto_bustools_prepref_isocollapse_exclude 
 "kallisto_bustools_prepref_isocollapse_exclude" 
   kallisto_bustools_prepref_isoseparate_exclude 
@@ -127,13 +125,6 @@ cols(
   velocity_genes = col_logical()
 )
 See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  velocity_genes = col_logical()
-)
-See spec(...) for full column specifications.
 > 
 > allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
 > selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
@@ -159,7 +150,7 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Sat Nov 30 18:35:35 2019"
+[1] "Sun Dec  1 13:35:00 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -210,4 +201,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  7.555   5.144   8.250 
+  8.474   6.764   6.353 

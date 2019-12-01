@@ -11,13 +11,14 @@ suppressPackageStartupMessages({
   library(BSgenome)
 })
 
-source("scripts/extractTxSeqs.R")
-
+print(scriptdir)
 print(gtf)
 print(genome)
 print(tx2gene)
 print(outfa)
 print(outt2g)
+
+source(file.path(scriptdir, "extractTxSeqs.R"))
 
 genome <- Biostrings::readDNAStringSet(genome)
 names(genome) <- sapply(strsplit(names(genome), " "), .subset, 1)

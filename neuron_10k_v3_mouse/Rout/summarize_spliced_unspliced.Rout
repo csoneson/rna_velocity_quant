@@ -28,15 +28,15 @@ Type 'q()' to quit R.
 + })
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
 > print(helperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(cellfile)
-[1] "/work/gbioinfo/sonechar/Data/GSE132188/cells_kept_in_scvelo_exampledata.csv"
+[1] ""
 > print(samplename)
-[1] "SRR9201794"
+[1] "neuron_10k_v3"
 > print(outrds)
 [1] "output/sce/sces_spliced_unspliced.rds"
 > 
@@ -133,6 +133,11 @@ The following object is masked from 'package:dplyr':
 generating gene ranges
 loading existing gene ranges created: 2019-10-24 09:44:11
 fetching genome info for GENCODE
+Error in file(file, "rt") : 
+  cannot open the connection to 'ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.20_GRCm38/GCF_000001635.20_GRCm38_assembly_report.txt'
+In addition: Warning message:
+In file(file, "rt") :
+  URL 'ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.20_GRCm38/GCF_000001635.20_GRCm38_assembly_report.txt': status was 'Failure when receiving data from the peer'
 > 
 > 
 > for (m in c("prepref")) {
@@ -148,9 +153,6 @@ fetching genome info for GENCODE
 +     }
 +   }
 + }
-Error in (function (x)  : attempt to apply non-function
-Warning message:
-call dbDisconnect() when finished working with a connection 
 > 
 > ## ========================================================================= ##
 > ## subset to shared cells/genes
@@ -264,7 +266,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Nov 29 17:55:06 2019"
+[1] "Fri Nov 29 18:29:47 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -301,37 +303,37 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
  [4] XVector_0.26.0           BiocNeighbors_1.4.1      bit64_0.9-7             
- [7] RSpectra_0.15-0          splines_3.6.1            tximport_1.14.0         
-[10] jsonlite_1.6             Rsamtools_2.2.1          cluster_2.1.0           
-[13] dbplyr_1.4.2             uwot_0.1.4               compiler_3.6.1          
-[16] httr_1.4.1               dqrng_0.2.1              backports_1.1.5         
-[19] assertthat_0.2.1         lazyeval_0.2.2           limma_3.42.0            
-[22] prettyunits_1.0.2        tools_3.6.1              rsvd_1.0.2              
-[25] igraph_1.2.4.1           gtable_0.3.0             glue_1.3.1              
-[28] GenomeInfoDbData_1.2.2   rappdirs_0.3.1           Rcpp_1.0.3              
-[31] vctrs_0.2.0              Biostrings_2.54.0        nlme_3.1-142            
-[34] rtracklayer_1.46.0       DelayedMatrixStats_1.8.0 stringr_1.4.0           
-[37] plyranges_1.6.4          lifecycle_0.1.0          irlba_2.3.3             
-[40] ensembldb_2.10.2         gtools_3.8.1             statmod_1.4.32          
-[43] XML_3.98-1.20            edgeR_3.28.0             zlibbioc_1.32.0         
-[46] MASS_7.3-51.4            scales_1.1.0             BSgenome_1.54.0         
-[49] pcaMethods_1.78.0        hms_0.5.2                ProtGenerics_1.18.0     
-[52] AnnotationFilter_1.10.0  curl_4.2                 memoise_1.1.0           
-[55] gridExtra_2.3            biomaRt_2.42.0           stringi_1.4.3           
-[58] RSQLite_2.1.2            scran_1.14.5             rlang_0.4.2             
-[61] pkgconfig_2.0.3          bitops_1.0-6             lattice_0.20-38         
-[64] purrr_0.3.3              GenomicAlignments_1.22.1 bit_1.1-14              
-[67] tidyselect_0.2.5         magrittr_1.5             R6_2.4.1                
-[70] fishpond_1.2.0           DBI_1.0.0                pillar_1.4.2            
-[73] withr_2.1.2              mgcv_1.8-31              RCurl_1.95-4.12         
-[76] tibble_2.1.3             crayon_1.3.4             hdf5r_1.3.0             
-[79] BiocFileCache_1.10.2     viridis_0.5.1            progress_1.2.2          
-[82] locfit_1.5-9.1           grid_3.6.1               data.table_1.12.6       
-[85] blob_1.2.0               FNN_1.1.3                digest_0.6.23           
-[88] tidyr_1.0.0              openssl_1.4.1            RcppParallel_4.4.4      
-[91] munsell_0.5.0            beeswarm_0.2.3           viridisLite_0.3.0       
-[94] vipor_0.4.5              askpass_1.1             
+ [7] RSpectra_0.15-0          codetools_0.2-16         splines_3.6.1           
+[10] tximport_1.14.0          jsonlite_1.6             Rsamtools_2.2.1         
+[13] cluster_2.1.0            dbplyr_1.4.2             uwot_0.1.4              
+[16] compiler_3.6.1           httr_1.4.1               dqrng_0.2.1             
+[19] backports_1.1.5          assertthat_0.2.1         lazyeval_0.2.2          
+[22] limma_3.42.0             prettyunits_1.0.2        tools_3.6.1             
+[25] rsvd_1.0.2               igraph_1.2.4.1           gtable_0.3.0            
+[28] glue_1.3.1               GenomeInfoDbData_1.2.2   rappdirs_0.3.1          
+[31] Rcpp_1.0.3               vctrs_0.2.0              Biostrings_2.54.0       
+[34] nlme_3.1-142             rtracklayer_1.46.0       DelayedMatrixStats_1.8.0
+[37] stringr_1.4.0            plyranges_1.6.4          lifecycle_0.1.0         
+[40] irlba_2.3.3              ensembldb_2.10.2         gtools_3.8.1            
+[43] statmod_1.4.32           XML_3.98-1.20            edgeR_3.28.0            
+[46] zlibbioc_1.32.0          MASS_7.3-51.4            scales_1.1.0            
+[49] BSgenome_1.54.0          pcaMethods_1.78.0        hms_0.5.2               
+[52] ProtGenerics_1.18.0      AnnotationFilter_1.10.0  curl_4.2                
+[55] memoise_1.1.0            gridExtra_2.3            biomaRt_2.42.0          
+[58] stringi_1.4.3            RSQLite_2.1.2            scran_1.14.5            
+[61] rlang_0.4.2              pkgconfig_2.0.3          bitops_1.0-6            
+[64] lattice_0.20-38          purrr_0.3.3              GenomicAlignments_1.22.1
+[67] bit_1.1-14               tidyselect_0.2.5         RcppAnnoy_0.0.14        
+[70] magrittr_1.5             R6_2.4.1                 fishpond_1.2.0          
+[73] DBI_1.0.0                pillar_1.4.2             withr_2.1.2             
+[76] mgcv_1.8-31              RCurl_1.95-4.12          tibble_2.1.3            
+[79] crayon_1.3.4             hdf5r_1.3.0              BiocFileCache_1.10.2    
+[82] viridis_0.5.1            progress_1.2.2           locfit_1.5-9.1          
+[85] grid_3.6.1               data.table_1.12.6        blob_1.2.0              
+[88] digest_0.6.23            tidyr_1.0.0              openssl_1.4.1           
+[91] RcppParallel_4.4.4       munsell_0.5.0            beeswarm_0.2.3          
+[94] viridisLite_0.3.0        vipor_0.4.5              askpass_1.1             
 > 
 > proc.time()
     user   system  elapsed 
-1303.853  633.992 1082.067 
+4094.951 2939.736 3185.288 

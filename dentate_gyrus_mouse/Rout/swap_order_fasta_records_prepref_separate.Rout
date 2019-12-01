@@ -1,0 +1,72 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(Biostrings)
++ })
+> 
+> print(infa)
+[1] "reference/prepref_isoseparate/cDNA_introns.fa.gz"
+> print(outfa)
+[1] "reference/prepref_isoseparate/introns_cDNA.fa.gz"
+> 
+> x <- readDNAStringSet(infa)
+> idx1 <- grep("-I", names(x))
+> idx2 <- grep("-I", names(x), invert = TRUE)
+> x <- x[c(idx1, idx2)]
+> 
+> writeXStringSet(x, file = outfa, compress = TRUE)
+> 
+> date()
+[1] "Sat Nov 30 21:21:51 2019"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+[1] Biostrings_2.54.0   XVector_0.26.0      IRanges_2.20.1     
+[4] S4Vectors_0.24.0    BiocGenerics_0.32.0
+
+loaded via a namespace (and not attached):
+[1] zlibbioc_1.32.0 compiler_3.6.1 
+> 
+> proc.time()
+   user  system elapsed 
+766.977   9.488 771.421 

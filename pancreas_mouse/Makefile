@@ -8,6 +8,7 @@ ref10x := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/ref10x_splice
 tx2genefull := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds
 tx2gene := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene.txt
 txome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.fa
+chrlengths := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/refstar_spliced/star2_7_0c_GRCm38.primary_assembly_gencodeM21_spliced_sjdb100/chrNameLength.txt
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
 
@@ -46,6 +47,7 @@ quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
 quants/cellranger/SRR9201794/outs/web_summary.html \
 quants/cellranger/SRR9201794/velocyto/SRR9201794.loom \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam.bw \
 output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds)
 
@@ -79,6 +81,17 @@ quants/cellranger/SRR9201794/outs/web_summary.html $(gtf)
 	source activate velocyto_0.17 && \
 	velocyto run10x --samtools-threads 16 quants/cellranger/SRR9201794 $(gtf) && \
 	source deactivate
+
+## Generate bigwig file
+quants/cellranger/SRR9201794/outs/possorted_genome_bam.bw: \
+quants/cellranger/SRR9201794/outs/web_summary.html $(chrlengths)
+	module load BEDTools/2.27.1-foss-2018b && \
+	bedtools genomecov -split -ibam quants/cellranger/SRR9201794/outs/possorted_genome_bam.bam -bg | \
+	LC_COLLATE=C sort -k1,1 -k2,2n > SRR9201794.tmp.bedGraph
+	module load Kent_tools/20190212-linux.x86_64 && \
+	bedGraphToBigWig SRR9201794.tmp.bedGraph $(chrlengths) $@
+	rm -f SRR9201794.tmp.bedGraph
+
 
 ## -----------------------------------------------------------------------------------------------------
 ## Generate fasta file with transcripts + introns (with some flanking sequence)

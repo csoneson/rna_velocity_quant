@@ -37,9 +37,10 @@ velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
                       velocity_confidence_transition, velocity_self_transition, 
                       velocity_length, velocity_pseudotime, latent_time)
 }))
-velocity_confidence$clusters <- factor(as.character(velocity_confidence$clusters), 
-                                       levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
-                                                  "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
+velocity_confidence$clusters <- 
+  factor(as.character(velocity_confidence$clusters), 
+         levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
+                    "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
 
 velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
   w %>% dplyr::select(index, method, 
@@ -55,23 +56,8 @@ ggplot(velocity_confidence, aes(x = clusters, y = latent_time)) +
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
   labs(title = "Latent time vs cluster")
 
-pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_length) %>%
-               tidyr::spread(key = method, value = velocity_length) %>%
-               tibble::column_to_rownames("index")), 
-         cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity length")
-
-pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_pseudotime) %>%
-               tidyr::spread(key = method, value = velocity_pseudotime) %>%
-               tibble::column_to_rownames("index")), 
-         cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity pseudotime")
-
-pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, latent_time) %>%
-               tidyr::spread(key = method, value = latent_time) %>%
-               tibble::column_to_rownames("index")), 
-         cluster_rows = TRUE, cluster_cols = TRUE, main = "Latent time")
-
 ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) + 
-  geom_violin(aes(fill = method), alpha = 0.25) + 
+  geom_boxplot(aes(fill = method), alpha = 0.25) + 
   theme_bw() + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -81,7 +67,7 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) +
                          "a kind of smoothness score"))
 
 ggplot(velocity_confidence, aes(x = method, y = velocity_length)) + 
-  geom_violin(aes(fill = method), alpha = 0.25) + 
+  geom_boxplot(aes(fill = method), alpha = 0.25) + 
   theme_bw() + 
   scale_y_log10() + 
   theme(legend.position = "none",
@@ -90,7 +76,7 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_length)) +
        subtitle = "")
 
 ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition)) + 
-  geom_violin(aes(fill = method), alpha = 0.25) + 
+  geom_boxplot(aes(fill = method), alpha = 0.25) + 
   theme_bw() + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -101,7 +87,7 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition))
                          "in high dimensional space."))
 
 ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) + 
-  geom_violin(aes(fill = method), alpha = 0.25) + 
+  geom_boxplot(aes(fill = method), alpha = 0.25) + 
   theme_bw() + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -109,7 +95,7 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) +
        subtitle = paste0(""))
 
 ggplot(velocity_genes, aes(x = method, y = velocity_score)) + 
-  geom_violin(aes(fill = method), alpha = 0.25) + 
+  geom_boxplot(aes(fill = method), alpha = 0.25) + 
   scale_y_sqrt() + 
   theme_bw() + 
   theme(legend.position = "none",
@@ -118,7 +104,7 @@ ggplot(velocity_genes, aes(x = method, y = velocity_score)) +
        subtitle = paste0(""))
 
 ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) + 
-  geom_violin(aes(fill = method), alpha = 0.25, scale = "width") + 
+  geom_boxplot(aes(fill = method), alpha = 0.25, scale = "width") + 
   theme_bw() + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -133,6 +119,8 @@ upset(selgenes, nsets = length(geneinfo), keep.order = TRUE,
       order.by = "freq", decreasing = TRUE)
 
 dev.off()
+
+
 
 saveRDS(NULL, file = outrds)
 date()

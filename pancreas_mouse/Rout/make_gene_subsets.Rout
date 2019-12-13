@@ -56,6 +56,8 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy" 
                        alevin_spliced_unspliced 
                      "alevin_spliced_unspliced" 
+                                       starsolo 
+                                     "starsolo" 
 > print(outtxt)
 [1] "output/genesets/shared_genes.txt"
 > 
@@ -64,6 +66,13 @@ Type 'q()' to quit R.
 +                          "_gene_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -159,14 +168,14 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Sat Nov 30 18:35:35 2019"
+[1] "Fri Dec  6 21:56:19 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
 
 locale:
  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -210,4 +219,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  7.555   5.144   8.250 
+  5.870   0.753   6.799 

@@ -123,12 +123,13 @@ try:
 except:
 	print('Plotting genes from paper did not work')
 
-
 try:
-	scv.tl.rank_velocity_genes(adata2, match_with = "clusters", n_genes = 10)
-	generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(10)
+	scv.tl.rank_velocity_genes(adata2, groupby = "clusters", n_genes = 25)
+	generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(25)
+	genescore = pd.DataFrame(adata2.uns['rank_velocity_genes']['scores']).head(25)
 	adata2.var.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_info.csv")
 	generank.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity.csv")
+	genescore.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity_score.csv")
 	
 	genes = generank.iloc[0]
 	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='clusters', basis='UMAP_alevin_spliced', show=False)

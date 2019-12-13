@@ -28,7 +28,7 @@ Type 'q()' to quit R.
 + })
 > 
 > print(topdir)
-[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse"
 > print(helperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
 > print(tx2gene)
@@ -133,11 +133,6 @@ The following object is masked from 'package:dplyr':
 generating gene ranges
 loading existing gene ranges created: 2019-10-24 09:44:11
 fetching genome info for GENCODE
-Error in file(file, "rt") : 
-  cannot open the connection to 'ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.20_GRCm38/GCF_000001635.20_GRCm38_assembly_report.txt'
-In addition: Warning message:
-In file(file, "rt") :
-  URL 'ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635/GCF_000001635.20_GRCm38/GCF_000001635.20_GRCm38_assembly_report.txt': status was 'Failure when receiving data from the peer'
 > 
 > 
 > for (m in c("prepref")) {
@@ -263,17 +258,21 @@ velocyto
 > for (nm in names(sces)) {
 +   saveRDS(sces[[nm]], file = file.path(dirname(outrds), paste0("sce_", nm, ".rds")))
 + }
+> write.table(paste0(shared_cells, "-1"), 
++             file = file.path(dirname(outrds), 
++                              paste0("retained_cell_barcodes.csv")),
++             row.names = FALSE, col.names = FALSE, sep = ",", quote = FALSE)
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Nov 29 18:29:47 2019"
+[1] "Wed Dec  4 13:24:19 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
 
 locale:
  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -336,4 +335,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-4094.951 2939.736 3185.288 
+2846.284  948.544 2926.674 

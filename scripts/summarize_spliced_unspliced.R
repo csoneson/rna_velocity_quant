@@ -9,6 +9,7 @@ suppressPackageStartupMessages({
 })
 
 print(topdir)
+print(dataset)
 print(helperscript)
 print(tx2gene)
 print(cellfile)
@@ -35,6 +36,11 @@ sces$velocyto <- read_velocyto(
   sampleid = samplename
 )
 
+## STARsolo
+sces$starsolo <- read_starsolo(
+  solodir = file.path(topdir, paste0("quants/starsolo/Solo.out/Velocyto/raw")),
+  sampleid = samplename
+)
 
 ## cDNA/introns separately (with decoys)
 for (m in c("prepref")) {
@@ -179,8 +185,13 @@ for (m in c("alevin_spliced_unspliced", "velocyto")) {
 ## Save
 ## ========================================================================= ##
 for (nm in names(sces)) {
+  metadata(sces[[nm]]) <- list(method = nm, dataset = dataset)
   saveRDS(sces[[nm]], file = file.path(dirname(outrds), paste0("sce_", nm, ".rds")))
 }
+write.table(paste0(shared_cells, "-1"), 
+            file = file.path(dirname(outrds), 
+                             paste0("retained_cell_barcodes.csv")),
+            row.names = FALSE, col.names = FALSE, sep = ",", quote = FALSE)
 saveRDS(NULL, file = outrds)
 
 date()

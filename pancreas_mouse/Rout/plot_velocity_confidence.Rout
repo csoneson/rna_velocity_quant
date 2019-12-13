@@ -59,6 +59,8 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy" 
                        alevin_spliced_unspliced 
                      "alevin_spliced_unspliced" 
+                                       starsolo 
+                                     "starsolo" 
 > print(outrds)
 [1] "plots/misc/plot_velocity_confidence.rds"
 > 
@@ -73,8 +75,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -83,8 +84,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -93,8 +93,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -103,8 +102,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -113,8 +111,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -123,8 +120,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -133,8 +129,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -143,8 +138,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -153,8 +147,7 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 Parsed with column specification:
@@ -163,8 +156,16 @@ cols(
   index = col_character(),
   cell_index = col_character(),
   clusters_coarse = col_character(),
-  clusters = col_character(),
-  velocity_clusters = col_character()
+  clusters = col_character()
+)
+See spec(...) for full column specifications.
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character()
 )
 See spec(...) for full column specifications.
 > geneinfo <- lapply(methods, function(nm) {
@@ -242,15 +243,23 @@ cols(
   velocity_genes = col_logical()
 )
 See spec(...) for full column specifications.
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
 > 
 > velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
 +   w %>% dplyr::select(index, method, clusters, velocity_confidence, 
 +                       velocity_confidence_transition, velocity_self_transition, 
 +                       velocity_length, velocity_pseudotime, latent_time)
 + }))
-> velocity_confidence$clusters <- factor(as.character(velocity_confidence$clusters), 
-+                                        levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
-+                                                   "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
+> velocity_confidence$clusters <- 
++   factor(as.character(velocity_confidence$clusters), 
++          levels = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
++                     "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"))
 > 
 > velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
 +   w %>% dplyr::select(index, method, 
@@ -266,23 +275,8 @@ See spec(...) for full column specifications.
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
 +   labs(title = "Latent time vs cluster")
 > 
-> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_length) %>%
-+                tidyr::spread(key = method, value = velocity_length) %>%
-+                tibble::column_to_rownames("index")), 
-+          cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity length")
-> 
-> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, velocity_pseudotime) %>%
-+                tidyr::spread(key = method, value = velocity_pseudotime) %>%
-+                tibble::column_to_rownames("index")), 
-+          cluster_rows = TRUE, cluster_cols = TRUE, main = "Velocity pseudotime")
-> 
-> pheatmap(cor(velocity_confidence %>% dplyr::select(index, method, latent_time) %>%
-+                tidyr::spread(key = method, value = latent_time) %>%
-+                tibble::column_to_rownames("index")), 
-+          cluster_rows = TRUE, cluster_cols = TRUE, main = "Latent time")
-> 
 > ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25) + 
++   geom_boxplot(aes(fill = method), alpha = 0.25) + 
 +   theme_bw() + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -292,7 +286,7 @@ See spec(...) for full column specifications.
 +                          "a kind of smoothness score"))
 > 
 > ggplot(velocity_confidence, aes(x = method, y = velocity_length)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25) + 
++   geom_boxplot(aes(fill = method), alpha = 0.25) + 
 +   theme_bw() + 
 +   scale_y_log10() + 
 +   theme(legend.position = "none",
@@ -301,7 +295,7 @@ See spec(...) for full column specifications.
 +        subtitle = "")
 > 
 > ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25) + 
++   geom_boxplot(aes(fill = method), alpha = 0.25) + 
 +   theme_bw() + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -312,7 +306,7 @@ See spec(...) for full column specifications.
 +                          "in high dimensional space."))
 > 
 > ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25) + 
++   geom_boxplot(aes(fill = method), alpha = 0.25) + 
 +   theme_bw() + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
@@ -320,7 +314,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0(""))
 > 
 > ggplot(velocity_genes, aes(x = method, y = velocity_score)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25) + 
++   geom_boxplot(aes(fill = method), alpha = 0.25) + 
 +   scale_y_sqrt() + 
 +   theme_bw() + 
 +   theme(legend.position = "none",
@@ -329,14 +323,15 @@ See spec(...) for full column specifications.
 +        subtitle = paste0(""))
 > 
 > ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) + 
-+   geom_violin(aes(fill = method), alpha = 0.25, scale = "width") + 
++   geom_boxplot(aes(fill = method), alpha = 0.25, scale = "width") + 
 +   theme_bw() + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Fit likelihood, per gene",
 +        subtitle = paste0(""))
+Warning: Ignoring unknown parameters: scale
 Warning message:
-Removed 7 rows containing non-finite values (stat_ydensity). 
+Removed 7 rows containing non-finite values (stat_boxplot). 
 > 
 > allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
 > selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
@@ -349,16 +344,18 @@ Removed 7 rows containing non-finite values (stat_ydensity).
 null device 
           1 
 > 
+> 
+> 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sat Nov 30 18:35:44 2019"
+[1] "Sun Dec  8 14:09:06 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
 
 locale:
  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -396,12 +393,11 @@ loaded via a namespace (and not attached):
 [28] XVector_0.26.0           farver_2.0.1             gridExtra_2.3           
 [31] hms_0.5.2                grid_3.6.1               bitops_1.0-6            
 [34] tools_3.6.1              magrittr_1.5             lazyeval_0.2.2          
-[37] RCurl_1.95-4.12          tibble_2.1.3             tidyr_1.0.0             
-[40] crayon_1.3.4             pkgconfig_2.0.3          zeallot_0.1.0           
-[43] Matrix_1.2-17            DelayedMatrixStats_1.8.0 ggbeeswarm_0.6.0        
-[46] assertthat_0.2.1         viridis_0.5.1            R6_2.4.1                
-[49] compiler_3.6.1          
+[37] RCurl_1.95-4.12          tibble_2.1.3             crayon_1.3.4            
+[40] pkgconfig_2.0.3          zeallot_0.1.0            Matrix_1.2-17           
+[43] DelayedMatrixStats_1.8.0 ggbeeswarm_0.6.0         assertthat_0.2.1        
+[46] viridis_0.5.1            R6_2.4.1                 compiler_3.6.1          
 > 
 > proc.time()
    user  system elapsed 
- 43.653  65.430  17.365 
+ 12.145   1.174  15.584 

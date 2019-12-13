@@ -34,7 +34,7 @@ Type 'q()' to quit R.
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(cellfile)
-[1] "/work/gbioinfo/sonechar/Data/GSE132188/cells_kept_in_scvelo_exampledata.csv"
+[1] "/work/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/cells_kept_in_scvelo_exampledata.csv"
 > print(samplename)
 [1] "SRR9201794"
 > print(outrds)
@@ -61,6 +61,28 @@ Type 'q()' to quit R.
 + )
 reading loom file via hdf5r...
 > 
+> ## STARsolo
+> sces$starsolo <- read_starsolo(
++   solodir = file.path(topdir, paste0("quants/starsolo/Solo.out/Velocyto/raw")),
++   sampleid = samplename
++ )
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double(),
+  X4 = col_double(),
+  X5 = col_double()
+)
 > 
 > ## cDNA/introns separately (with decoys)
 > for (m in c("prepref")) {
@@ -148,9 +170,6 @@ fetching genome info for GENCODE
 +     }
 +   }
 + }
-Error in (function (x)  : attempt to apply non-function
-Warning message:
-call dbDisconnect() when finished working with a connection 
 > 
 > ## ========================================================================= ##
 > ## subset to shared cells/genes
@@ -203,6 +222,7 @@ call dbDisconnect() when finished working with a connection
 +   sces[[nm]] <- do_dimred(sces[[nm]])
 + }
 velocyto
+starsolo
 alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns
@@ -261,17 +281,21 @@ velocyto
 > for (nm in names(sces)) {
 +   saveRDS(sces[[nm]], file = file.path(dirname(outrds), paste0("sce_", nm, ".rds")))
 + }
+> write.table(paste0(shared_cells, "-1"), 
++             file = file.path(dirname(outrds), 
++                              paste0("retained_cell_barcodes.csv")),
++             row.names = FALSE, col.names = FALSE, sep = ",", quote = FALSE)
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Nov 29 17:55:06 2019"
+[1] "Fri Dec  6 17:34:57 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
 
 locale:
  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -287,16 +311,17 @@ attached base packages:
 
 other attached packages:
  [1] GenomicFeatures_1.38.0      AnnotationDbi_1.48.0       
- [3] scater_1.14.4               velocyto.R_0.6             
- [5] Matrix_1.2-17               SingleCellExperiment_1.8.0 
- [7] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
- [9] matrixStats_0.55.0          Biobase_2.46.0             
-[11] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
-[13] IRanges_2.20.1              S4Vectors_0.24.0           
-[15] BiocGenerics_0.32.0         BUSpaRse_1.0.0             
-[17] zeallot_0.1.0               ggplot2_3.2.1              
-[19] dplyr_0.8.3                 tximeta_1.4.2              
-[21] BiocSingular_1.2.0          BiocParallel_1.20.0        
+ [3] readr_1.3.1                 scater_1.14.4              
+ [5] velocyto.R_0.6              Matrix_1.2-17              
+ [7] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
+ [9] DelayedArray_0.12.0         matrixStats_0.55.0         
+[11] Biobase_2.46.0              GenomicRanges_1.38.0       
+[13] GenomeInfoDb_1.22.0         IRanges_2.20.1             
+[15] S4Vectors_0.24.0            BiocGenerics_0.32.0        
+[17] BUSpaRse_1.0.0              zeallot_0.1.0              
+[19] ggplot2_3.2.1               dplyr_0.8.3                
+[21] tximeta_1.4.2               BiocSingular_1.2.0         
+[23] BiocParallel_1.20.0        
 
 loaded via a namespace (and not attached):
  [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
@@ -334,4 +359,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1303.853  633.992 1082.067 
+1183.871   59.814 1250.199 

@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 comma := ,
 empty :=
 space := $(empty) $(empty)
@@ -9,8 +11,10 @@ tx2genefull := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/
 tx2gene := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene.txt
 txome := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.transcripts.fa
 chrlengths := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/refstar_spliced/star2_7_0c_GRCm38.primary_assembly_gencodeM21_spliced_sjdb100/chrNameLength.txt
+starindex := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/refstar_spliced/star2_7_3a_GRCm38.primary_assembly_gencodeM21_spliced_sjdb150
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
+subsetbam := /tungstenfs/groups/gbioinfo/sonechar/Software/subset-bam-1.0-x86_64-linux/subset-bam
 
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/fastq
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse
@@ -21,7 +25,7 @@ flanklength := 150
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced
+alevin_spliced_unspliced starsolo
 methodsc := $(subst $(space),$(comma),$(methods))
 
 all: ref quantific veloc plot
@@ -34,7 +38,9 @@ $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_in
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_intronsasdecoy.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_introns_cdnaasdecoy.sidx/seq.bin)) \
 reference/spliced_unspliced.sidx/seq.bin \
-reference/spliced.sidx/seq.bin
+reference/spliced.sidx/seq.bin \
+$(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_uniqueness.txt)) \
+$(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_uniqueness_overall.txt))
 
 quantific: $(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/run_info.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/output.correct.sort.bus)) \
@@ -47,9 +53,12 @@ quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
 quants/cellranger/SRR9201794/outs/web_summary.html \
 quants/cellranger/SRR9201794/velocyto/SRR9201794.loom \
-quants/cellranger/SRR9201794/outs/possorted_genome_bam.bw \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw \
+quants/starsolo/Solo.out/Gene/Summary.csv \
 output/sce/sces_spliced_unspliced.rds \
-$(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds)
+$(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds) \
+output/sce/retained_cell_barcodes.csv
 
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
@@ -58,9 +67,10 @@ output/genesets/shared_genes_without_Ins2.txt \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_without_Ins2_with_velocity.h5ad)
 
-plot: plots/misc/plot_spliced_unspliced.rds \
-plots/misc/plot_velocity_confidence.rds \
-plots/misc/plot_count_correlation.rds
+plot: plots/misc/plot_velocity_confidence.rds \
+plots/misc/plot_count_correlation.rds \
+plots/misc/plot_total_count.rds \
+plots/misc/plot_spliced_unspliced_mds.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -82,15 +92,37 @@ quants/cellranger/SRR9201794/outs/web_summary.html $(gtf)
 	velocyto run10x --samtools-threads 16 quants/cellranger/SRR9201794 $(gtf) && \
 	source deactivate
 
+## Subset bam file to only reads from retained cell barcodes
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam: \
+quants/cellranger/SRR9201794/outs/web_summary.html \
+output/sce/retained_cell_barcodes.csv
+	$(subsetbam) --bam quants/cellranger/SRR9201794/outs/possorted_genome_bam.bam \
+	--cell-barcodes output/sce/retained_cell_barcodes.csv \
+	--out-bam $@ --cores 24 --log-level info --bam-tag CB
+
 ## Generate bigwig file
-quants/cellranger/SRR9201794/outs/possorted_genome_bam.bw: \
-quants/cellranger/SRR9201794/outs/web_summary.html $(chrlengths)
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw: \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam $(chrlengths)
 	module load BEDTools/2.27.1-foss-2018b && \
-	bedtools genomecov -split -ibam quants/cellranger/SRR9201794/outs/possorted_genome_bam.bam -bg | \
+	bedtools genomecov -split -ibam $< -bg | \
 	LC_COLLATE=C sort -k1,1 -k2,2n > SRR9201794.tmp.bedGraph
 	module load Kent_tools/20190212-linux.x86_64 && \
 	bedGraphToBigWig SRR9201794.tmp.bedGraph $(chrlengths) $@
 	rm -f SRR9201794.tmp.bedGraph
+
+## -----------------------------------------------------------------------------------------------------
+## STARsolo
+## -----------------------------------------------------------------------------------------------------
+quants/starsolo/Solo.out/Gene/Summary.csv: \
+$(datadir)/SRR9201794_S1_L001_R1_001.fastq.gz $(datadir)/SRR9201794_S1_L001_R2_001.fastq.gz \
+reference/cellranger2.2.0-737K-august-2016.txt
+	mkdir -p quants/starsolo
+	module load STAR/2.7.3a-foss-2019b && \
+	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/SRR9201794_S1_L001_R2_001.fastq.gz $(datadir)/SRR9201794_S1_L001_R1_001.fastq.gz \
+	--soloFeatures Gene GeneFull Velocyto --soloType CB_UMI_Simple --soloCBwhitelist reference/cellranger2.2.0-737K-august-2016.txt \
+	--soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 10 --soloStrand Forward \
+	--outFileNamePrefix quants/starsolo/ --runThreadN 48 --readFilesCommand zcat \
+	--outSAMtype BAM SortedByCoordinate --outSAMattributes NH HI CR UR CB UB GX GN
 
 
 ## -----------------------------------------------------------------------------------------------------
@@ -142,6 +174,27 @@ $(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R
 reference/gencode.vM21.spliced.unspliced.tx2gene.txt: \
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
 	touch $@
+
+## Get uniqueness for each (spliced and unspliced) gene
+define uniquenessrule
+reference/$(2)_iso$(1)_uniqueness.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/tr2g_modified.tsv \
+$(scriptdir)/frac_unique.py
+	module purge && module load Anaconda3/5.3.0 && \
+	source activate velocyto_0.17 && \
+	python $(scriptdir)/frac_unique.py <(zcat reference/$(2)_iso$(1)/cDNA_introns.fa.gz) reference/$(2)_iso$(1)/tr2g_modified.tsv $(flanklength) > $$@ && \
+	source deactivate && module purge
+endef
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessrule,$(v),$(m)))))
+
+define uniquenessruleoverall
+reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
+$(scriptdir)/frac_unique.py
+	module purge && module load Anaconda3/5.3.0 && \
+	source activate velocyto_0.17 && \
+	python $(scriptdir)/frac_unique.py <(zcat reference/$(2)_iso$(1)/cDNA_introns.fa.gz) reference/$(2)_iso$(1)/tr2g.tsv $(flanklength) > $$@ && \
+	source deactivate && module purge
+endef
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessruleoverall,$(v),$(m)))))
 
 ## -----------------------------------------------------------------------------------------------------
 ## Build indexes
@@ -346,7 +399,8 @@ $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdn
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
 quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
-quants/cellranger/SRR9201794/velocyto/SRR9201794.loom
+quants/cellranger/SRR9201794/velocyto/SRR9201794.loom \
+quants/starsolo/Solo.out/Gene/Summary.csv
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -358,13 +412,24 @@ output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
 endef
 $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 
-## Plot summaries of spliced/unspliced counts
-plots/misc/plot_spliced_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
-$(scriptdir)/plot_spliced_unspliced.R $(gtf)
+output/sce/retained_cell_barcodes.csv: output/sce/sces_spliced_unspliced.rds
+	touch $@
+
+plots/misc/plot_total_count.rds: outptu/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
+$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
+$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' gtf='$(gtf)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced.R Rout/plot_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir) plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
+
+plots/misc/plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
 
 plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence_pancreas.R

@@ -29,6 +29,8 @@ Type 'q()' to quit R.
 > 
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse"
+> print(dataset)
+[1] "Neuron"
 > print(helperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
 > print(tx2gene)
@@ -61,6 +63,64 @@ Type 'q()' to quit R.
 + )
 reading loom file via hdf5r...
 > 
+> ## STARsolo
+> sces$starsolo <- read_starsolo(
++   solodir = file.path(topdir, paste0("quants/starsolo/Solo.out/Velocyto/raw")),
++   sampleid = samplename
++ )
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double(),
+  X4 = col_double(),
+  X5 = col_double()
+)
+> 
+> sces$starsolo_subtr <- read_starsolo_subtract(
++   solodir = file.path(topdir, paste0("quants/starsolo/Solo.out")),
++   sampleid = samplename
++ )
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double()
+)
+Joining, by = c("X1", "X2")
 > 
 > ## cDNA/introns separately (with decoys)
 > for (m in c("prepref")) {
@@ -200,6 +260,8 @@ fetching genome info for GENCODE
 +   sces[[nm]] <- do_dimred(sces[[nm]])
 + }
 velocyto
+starsolo
+starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns
@@ -256,6 +318,7 @@ velocyto
 > ## Save
 > ## ========================================================================= ##
 > for (nm in names(sces)) {
++   metadata(sces[[nm]]) <- list(method = nm, dataset = dataset)
 +   saveRDS(sces[[nm]], file = file.path(dirname(outrds), paste0("sce_", nm, ".rds")))
 + }
 > write.table(paste0(shared_cells, "-1"), 
@@ -265,7 +328,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Wed Dec  4 13:24:19 2019"
+[1] "Fri Dec 13 23:39:55 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -288,16 +351,17 @@ attached base packages:
 
 other attached packages:
  [1] GenomicFeatures_1.38.0      AnnotationDbi_1.48.0       
- [3] scater_1.14.4               velocyto.R_0.6             
- [5] Matrix_1.2-17               SingleCellExperiment_1.8.0 
- [7] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
- [9] matrixStats_0.55.0          Biobase_2.46.0             
-[11] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
-[13] IRanges_2.20.1              S4Vectors_0.24.0           
-[15] BiocGenerics_0.32.0         BUSpaRse_1.0.0             
-[17] zeallot_0.1.0               ggplot2_3.2.1              
-[19] dplyr_0.8.3                 tximeta_1.4.2              
-[21] BiocSingular_1.2.0          BiocParallel_1.20.0        
+ [3] readr_1.3.1                 scater_1.14.4              
+ [5] velocyto.R_0.6              Matrix_1.2-17              
+ [7] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
+ [9] DelayedArray_0.12.0         matrixStats_0.55.0         
+[11] Biobase_2.46.0              GenomicRanges_1.38.0       
+[13] GenomeInfoDb_1.22.0         IRanges_2.20.1             
+[15] S4Vectors_0.24.0            BiocGenerics_0.32.0        
+[17] BUSpaRse_1.0.0              zeallot_0.1.0              
+[19] ggplot2_3.2.1               dplyr_0.8.3                
+[21] tximeta_1.4.2               BiocSingular_1.2.0         
+[23] BiocParallel_1.20.0        
 
 loaded via a namespace (and not attached):
  [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
@@ -308,7 +372,7 @@ loaded via a namespace (and not attached):
 [16] compiler_3.6.1           httr_1.4.1               dqrng_0.2.1             
 [19] backports_1.1.5          assertthat_0.2.1         lazyeval_0.2.2          
 [22] limma_3.42.0             prettyunits_1.0.2        tools_3.6.1             
-[25] rsvd_1.0.2               igraph_1.2.4.1           gtable_0.3.0            
+[25] igraph_1.2.4.1           rsvd_1.0.2               gtable_0.3.0            
 [28] glue_1.3.1               GenomeInfoDbData_1.2.2   rappdirs_0.3.1          
 [31] Rcpp_1.0.3               vctrs_0.2.0              Biostrings_2.54.0       
 [34] nlme_3.1-142             rtracklayer_1.46.0       DelayedMatrixStats_1.8.0
@@ -335,4 +399,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-2846.284  948.544 2926.674 
+4696.342  951.768 4821.871 

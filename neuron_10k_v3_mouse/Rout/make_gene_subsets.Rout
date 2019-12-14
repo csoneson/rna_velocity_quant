@@ -56,6 +56,10 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy" 
                        alevin_spliced_unspliced 
                      "alevin_spliced_unspliced" 
+                                       starsolo 
+                                     "starsolo" 
+                                 starsolo_subtr 
+                               "starsolo_subtr" 
 > print(outtxt)
 [1] "output/genesets/shared_genes.txt"
 > 
@@ -64,6 +68,20 @@ Type 'q()' to quit R.
 +                          "_gene_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -159,7 +177,7 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Wed Dec  4 15:57:30 2019"
+[1] "Sat Dec 14 20:12:08 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -210,4 +228,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  5.234   0.681   6.224 
+  6.706   0.968  10.934 

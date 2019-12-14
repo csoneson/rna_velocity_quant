@@ -29,6 +29,8 @@ Type 'q()' to quit R.
 > 
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(dataset)
+[1] "Pancreas"
 > print(helperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
 > print(tx2gene)
@@ -83,6 +85,42 @@ cols(
   X4 = col_double(),
   X5 = col_double()
 )
+> 
+> sces$starsolo_subtr <- read_starsolo_subtract(
++   solodir = file.path(topdir, paste0("quants/starsolo/Solo.out")),
++   sampleid = samplename
++ )
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character(),
+  X2 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_character()
+)
+Parsed with column specification:
+cols(
+  X1 = col_double(),
+  X2 = col_double(),
+  X3 = col_double()
+)
+Joining, by = c("X1", "X2")
 > 
 > ## cDNA/introns separately (with decoys)
 > for (m in c("prepref")) {
@@ -223,6 +261,7 @@ fetching genome info for GENCODE
 + }
 velocyto
 starsolo
+starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns
@@ -279,6 +318,7 @@ velocyto
 > ## Save
 > ## ========================================================================= ##
 > for (nm in names(sces)) {
++   metadata(sces[[nm]]) <- list(method = nm, dataset = dataset)
 +   saveRDS(sces[[nm]], file = file.path(dirname(outrds), paste0("sce_", nm, ".rds")))
 + }
 > write.table(paste0(shared_cells, "-1"), 
@@ -288,7 +328,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Dec  6 17:34:57 2019"
+[1] "Sat Dec 14 05:17:36 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -359,4 +399,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1183.871   59.814 1250.199 
+1517.900   79.884 1622.200 

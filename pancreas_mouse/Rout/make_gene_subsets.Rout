@@ -58,6 +58,8 @@ Type 'q()' to quit R.
                      "alevin_spliced_unspliced" 
                                        starsolo 
                                      "starsolo" 
+                                 starsolo_subtr 
+                               "starsolo_subtr" 
 > print(outtxt)
 [1] "output/genesets/shared_genes.txt"
 > 
@@ -66,6 +68,13 @@ Type 'q()' to quit R.
 +                          "_gene_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -168,7 +177,7 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Fri Dec  6 21:56:19 2019"
+[1] "Sat Dec 14 09:49:40 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -219,4 +228,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  5.870   0.753   6.799 
+  9.407   0.993  13.119 

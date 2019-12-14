@@ -42,6 +42,11 @@ sces$starsolo <- read_starsolo(
   sampleid = samplename
 )
 
+sces$starsolo_subtr <- read_starsolo_subtract(
+  solodir = file.path(topdir, paste0("quants/starsolo/Solo.out")),
+  sampleid = samplename
+)
+
 ## cDNA/introns separately (with decoys)
 for (m in c("prepref")) {
   for (v in c("separate", "collapse")) {

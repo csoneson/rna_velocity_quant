@@ -27,7 +27,7 @@ samples := p12 p35
 methods := $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced starsolo
+alevin_spliced_unspliced starsolo starsolo_subtr
 methodsc := $(subst $(space),$(comma),$(methods))
 
 all: ref quantific veloc plot
@@ -104,7 +104,7 @@ $(datadir)/$(1)/$(1)_S1_L001_R1_001.fastq.gz $(datadir)/$(1)/$(1)_S1_L001_R2_001
 reference/cellranger-2.0.0-737K-april-2014_rc.txt
 	mkdir -p quants/$(1)/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
-	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(1)/$(1)_S1_L001_R1_001.fastq.gz $(datadir)/$(1)/$(1)_S1_L001_R2_001.fastq.gz \
+	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(1)/$(1)_S1_L001_R2_001.fastq.gz $(datadir)/$(1)/$(1)_S1_L001_R1_001.fastq.gz \
 	--soloFeatures Gene GeneFull Velocyto --soloType CB_UMI_Simple --soloCBwhitelist reference/cellranger-2.0.0-737K-april-2014_rc.txt \
 	--soloCBstart 1 --soloCBlen 14 --soloUMIstart 15 --soloUMIlen 10 --soloStrand Forward \
 	--outFileNamePrefix quants/$(1)/starsolo/ --runThreadN 48 --readFilesCommand zcat \
@@ -410,7 +410,7 @@ $(foreach q,p12 p35,quants/$(q)/starsolo/Solo.out/Gene/Summary.csv)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='/work/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse/cells_kept_in_scvelo_exampledata.csv' samplenames='p12,p35' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced_dentategyrus.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Dentate_gyrus' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='/work/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse/cells_kept_in_scvelo_exampledata.csv' samplenames='p12,p35' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced_dentategyrus.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -418,14 +418,14 @@ output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
 endef
 $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 
-plots/misc/plot_total_count.rds: outptu/sce/sces_spliced_unspliced.rds \
+plots/misc/plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir) plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 ## Plot summaries of spliced/unspliced counts
 plots/misc/plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
@@ -434,6 +434,13 @@ $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
+
+plots/misc/plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence_dentategyrus.R

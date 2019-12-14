@@ -60,6 +60,8 @@ Type 'q()' to quit R.
                      "alevin_spliced_unspliced" 
                                        starsolo 
                                      "starsolo" 
+                                 starsolo_subtr 
+                               "starsolo_subtr" 
 > print(genetxt)
 [1] "output/genesets/shared_genes.txt"
 > print(outrds)
@@ -80,6 +82,24 @@ Type 'q()' to quit R.
 +   stopifnot(all(rownames(w) == genes))
 +   w
 + })
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -340,6 +360,7 @@ velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
 velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
 velocyto - alevin_spliced_unspliced
 velocyto - starsolo
+velocyto - starsolo_subtr
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -349,6 +370,7 @@ kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_exclude - starsolo
+kallisto_bustools_prepref_isocollapse_exclude - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
@@ -357,6 +379,7 @@ kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced
 kallisto_bustools_prepref_isoseparate_exclude - starsolo
+kallisto_bustools_prepref_isoseparate_exclude - starsolo_subtr
 kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
@@ -364,27 +387,35 @@ kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_include - starsolo
+kallisto_bustools_prepref_isocollapse_include - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced
 kallisto_bustools_prepref_isoseparate_include - starsolo
+kallisto_bustools_prepref_isoseparate_include - starsolo_subtr
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns - alevin_spliced_unspliced
 alevin_prepref_isocollapse_cdna_introns - starsolo
+alevin_prepref_isocollapse_cdna_introns - starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
 alevin_prepref_isoseparate_cdna_introns - starsolo
+alevin_prepref_isoseparate_cdna_introns - starsolo_subtr
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
 alevin_prepref_isocollapse_cdna_introns_decoy - starsolo
+alevin_prepref_isocollapse_cdna_introns_decoy - starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
 alevin_prepref_isoseparate_cdna_introns_decoy - starsolo
+alevin_prepref_isoseparate_cdna_introns_decoy - starsolo_subtr
 alevin_spliced_unspliced - starsolo
+alevin_spliced_unspliced - starsolo_subtr
+starsolo - starsolo_subtr
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods[methods %in% gene_corrs$method1])
@@ -460,6 +491,7 @@ velocyto - alevin_prepref_isocollapse_cdna_introns_decoy
 velocyto - alevin_prepref_isoseparate_cdna_introns_decoy
 velocyto - alevin_spliced_unspliced
 velocyto - starsolo
+velocyto - starsolo_subtr
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -469,6 +501,7 @@ kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_exclude - starsolo
+kallisto_bustools_prepref_isocollapse_exclude - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns
@@ -477,6 +510,7 @@ kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced
 kallisto_bustools_prepref_isoseparate_exclude - starsolo
+kallisto_bustools_prepref_isoseparate_exclude - starsolo_subtr
 kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns
@@ -484,27 +518,35 @@ kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced
 kallisto_bustools_prepref_isocollapse_include - starsolo
+kallisto_bustools_prepref_isocollapse_include - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy
 kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced
 kallisto_bustools_prepref_isoseparate_include - starsolo
+kallisto_bustools_prepref_isoseparate_include - starsolo_subtr
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns - alevin_spliced_unspliced
 alevin_prepref_isocollapse_cdna_introns - starsolo
+alevin_prepref_isocollapse_cdna_introns - starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isoseparate_cdna_introns - alevin_spliced_unspliced
 alevin_prepref_isoseparate_cdna_introns - starsolo
+alevin_prepref_isoseparate_cdna_introns - starsolo_subtr
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_prepref_isoseparate_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy - alevin_spliced_unspliced
 alevin_prepref_isocollapse_cdna_introns_decoy - starsolo
+alevin_prepref_isocollapse_cdna_introns_decoy - starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns_decoy - alevin_spliced_unspliced
 alevin_prepref_isoseparate_cdna_introns_decoy - starsolo
+alevin_prepref_isoseparate_cdna_introns_decoy - starsolo_subtr
 alevin_spliced_unspliced - starsolo
+alevin_spliced_unspliced - starsolo_subtr
+starsolo - starsolo_subtr
 There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods[methods %in% cell_corrs$method1])
@@ -523,7 +565,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   labs(title = "Correlation, counts and velocities, by gene",
 +        subtitle = "For genes selected by all methods")
 Warning message:
-Removed 7380 rows containing non-finite values (stat_boxplot). 
+Removed 8724 rows containing non-finite values (stat_boxplot). 
 > 
 > ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
 +   geom_boxplot() + 
@@ -555,7 +597,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Dec 13 11:43:36 2019"
+[1] "Sat Dec 14 13:15:59 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -634,4 +676,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-302.963  21.248 325.225 
+398.652  20.756 434.373 

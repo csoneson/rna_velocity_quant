@@ -133,7 +133,7 @@ dev.off()
 ## ------------------------------------------------------------------------- ##
 ## Plot counts
 ## ------------------------------------------------------------------------- ##
-pdf(gsub("\\.rds$", "_total_count.pdf", outrds), width = 7, height = 10)
+pdf(gsub("\\.rds$", "_total_count.pdf", outrds), width = 7, height = 12)
 for (ct in c("exonic", "intronic", "overall")) {
   for (at in c("collapse", "separate")) {
     print(ggplot(dplyr::bind_rows(

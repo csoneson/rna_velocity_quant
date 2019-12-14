@@ -22,10 +22,12 @@ scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scrip
 
 flanklength := 150
 
+genestoplot := Rrm2b
+
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced starsolo
+alevin_spliced_unspliced starsolo starsolo_subtr
 methodsc := $(subst $(space),$(comma),$(methods))
 
 all: ref quantific veloc plot
@@ -70,7 +72,9 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_wi
 plot: plots/misc/plot_velocity_confidence.rds \
 plots/misc/plot_count_correlation.rds \
 plots/misc/plot_total_count.rds \
-plots/misc/plot_spliced_unspliced_mds.rds
+plots/misc/plot_spliced_unspliced_mds.rds \
+plots/misc/plot_frac_unspliced.rds \
+$(foreach g,$(genestoplot),plots/genes/$(g)_pancreas.pdf)
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -404,7 +408,7 @@ quants/starsolo/Solo.out/Gene/Summary.csv
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='/work/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/cells_kept_in_scvelo_exampledata.csv' samplename='SRR9201794' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Pancreas' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='/work/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/cells_kept_in_scvelo_exampledata.csv' samplename='SRR9201794' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -415,14 +419,14 @@ $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 output/sce/retained_cell_barcodes.csv: output/sce/sces_spliced_unspliced.rds
 	touch $@
 
-plots/misc/plot_total_count.rds: outptu/sce/sces_spliced_unspliced.rds \
+plots/misc/plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir) plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 plots/misc/plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
@@ -430,6 +434,13 @@ $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
+
+plots/misc/plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence_pancreas.R
@@ -444,6 +455,17 @@ $(scriptdir)/plot_count_correlation_pancreas.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation_pancreas.R Rout/plot_count_correlation.Rout
+
+define plotgenerule
+plots/genes/$(1)_pancreas.pdf: quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw \
+$(gtf) $(scriptdir)/plot_helpers.R $(scriptdir)/plot_gene_model.R
+	mkdir -p $$(@D)
+	mkdir -p Rout
+	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' gtf='$(gtf)' bigwigfile='$$<' samplename='Pancreas' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
+endef
+$(foreach g,$(genestoplot),$(eval $(call plotgenerule,$(g))))
 
 ## Convert SCE to anndata
 define anndatarule

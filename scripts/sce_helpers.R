@@ -50,6 +50,71 @@ read_starsolo <- function(solodir, sampleid) {
   )
 }
 
+read_starsolo_subtract <- function(solodir, sampleid) {
+  ## Read gene body and exon counts, infer intronic counts as the difference
+  ## Gene body
+  fgenes <- readr::read_delim(file.path(solodir, "GeneFull/raw/features.tsv"), col_names = FALSE, delim = "\t")
+  fcells <- readr::read_delim(file.path(solodir, "GeneFull/raw/barcodes.tsv"), col_names = FALSE, delim = "\t")
+  fn_genes <- nrow(fgenes)
+  fn_cells <- nrow(fcells)
+  ## Read matrix. col 1 = gene, col 2 = cell, col 3 = spliced, col 4 = unspliced, col 5 = ambiguous
+  fmatr <- readr::read_delim(file.path(solodir, "GeneFull/raw/matrix.mtx"), skip = 3, delim = " ", col_names = FALSE)
+  fcounts <- Matrix::sparseMatrix(
+    i = fmatr$X1,
+    j = fmatr$X2,
+    x = fmatr$X3,
+    dims = c(fn_genes, fn_cells)
+  )
+  rownames(fcounts) <- fgenes$X2
+  colnames(fcounts) <- fcells$X1
+  
+  ## Exons
+  sgenes <- readr::read_delim(file.path(solodir, "Gene/raw/features.tsv"), col_names = FALSE, delim = "\t")
+  scells <- readr::read_delim(file.path(solodir, "Gene/raw/barcodes.tsv"), col_names = FALSE, delim = "\t")
+  sn_genes <- nrow(sgenes)
+  sn_cells <- nrow(scells)
+  ## Read matrix. col 1 = gene, col 2 = cell, col 3 = spliced, col 4 = unspliced, col 5 = ambiguous
+  smatr <- readr::read_delim(file.path(solodir, "Gene/raw/matrix.mtx"), skip = 3, delim = " ", col_names = FALSE)
+  scounts <- Matrix::sparseMatrix(
+    i = smatr$X1,
+    j = smatr$X2,
+    x = smatr$X3,
+    dims = c(sn_genes, sn_cells)
+  )
+  rownames(scounts) <- sgenes$X2
+  colnames(scounts) <- scells$X1
+  
+  stopifnot(all(fgenes$X1 == sgenes$X1))
+  stopifnot(all(fgenes$X2 == sgenes$X2))
+  stopifnot(all(fcells$X1 == scells$X1))
+  
+  umatr <- fmatr %>% dplyr::rename(f = X3) %>%
+    dplyr::full_join(smatr %>% dplyr::rename(s = X3)) %>%
+    dplyr::mutate(f = replace(f, is.na(f), 0),
+                  s = replace(s, is.na(s), 0)) %>%
+    dplyr::mutate(u = f - s) %>%
+    dplyr::mutate(u = replace(u, u < 0, 0))
+  ucounts <- Matrix::sparseMatrix(
+    i = umatr$X1,
+    j = umatr$X2,
+    x = umatr$u,
+    dims = c(sn_genes, sn_cells)
+  )
+  rownames(ucounts) <- sgenes$X2
+  colnames(ucounts) <- scells$X1
+  
+  stopifnot(all(rownames(scounts) == rownames(fcounts)))
+  stopifnot(all(rownames(scounts) == rownames(ucounts)))
+  stopifnot(all(colnames(scounts) == colnames(fcounts)))
+  stopifnot(all(colnames(scounts) == colnames(ucounts)))
+  
+  SingleCellExperiment(
+    assays = list(counts = scounts,
+                  spliced = scounts,
+                  unspliced = ucounts)
+  )
+}
+
 sce_from_scounts_ucounts <- function(scounts, ucounts) {
   ucounts <- ucounts[rownames(ucounts) %in% rownames(scounts), colnames(ucounts) %in% colnames(scounts)]
   ucounts2 <- scounts

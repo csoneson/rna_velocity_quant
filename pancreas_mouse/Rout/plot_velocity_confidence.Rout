@@ -61,6 +61,8 @@ Type 'q()' to quit R.
                      "alevin_spliced_unspliced" 
                                        starsolo 
                                      "starsolo" 
+                                 starsolo_subtr 
+                               "starsolo_subtr" 
 > print(outrds)
 [1] "plots/misc/plot_velocity_confidence.rds"
 > 
@@ -69,6 +71,15 @@ Type 'q()' to quit R.
 +                          "_cell_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  cell_index = col_character(),
+  clusters_coarse = col_character(),
+  clusters = col_character()
+)
+See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -250,6 +261,13 @@ cols(
   velocity_genes = col_logical()
 )
 See spec(...) for full column specifications.
+Parsed with column specification:
+cols(
+  .default = col_double(),
+  index = col_character(),
+  velocity_genes = col_logical()
+)
+See spec(...) for full column specifications.
 > 
 > velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
 +   w %>% dplyr::select(index, method, clusters, velocity_confidence, 
@@ -348,7 +366,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Dec  8 14:09:06 2019"
+[1] "Sat Dec 14 13:09:02 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -400,4 +418,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 12.145   1.174  15.584 
+ 15.230   0.890  17.036 

@@ -25,13 +25,13 @@ flanklength := 90
 methodsall := velocyto $(foreach k,exclude include,$(foreach m,busparse prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,busparse prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,busparse prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced starsolo
+alevin_spliced_unspliced starsolo starsolo_subtr
 methodsallc := $(subst $(space),$(comma),$(methodsall))
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced starsolo
+alevin_spliced_unspliced starsolo starsolo_subtr
 methodsc := $(subst $(space),$(comma),$(methods))
 
 all: ref quantific veloc plot
@@ -75,7 +75,8 @@ plot: plots/misc/plot_velocity_confidence.rds \
 plots/misc/plot_count_correlation.rds \
 plots/misc/plot_busparse_prepref.rds \
 plots/misc/plot_total_count.rds \
-plots/misc/plot_spliced_unspliced_mds.rds
+plots/misc/plot_spliced_unspliced_mds.rds \
+plots/misc/plot_frac_unspliced.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -125,8 +126,8 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 reference/cellranger3.1.0-3M-february-2018.txt
 	mkdir -p quants/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
-	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz \
-	$(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
+	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
+	$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz \
 	--soloFeatures Gene GeneFull Velocyto --soloType CB_UMI_Simple --soloCBwhitelist reference/cellranger3.1.0-3M-february-2018.txt \
 	--soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 12 --soloStrand Forward \
 	--outFileNamePrefix quants/starsolo/ --runThreadN 48 --readFilesCommand zcat \
@@ -426,7 +427,7 @@ quants/starsolo/Solo.out/Gene/Summary.csv
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -437,14 +438,14 @@ $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 output/sce/retained_cell_barcodes.csv: output/sce/sces_spliced_unspliced.rds
 	touch $@
 
-plots/misc/plot_total_count.rds: outptu/sce/sces_spliced_unspliced.rds \
+plots/misc/plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir) plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 ## Plot summaries of spliced/unspliced counts
 plots/misc/plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
@@ -452,7 +453,14 @@ $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
+
+plots/misc/plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence_neuron.R

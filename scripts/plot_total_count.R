@@ -48,52 +48,7 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
 }))
 
 ## Add info about uniqueness
-uniq <- dplyr::bind_rows(
-  read.delim(
-    file.path(topdir, "reference/prepref_isoseparate_uniqueness.txt"),
-    header = TRUE, as.is = TRUE
-  ) %>% 
-    dplyr::mutate(ctype = c("exonic", "intronic")[grepl("I\\.", gene) + 1]) %>%
-    dplyr::mutate(gene = gsub("I\\.", "", gene)) %>%
-    dplyr::mutate(frac_unique = unique/total) %>%
-    dplyr::select(gene, ctype, frac_unique) %>%
-    dplyr::mutate(atype = "separate"),
-  read.delim(
-    file.path(topdir, "reference/prepref_isocollapse_uniqueness.txt"),
-    header = TRUE, as.is = TRUE
-  ) %>% 
-    dplyr::mutate(ctype = c("exonic", "intronic")[grepl("I\\.", gene) + 1]) %>%
-    dplyr::mutate(gene = gsub("I\\.", "", gene)) %>%
-    dplyr::mutate(frac_unique = unique/total) %>%
-    dplyr::select(gene, ctype, frac_unique) %>%
-    dplyr::mutate(atype = "collapse"),
-  read.delim(
-    file.path(topdir, "reference/prepref_isoseparate_uniqueness_overall.txt"),
-    header = TRUE, as.is = TRUE
-  ) %>% 
-    dplyr::mutate(ctype = "overall") %>%
-    dplyr::mutate(gene = gsub("I\\.", "", gene)) %>%
-    dplyr::mutate(frac_unique = unique/total) %>%
-    dplyr::select(gene, ctype, frac_unique) %>%
-    dplyr::mutate(atype = "separate"),
-  read.delim(
-    file.path(topdir, "reference/prepref_isocollapse_uniqueness_overall.txt"),
-    header = TRUE, as.is = TRUE
-  ) %>% 
-    dplyr::mutate(ctype = "overall") %>%
-    dplyr::mutate(gene = gsub("I\\.", "", gene)) %>%
-    dplyr::mutate(frac_unique = unique/total) %>%
-    dplyr::select(gene, ctype, frac_unique) %>%
-    dplyr::mutate(atype = "collapse")
-) %>%
-  dplyr::mutate(frac_unique_bin = Hmisc::cut2(frac_unique, 
-                                              cuts = c(0, 0.001, 0.5, 0.999, 1))) %>% 
-  dplyr::mutate(gene = tx2gene$gene_name[match(gene, tx2gene$gene_id)]) %>%
-  dplyr::filter(gene %in% sumdf_bygene$gene) %>%
-  dplyr::group_by(ctype, atype, frac_unique_bin) %>%
-  dplyr::mutate(nbr_genes = length(gene)) %>% 
-  dplyr::ungroup() %>%
-  tidyr::unite("frac_unique_bin", frac_unique_bin, nbr_genes, sep = ", n = ")
+uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
 
 ## ------------------------------------------------------------------------- ##
 ## Plot uniqueness

@@ -19,6 +19,7 @@ names(methods) <- methods
 print(topdir)
 print(plothelperscript)
 print(gtf)
+print(tx2gene)
 print(methods)
 print(bigwigfile)
 print(samplename)
@@ -30,6 +31,7 @@ source(plothelperscript)
 gr <- prepareGTF(gtf)
 bwf <- bigwigfile
 names(bwf) <- samplename
+tx2gene <- readRDS(tx2gene)
 
 sces <- lapply(methods, function(nm) {
   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
@@ -46,9 +48,11 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
   )
 }))
 
+uniq <- merge_uniq(topdir, tx2gene)
+
 methods_short <- shorten_methods(methods)
 
-plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf) {
+plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
   
   rn <- round(1e7 * runif(1))
   tmpdir <- tempdir()
@@ -63,26 +67,41 @@ plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf) {
                  tidyr::gather(key = "ctype", value = "count", spliced, unspliced) %>%
                  dplyr::left_join(methods_short, by = "method"),
                aes(x = method_short, y = count, fill = mtype)) + 
-    geom_bar(stat = "identity") + facet_wrap(~ ctype, ncol = 1) + 
+    geom_bar(stat = "identity") + facet_wrap(~ ctype, nrow = 1) + 
     theme_bw() + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
           legend.position = "none") + 
     scale_fill_manual(values = base_method_colors) + 
-    labs(x = "", title = "Total UMI count", y = "")
+    labs(x = "", title = "Total UMI count", y = "") + 
+    scale_y_continuous(expand = c(0, 0, 0.05, 0)) + 
+    coord_flip()
+  
+  p3 <- ggplot(uniq %>% dplyr::filter(gene == showgene) %>%
+                 tidyr::unite(col = "categ", ctype, atype, sep = "."),
+               aes(x = categ, y = frac_unique)) + 
+    geom_bar(stat = "identity") + 
+    theme_bw() + 
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+          legend.position = "none") + 
+    labs(x = "", title = "Uniqueness", y = "") + 
+    scale_y_continuous(limits = c(0, 1), expand = c(0, 0, 0.05, 0)) + 
+    coord_flip()
   
   plt <- cowplot::plot_grid(
     cowplot::ggdraw() +
       cowplot::draw_image(paste0(tmpdir, "/gviz", rn, ".png")),
-    p2,
-    nrow = 1, rel_widths = c(1, 0.3), labels = ""
+    cowplot::plot_grid(p2, p3, nrow = 1, rel_widths = c(1, 0.5),
+                       align = "h", axis = "b"),
+    ncol = 1, rel_heights = c(1, 0.7), labels = ""
   )
   unlink(paste0(tmpdir, "/gviz", rn, ".png"))
   plt
 }
 
-pdf(outpdf, width = 10, height = 4.5)
+pdf(outpdf, width = 8, height = 6)
 print(plot_gene_model(gr = gr, bwf = bwf, showgene = showgene,
-                      sumdfg = sumdf_bygene, methodsdf = methods_short))
+                      sumdfg = sumdf_bygene, methodsdf = methods_short,
+                      uniq = uniq))
 dev.off()
 
 date()

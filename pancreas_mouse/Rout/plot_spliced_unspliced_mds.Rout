@@ -65,7 +65,7 @@ Type 'q()' to quit R.
                                  starsolo_subtr 
                                "starsolo_subtr" 
 > print(outrds)
-[1] "plots/misc/plot_spliced_unspliced_mds.rds"
+[1] "plots/spliced_unspliced_mds/pancreas_plot_spliced_unspliced_mds.rds"
 > 
 > sces <- lapply(methods, function(nm) {
 +   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
@@ -136,7 +136,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sat Dec 14 13:17:04 2019"
+[1] "Sun Dec 15 17:01:49 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -184,4 +184,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-398.986  90.840 499.133 
+353.614  81.407 437.372 

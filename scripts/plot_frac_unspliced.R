@@ -17,6 +17,7 @@ names(methods) <- methods
 
 print(plothelperscript)
 print(topdir)
+print(tx2gene)
 print(methods)
 print(outrds)
 
@@ -36,6 +37,9 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
              stringsAsFactors = FALSE
   )
 }))
+
+tx2gene <- readRDS(tx2gene)
+uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
 
 ## ------------------------------------------------------------------------- ##
 ## Velocity
@@ -59,7 +63,8 @@ sumdf_bygene_acrossmethods <- sumdf_bygene %>%
   dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced))
 
 ## Plot ----
-sumdf_bygene_acrossmethods_scvelosel <- sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
+sumdf_bygene_acrossmethods_scvelosel <- 
+  sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
 qtl <- quantile(sumdf_bygene_acrossmethods_scvelosel$sd_frac_unspliced, 0.9, na.rm = TRUE)
 ggplot(sumdf_bygene_acrossmethods_scvelosel, 
        aes(x = sd_frac_unspliced)) + 
@@ -115,6 +120,25 @@ for (i in unique(clusters)) {
   }
 }
 
+## Uniqueness for each cluster
+uniqsub <- uniq %>% 
+  dplyr::left_join(
+    as.data.frame(clusters) %>% tibble::rownames_to_column("gene")
+  ) %>%
+  dplyr::filter(!is.na(clusters)) %>%
+  tidyr::unite(col = "actype", ctype, atype, sep = ".") %>%
+  dplyr::mutate(clusters = factor(clusters, levels = sort(unique(as.numeric(clusters)))))
+  
+pdf(gsub("\\.rds$", "_uniqueness_by_cluster.pdf", outrds), width = 7, height = 5)
+ggplot(uniqsub, aes(x = clusters, 
+                    y = frac_unique, 
+                    fill = clusters)) + 
+  geom_boxplot(alpha = 0.5) + 
+  facet_wrap(~ actype) + 
+  theme_bw() + 
+  labs(x = "Cluster", y = "Uniqueness") + 
+  theme(legend.position = "none")
+dev.off()
 
 saveRDS(NULL, file = outrds)
 

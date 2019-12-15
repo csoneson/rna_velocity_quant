@@ -38,6 +38,8 @@ Type 'q()' to quit R.
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse"
+> print(tx2gene)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(methods)
                                        velocyto 
                                      "velocyto" 
@@ -64,7 +66,7 @@ Type 'q()' to quit R.
                                  starsolo_subtr 
                                "starsolo_subtr" 
 > print(outrds)
-[1] "plots/misc/plot_frac_unspliced.rds"
+[1] "plots/frac_unspliced/neuron_plot_frac_unspliced.rds"
 > 
 > sces <- lapply(methods, function(nm) {
 +   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
@@ -82,6 +84,12 @@ Type 'q()' to quit R.
 +              stringsAsFactors = FALSE
 +   )
 + }))
+> 
+> tx2gene <- readRDS(tx2gene)
+> uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
+Warning messages:
+1: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
+2: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > ## ------------------------------------------------------------------------- ##
 > ## Velocity
@@ -189,7 +197,8 @@ See spec(...) for full column specifications.
 +   dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced))
 > 
 > ## Plot ----
-> sumdf_bygene_acrossmethods_scvelosel <- sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
+> sumdf_bygene_acrossmethods_scvelosel <- 
++   sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
 > qtl <- quantile(sumdf_bygene_acrossmethods_scvelosel$sd_frac_unspliced, 0.9, na.rm = TRUE)
 > ggplot(sumdf_bygene_acrossmethods_scvelosel, 
 +        aes(x = sd_frac_unspliced)) + 
@@ -251,11 +260,33 @@ pdf
 +   }
 + }
 > 
+> ## Uniqueness for each cluster
+> uniqsub <- uniq %>% 
++   dplyr::left_join(
++     as.data.frame(clusters) %>% tibble::rownames_to_column("gene")
++   ) %>%
++   dplyr::filter(!is.na(clusters)) %>%
++   tidyr::unite(col = "actype", ctype, atype, sep = ".") %>%
++   dplyr::mutate(clusters = factor(clusters, levels = sort(unique(as.numeric(clusters)))))
+Joining, by = "gene"
+>   
+> pdf(gsub("\\.rds$", "_uniqueness_by_cluster.pdf", outrds), width = 7, height = 5)
+> ggplot(uniqsub, aes(x = clusters, 
++                     y = frac_unique, 
++                     fill = clusters)) + 
++   geom_boxplot(alpha = 0.5) + 
++   facet_wrap(~ actype) + 
++   theme_bw() + 
++   labs(x = "Cluster", y = "Uniqueness") + 
++   theme(legend.position = "none")
+> dev.off()
+pdf 
+  3 
 > 
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sat Dec 14 22:08:42 2019"
+[1] "Sun Dec 15 17:36:13 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -286,21 +317,28 @@ other attached packages:
 [13] ggplot2_3.2.1               dplyr_0.8.3                
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3             RColorBrewer_1.1-2     pillar_1.4.2          
- [4] compiler_3.6.1         XVector_0.26.0         tools_3.6.1           
- [7] bitops_1.0-6           zlibbioc_1.32.0        zeallot_0.1.0         
-[10] lifecycle_0.1.0        tibble_2.1.3           gtable_0.3.0          
-[13] lattice_0.20-38        pkgconfig_2.0.3        rlang_0.4.2           
-[16] Matrix_1.2-17          GenomeInfoDbData_1.2.2 stringr_1.4.0         
-[19] withr_2.1.2            vctrs_0.2.0            hms_0.5.2             
-[22] grid_3.6.1             tidyselect_0.2.5       glue_1.3.1            
-[25] R6_2.4.1               pheatmap_1.0.12        tidyr_1.0.0           
-[28] farver_2.0.1           readr_1.3.1            purrr_0.3.3           
-[31] magrittr_1.5           backports_1.1.5        scales_1.1.0          
-[34] assertthat_0.2.1       colorspace_1.4-1       labeling_0.3          
-[37] stringi_1.4.3          RCurl_1.95-4.12        lazyeval_0.2.2        
-[40] munsell_0.5.0          crayon_1.3.4          
+ [1] Rcpp_1.0.3             lattice_0.20-38        tidyr_1.0.0           
+ [4] zeallot_0.1.0          assertthat_0.2.1       digest_0.6.23         
+ [7] R6_2.4.1               backports_1.1.5        acepack_1.4.1         
+[10] pillar_1.4.2           zlibbioc_1.32.0        rlang_0.4.2           
+[13] lazyeval_0.2.2         data.table_1.12.6      rstudioapi_0.10       
+[16] rpart_4.1-15           Matrix_1.2-17          checkmate_1.9.4       
+[19] labeling_0.3           splines_3.6.1          readr_1.3.1           
+[22] stringr_1.4.0          foreign_0.8-72         htmlwidgets_1.5.1     
+[25] pheatmap_1.0.12        RCurl_1.95-4.12        munsell_0.5.0         
+[28] compiler_3.6.1         xfun_0.11              pkgconfig_2.0.3       
+[31] base64enc_0.1-3        htmltools_0.4.0        nnet_7.3-12           
+[34] tidyselect_0.2.5       tibble_2.1.3           gridExtra_2.3         
+[37] htmlTable_1.13.2       GenomeInfoDbData_1.2.2 Hmisc_4.3-0           
+[40] crayon_1.3.4           withr_2.1.2            bitops_1.0-6          
+[43] grid_3.6.1             gtable_0.3.0           lifecycle_0.1.0       
+[46] magrittr_1.5           scales_1.1.0           stringi_1.4.3         
+[49] farver_2.0.1           XVector_0.26.0         latticeExtra_0.6-28   
+[52] ellipsis_0.3.0         vctrs_0.2.0            Formula_1.2-3         
+[55] RColorBrewer_1.1-2     tools_3.6.1            glue_1.3.1            
+[58] purrr_0.3.3            hms_0.5.2              survival_3.1-7        
+[61] colorspace_1.4-1       cluster_2.1.0          knitr_1.26            
 > 
 > proc.time()
    user  system elapsed 
-212.951  12.369 227.044 
+205.065  13.838 219.491 

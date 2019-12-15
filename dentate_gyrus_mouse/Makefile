@@ -64,10 +64,11 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h
 output/genesets/shared_genes.txt \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
 
-plot: plots/misc/plot_velocity_confidence.rds \
-plots/misc/plot_count_correlation.rds \
-plots/misc/plot_total_count.rds \
-plots/misc/plot_spliced_unspliced_mds.rds
+plot: plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds \
+plots/count_correlation/dentate_gyrus_plot_count_correlation.rds \
+plots/total_count/dentate_gyrus_plot_total_count.rds \
+plots/spliced_unspliced_mds/dentate_gyrus_plot_spliced_unspliced_mds.rds \
+plots/merge_umaps/dentate_gyrus_plot_merge_umaps.pdf
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -418,7 +419,7 @@ output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
 endef
 $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 
-plots/misc/plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
+plots/total_count/dentate_gyrus_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
@@ -428,33 +429,41 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 ## Plot summaries of spliced/unspliced counts
-plots/misc/plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
+plots/spliced_unspliced_mds/dentate_gyrus_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
 
-plots/misc/plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+plots/frac_unspliced/dentate_gyrus_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/misc/plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence_dentategyrus.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_dentategyrus.R Rout/plot_velocity_confidence.Rout
 
-plots/misc/plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+plots/count_correlation/dentate_gyrus_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_count_correlation_dentategyrus.R 
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation_dentategyrus.R Rout/plot_count_correlation.Rout
+
+plots/merge_umaps/dentate_gyrus_plot_merge_umaps.pdf: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_merge_umaps.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outpdf='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 ## Convert SCE to anndata
 define anndatarule

@@ -40,7 +40,7 @@ Type 'q()' to quit R.
 > print(flanklength)
 [1] 90
 > print(outrds)
-[1] "plots/misc/plot_busparse_prepref.rds"
+[1] "plots/busparse_prepref/neuron_plot_busparse_prepref.rds"
 > 
 > ## ----------------------------------------------------------------------------
 > ## Read reference files
@@ -302,14 +302,14 @@ null device
 > saveRDS(list(dftx = dftx, dfintr = dfintr), file = outrds)
 > 
 > date()
-[1] "Fri Nov 29 12:00:33 2019"
+[1] "Sun Dec 15 17:21:46 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: CentOS Linux 7 (Core)
 
 Matrix products: default
-BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakexp-r0.3.7.so
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
 
 locale:
  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -366,4 +366,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1118.319  304.621 1426.411 
+ 977.879  294.017 1275.623 

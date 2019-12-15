@@ -73,9 +73,9 @@ Type 'q()' to quit R.
 > print(samplename)
 [1] "Pancreas"
 > print(showgene)
-[1] "Rrm2b"
+[1] "Traf5"
 > print(outpdf)
-[1] "plots/genes/pancreas_Rrm2b.pdf"
+[1] "plots/genes/pancreas_Traf5.pdf"
 > 
 > source(plothelperscript)
 > 
@@ -228,4 +228,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-131.342   6.581 138.278 
+131.431   6.566 138.365 

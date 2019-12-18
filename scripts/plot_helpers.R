@@ -74,3 +74,13 @@ merge_uniq <- function(topdir, tx2gene) {
   
   uniq
 }
+
+cluster_levels <- list(
+  Dentate_gyrus = c("nIPC", "Neuroblast", "Mossy", "Cck-Tox", 
+                    "Granule immature", "Granule mature", "Microglia", 
+                    "Endothelial", "Radial Glia-like", "Astrocytes",
+                    "OPC", "OL", "GABA", "Cajal Retzius"),
+  Pancreas = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
+               "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"),
+  Neuron = NULL
+)

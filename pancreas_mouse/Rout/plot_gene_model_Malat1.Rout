@@ -68,8 +68,10 @@ Type 'q()' to quit R.
                                      "starsolo" 
                                  starsolo_subtr 
                                "starsolo_subtr" 
-> print(bigwigfile)
-[1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw"
+> print(bigwigfileplus)
+[1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw"
+> print(bigwigfileminus)
+[1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_minusstrand.bw"
 > print(samplename)
 [1] "Pancreas"
 > print(showgene)
@@ -80,8 +82,10 @@ Type 'q()' to quit R.
 > source(plothelperscript)
 > 
 > gr <- prepareGTF(gtf)
-> bwf <- bigwigfile
-> names(bwf) <- samplename
+> bwf <- c(bigwigfileplus, bigwigfileminus)
+> names(bwf) <- c("pos", "neg")
+> bwc <- c("pos", "neg")
+> names(bwc) <- c("pos", "neg")
 > tx2gene <- readRDS(tx2gene)
 > 
 > sces <- lapply(methods, function(nm) {
@@ -113,7 +117,11 @@ Warning messages:
 +   grDevices::png(paste0(tmpdir, "/gviz", rn, ".png"), width = 10.5,
 +                  height = 5.25, unit = "in", res = 400)
 +   swissknife::plotGeneRegion(granges = gr, bigwigFiles = bwf, 
-+                              showgene = showgene, geneTrackTitle = showgene)
++                              bigwigCond = bwc, 
++                              showgene = showgene, geneTrackTitle = showgene,
++                              colorByStrand = TRUE, 
++                              condColors = c(pos = "blue", neg = "red"),
++                              scaleDataTracks = TRUE)
 +   grDevices::dev.off()
 +   
 +   p2 <- ggplot(sumdfg %>% dplyr::filter(gene == showgene) %>%
@@ -161,7 +169,7 @@ null device
           1 
 > 
 > date()
-[1] "Sun Dec 15 16:56:49 2019"
+[1] "Wed Dec 18 13:58:54 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -187,45 +195,45 @@ other attached packages:
  [3] DelayedArray_0.12.0         BiocParallel_1.20.0        
  [5] matrixStats_0.55.0          Biobase_2.46.0             
  [7] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
- [9] IRanges_2.20.1              S4Vectors_0.24.0           
+ [9] IRanges_2.20.1              S4Vectors_0.24.1           
 [11] BiocGenerics_0.32.0         magick_2.2                 
 [13] dplyr_0.8.3                 cowplot_1.0.0              
-[15] ggplot2_3.2.1               swissknife_0.13            
+[15] ggplot2_3.2.1               swissknife_0.15            
 
 loaded via a namespace (and not attached):
  [1] ProtGenerics_1.18.0      bitops_1.0-6             bit64_0.9-7             
  [4] RColorBrewer_1.1-2       progress_1.2.2           httr_1.4.1              
  [7] tools_3.6.1              backports_1.1.5          R6_2.4.1                
 [10] KernSmooth_2.23-16       rpart_4.1-15             Hmisc_4.3-0             
-[13] DBI_1.0.0                lazyeval_0.2.2           Gviz_1.30.0             
+[13] DBI_1.1.0                lazyeval_0.2.2           Gviz_1.30.0             
 [16] colorspace_1.4-1         nnet_7.3-12              withr_2.1.2             
 [19] tidyselect_0.2.5         gridExtra_2.3            prettyunits_1.0.2       
-[22] bit_1.1-14               curl_4.2                 compiler_3.6.1          
-[25] htmlTable_1.13.2         labeling_0.3             rtracklayer_1.46.0      
+[22] bit_1.1-14               curl_4.3                 compiler_3.6.1          
+[25] htmlTable_1.13.3         labeling_0.3             rtracklayer_1.46.0      
 [28] scales_1.1.0             checkmate_1.9.4          askpass_1.1             
 [31] rappdirs_0.3.1           stringr_1.4.0            digest_0.6.23           
 [34] Rsamtools_2.2.1          foreign_0.8-72           XVector_0.26.0          
 [37] base64enc_0.1-3          dichromat_2.0-0          pkgconfig_2.0.3         
 [40] htmltools_0.4.0          ensembldb_2.10.2         BSgenome_1.54.0         
 [43] dbplyr_1.4.2             htmlwidgets_1.5.1        rlang_0.4.2             
-[46] rstudioapi_0.10          RSQLite_2.1.2            farver_2.0.1            
+[46] rstudioapi_0.10          RSQLite_2.1.4            farver_2.0.1            
 [49] acepack_1.4.1            VariantAnnotation_1.32.0 RCurl_1.95-4.12         
 [52] magrittr_1.5             GenomeInfoDbData_1.2.2   Formula_1.2-3           
-[55] Matrix_1.2-17            Rcpp_1.0.3               munsell_0.5.0           
+[55] Matrix_1.2-18            Rcpp_1.0.3               munsell_0.5.0           
 [58] lifecycle_0.1.0          stringi_1.4.3            zlibbioc_1.32.0         
 [61] BiocFileCache_1.10.2     grid_3.6.1               blob_1.2.0              
 [64] crayon_1.3.4             lattice_0.20-38          Biostrings_2.54.0       
 [67] splines_3.6.1            GenomicFeatures_1.38.0   hms_0.5.2               
 [70] zeallot_0.1.0            knitr_1.26               pillar_1.4.2            
 [73] biomaRt_2.42.0           XML_3.98-1.20            glue_1.3.1              
-[76] biovizBase_1.34.0        latticeExtra_0.6-28      data.table_1.12.6       
+[76] biovizBase_1.34.1        latticeExtra_0.6-28      data.table_1.12.8       
 [79] png_0.1-7                vctrs_0.2.0              tidyr_1.0.0             
 [82] gtable_0.3.0             openssl_1.4.1            purrr_0.3.3             
 [85] assertthat_0.2.1         xfun_0.11                AnnotationFilter_1.10.0 
-[88] survival_3.1-7           tibble_2.1.3             GenomicAlignments_1.22.1
+[88] survival_3.1-8           tibble_2.1.3             GenomicAlignments_1.22.1
 [91] AnnotationDbi_1.48.0     memoise_1.1.0            cluster_2.1.0           
 [94] ellipsis_0.3.0          
 > 
 > proc.time()
    user  system elapsed 
-130.658   6.214 137.236 
+139.416   7.648 147.966 

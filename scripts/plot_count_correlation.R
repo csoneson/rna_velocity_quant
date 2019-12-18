@@ -124,24 +124,36 @@ cell_corrs <- do.call(
           data.frame(method1 = jj,
                      method2 = kk, 
                      cell = names(corrs_spliced), 
+                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
+                                      sces[[jj]]$clusters,
+                                      NA),
                      ctype = "spliced",
                      corrs = corrs_spliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_unspliced), 
+                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
+                                      sces[[jj]]$clusters,
+                                      NA),
                      ctype = "unspliced",
                      corrs = corrs_unspliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_velocity), 
+                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
+                                      levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1],
+                                      NA),
                      ctype = "velocity",
                      corrs = corrs_velocity, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_total), 
+                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
+                                      sces[[jj]]$clusters,
+                                      NA),
                      ctype = "total",
                      corrs = corrs_total, 
                      stringsAsFactors = FALSE)
@@ -174,6 +186,21 @@ ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) +
         title = element_text(size = 20)) + 
   labs(title = "Correlation, counts and velocities, by cell",
        subtitle = "Over genes selected by all methods")
+
+if (!any(is.na(cell_corrs$cluster))) {
+  for (ct in unique(cell_corrs$ctype)) {
+    print(ggplot(cell_corrs %>% dplyr::filter(ctype == ct), 
+                 aes(x = cluster, y = corrs, fill = cluster)) + 
+            geom_boxplot() + 
+            facet_grid(method1 ~ method2) + 
+            theme_bw() + 
+            theme(strip.text = element_text(size = 5),
+                  axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+                  title = element_text(size = 20)) + 
+            labs(title = paste0("Correlation, counts and velocities, by cell (", ct, ")"),
+                 subtitle = "Over genes selected by all methods"))
+  }
+}
 
 dev.off()
 

@@ -77,7 +77,9 @@ plots/busparse_prepref/neuron_plot_busparse_prepref.rds \
 plots/total_count/neuron_plot_total_count.rds \
 plots/spliced_unspliced_mds/neuron_plot_spliced_unspliced_mds.rds \
 plots/frac_unspliced/neuron_plot_frac_unspliced.rds \
-plots/merge_umaps/neuron_plot_merge_umaps.pdf
+plots/merge_umaps/neuron_plot_merge_umaps.rds \
+plots/compare_velocity_projections/neuron_plot_compare_velocity_projections.rds \
+plots/shared_genes_scvelo/neuron_plot_shared_genes_scvelo.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -185,12 +187,12 @@ reference/gencode.vM21.spliced.unspliced.tx2gene.txt: \
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
 	touch $@
 
-plots/busparse_prepref/neuron_plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/compare_busparse_prepref.R \
+plots/busparse_prepref/neuron_plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/plot_compare_busparse_prepref.R \
 $(foreach v,collapse separate,$(foreach m,busparse prepref,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) 
 	mkdir -p Rout
 	mkdir -p $(@D)
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args txomefa='$(txome)' gtffile='$(gtf)' refdir='reference' flanklength=$(flanklength) outrds='$(@)'" $(scriptdir)/compare_busparse_prepref.R Rout/compare_busparse_prepref.Rout
+	R CMD BATCH --no-save --no-restore "--args txomefa='$(txome)' gtffile='$(gtf)' refdir='reference' flanklength=$(flanklength) outrds='$(@)'" $(scriptdir)/plot_compare_busparse_prepref.R Rout/compare_busparse_prepref.Rout
 
 ## Get uniqueness for each (spliced and unspliced) gene
 define uniquenessrule
@@ -466,26 +468,43 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/velocity_confidence/neuron_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_confidence_neuron.R
+$(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_neuron.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='Neuron' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
 plots/count_correlation/neuron_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
-$(scriptdir)/plot_count_correlation_neuron.R 
+$(scriptdir)/plot_count_correlation.R 
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation_neuron.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/merge_umaps/neuron_plot_merge_umaps.pdf: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_merge_umaps.R
+plots/merge_umaps/neuron_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outpdf='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+
+plots/compare_velocity_projections/neuron_plot_compare_velocity_projections.rds: \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+
+plots/shared_genes_scvelo/neuron_plot_shared_genes_scvelo.rds: \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
 
 ## Convert SCE to anndata
 define anndatarule

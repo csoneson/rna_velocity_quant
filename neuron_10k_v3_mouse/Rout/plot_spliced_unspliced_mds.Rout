@@ -136,7 +136,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Dec 15 17:24:53 2019"
+[1] "Tue Dec 17 14:14:21 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -163,7 +163,7 @@ other attached packages:
  [5] DelayedArray_0.12.0         BiocParallel_1.20.0        
  [7] matrixStats_0.55.0          Biobase_2.46.0             
  [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
-[11] IRanges_2.20.1              S4Vectors_0.24.0           
+[11] IRanges_2.20.1              S4Vectors_0.24.1           
 [13] BiocGenerics_0.32.0         ggplot2_3.2.1              
 [15] dplyr_0.8.3                
 
@@ -173,7 +173,7 @@ loaded via a namespace (and not attached):
  [7] zlibbioc_1.32.0        digest_0.6.23          zeallot_0.1.0         
 [10] lifecycle_0.1.0        tibble_2.1.3           gtable_0.3.0          
 [13] lattice_0.20-38        pkgconfig_2.0.3        rlang_0.4.2           
-[16] Matrix_1.2-17          GenomeInfoDbData_1.2.2 stringr_1.4.0         
+[16] Matrix_1.2-18          GenomeInfoDbData_1.2.2 stringr_1.4.0         
 [19] withr_2.1.2            vctrs_0.2.0            grid_3.6.1            
 [22] tidyselect_0.2.5       glue_1.3.1             R6_2.4.1              
 [25] farver_2.0.1           tidyr_1.0.0            purrr_0.3.3           
@@ -184,4 +184,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1104.918  299.286 1462.568 
+1158.879  309.136 1472.783 

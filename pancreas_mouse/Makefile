@@ -22,8 +22,8 @@ scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scrip
 
 flanklength := 150
 
-genestoplot := Thap8 Rnf41 Trim3 Dtnbos Gm11425 Tgm7 Ppp1ccb Ins2 Malat1 Txn2 Mirt1 Per3 Otulin Usp50 Fen1 Usf2 \
-Ccl9 Nectin2 Dqx1 Traf5 Rrm2b Gm37350 Gse1 Kxd1 Cbx3 Irf6 Mast1 Tdg Slc24a5
+genestoplot := Thap8 Rnf41 Trim3 Apoe Nrxn2 Spaca6 Dtnbos Zfp423 Cul9 Thbs3 Dpp4 Gm11425 Gm5561 Gpr142 Tgm7 Ppp1ccb Ins2 Malat1 Txn2 Mirt1 Per3 Otulin Usp50 Fen1 Usf2 \
+Ccl9 Nectin2 Dqx1 Traf5 Rrm2b Gm37350 Gse1 Kxd1 Cbx3 Irf6 Mast1 Tdg Slc24a5 Myef2 Meg3 Gm37376 Gm24276
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
@@ -58,6 +58,8 @@ quants/cellranger/SRR9201794/outs/web_summary.html \
 quants/cellranger/SRR9201794/velocyto/SRR9201794.loom \
 quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam \
 quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_minusstrand.bw \
 quants/starsolo/Solo.out/Gene/Summary.csv \
 output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds) \
@@ -66,9 +68,7 @@ output/sce/retained_cell_barcodes.csv
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 output/genesets/shared_genes.txt \
-output/genesets/shared_genes_without_Ins2.txt \
-$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
-$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_without_Ins2_with_velocity.h5ad)
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
 
 plot: plots/velocity_confidence/pancreas_plot_velocity_confidence.rds \
 plots/count_correlation/pancreas_plot_count_correlation.rds \
@@ -76,7 +76,9 @@ plots/total_count/pancreas_plot_total_count.rds \
 plots/spliced_unspliced_mds/pancreas_plot_spliced_unspliced_mds.rds \
 plots/frac_unspliced/pancreas_plot_frac_unspliced.rds \
 $(foreach g,$(genestoplot),plots/genes/pancreas_$(g).pdf) \
-plots/merge_umaps/pancreas_plot_merge_umaps.pdf
+plots/merge_umaps/pancreas_plot_merge_umaps.rds \
+plots/compare_velocity_projections/pancreas_plot_compare_velocity_projections.rds \
+plots/shared_genes_scvelo/pancreas_plot_shared_genes_scvelo.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -115,6 +117,25 @@ quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam $(chrlengths
 	module load Kent_tools/20190212-linux.x86_64 && \
 	bedGraphToBigWig SRR9201794.tmp.bedGraph $(chrlengths) $@
 	rm -f SRR9201794.tmp.bedGraph
+
+## Separate strands
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw: \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam $(chrlengths)
+	module load BEDTools/2.27.1-foss-2018b && \
+	bedtools genomecov -split -ibam $< -bg -strand '+' | \
+	LC_COLLATE=C sort -k1,1 -k2,2n > SRR9201794.pos.tmp.bedGraph
+	module load Kent_tools/20190212-linux.x86_64 && \
+	bedGraphToBigWig SRR9201794.pos.tmp.bedGraph $(chrlengths) $@
+	rm -f SRR9201794.pos.tmp.bedGraph
+
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_minusstrand.bw: \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bam $(chrlengths)
+	module load BEDTools/2.27.1-foss-2018b && \
+	bedtools genomecov -split -ibam $< -bg -strand '-' | \
+	LC_COLLATE=C sort -k1,1 -k2,2n > SRR9201794.neg.tmp.bedGraph
+	module load Kent_tools/20190212-linux.x86_64 && \
+	bedGraphToBigWig SRR9201794.neg.tmp.bedGraph $(chrlengths) $@
+	rm -f SRR9201794.neg.tmp.bedGraph
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo
@@ -447,29 +468,47 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/velocity_confidence/pancreas_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_confidence_pancreas.R
+$(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_pancreas.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='Pancreas' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
 plots/count_correlation/pancreas_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
-$(scriptdir)/plot_count_correlation_pancreas.R 
+$(scriptdir)/plot_count_correlation.R 
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation_pancreas.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/merge_umaps/pancreas_plot_merge_umaps.pdf: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_merge_umaps.R
+plots/merge_umaps/pancreas_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outpdf='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+
+plots/compare_velocity_projections/pancreas_plot_compare_velocity_projections.rds: \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+
+plots/shared_genes_scvelo/pancreas_plot_shared_genes_scvelo.rds: \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Pancreas' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
 
 define plotgenerule
-plots/genes/pancreas_$(1).pdf: quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells.bw \
+plots/genes/pancreas_$(1).pdf: quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw \
+quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_minusstrand.bw \
 $(gtf) $(scriptdir)/plot_helpers.R $(scriptdir)/plot_gene_model.R $(tx2genefull) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
@@ -477,7 +516,7 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' gtf='$(gtf)' bigwigfile='$$<' samplename='Pancreas' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' gtf='$(gtf)' bigwigfileplus='$$(word 1,$$^)' bigwigfileminus='$$(word 2,$$^)' samplename='Pancreas' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
 endef
 $(foreach g,$(genestoplot),$(eval $(call plotgenerule,$(g))))
 
@@ -516,9 +555,6 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outtxt='$@'" $(scriptdir)/make_gene_subsets.R Rout/make_gene_subsets.Rout
 
-output/genesets/shared_genes_without_Ins2.txt: output/genesets/shared_genes.txt
-	touch $@
-
 ## Velocity, based on genes selected by all methods
 define scveloruleshared
 output/anndata_with_velocity/anndata_$(1)_shared_genes$(2)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
@@ -532,4 +568,3 @@ $(scriptdir)/run_scVelo_pancreas.py output/genesets/shared_genes$(2).txt
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call scveloruleshared,$(x),)))
-$(foreach x,$(methods),$(eval $(call scveloruleshared,$(x),_without_Ins2)))

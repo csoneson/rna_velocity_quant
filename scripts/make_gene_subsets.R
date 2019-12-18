@@ -24,26 +24,21 @@ geneinfo <- lapply(methods, function(nm) {
     dplyr::mutate(method = nm)
 })
 
-allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index)))
-selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index)))
+## Extract all genes that are selected with all methods, and have valid fits with all methods
+allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index[!is.na(w$fit_alpha)])))
+selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index[!is.na(w$fit_alpha)])))
 rownames(selgenes) <- allgenes
 selgenes <- data.frame(selgenes)
 
-n_not_busparse <- length(grep("busparse", colnames(selgenes), invert = TRUE))
-genes_in_all <- selgenes %>% dplyr::select(-contains("busparse")) %>% 
+n_methods <- ncol(selgenes)
+genes_in_all <- selgenes %>% 
   tibble::rownames_to_column("gene") %>%
   tidyr::gather(key = "method", value = "selected", -gene) %>%
   dplyr::group_by(gene) %>%
   dplyr::summarize(n = sum(selected)) %>% 
-  dplyr::filter(n == n_not_busparse) %>%
+  dplyr::filter(n == n_methods) %>%
   dplyr::pull(gene)
 
-if ("Ins2" %in% genes_in_all) {
-  write.table(setdiff(genes_in_all, "Ins2"), 
-              file = gsub("\\.txt", "_without_Ins2.txt", outtxt), 
-              row.names = FALSE, col.names = FALSE,
-              quote = FALSE, sep = "\t")
-}
 write.table(genes_in_all, file = outtxt, row.names = FALSE, col.names = FALSE,
             quote = FALSE, sep = "\t")
 

@@ -21,7 +21,8 @@ print(plothelperscript)
 print(gtf)
 print(tx2gene)
 print(methods)
-print(bigwigfile)
+print(bigwigfileplus)
+print(bigwigfileminus)
 print(samplename)
 print(showgene)
 print(outpdf)
@@ -29,8 +30,10 @@ print(outpdf)
 source(plothelperscript)
 
 gr <- prepareGTF(gtf)
-bwf <- bigwigfile
-names(bwf) <- samplename
+bwf <- c(bigwigfileplus, bigwigfileminus)
+names(bwf) <- c("pos", "neg")
+bwc <- c("pos", "neg")
+names(bwc) <- c("pos", "neg")
 tx2gene <- readRDS(tx2gene)
 
 sces <- lapply(methods, function(nm) {
@@ -59,7 +62,11 @@ plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
   grDevices::png(paste0(tmpdir, "/gviz", rn, ".png"), width = 10.5,
                  height = 5.25, unit = "in", res = 400)
   swissknife::plotGeneRegion(granges = gr, bigwigFiles = bwf, 
-                             showgene = showgene, geneTrackTitle = showgene)
+                             bigwigCond = bwc, 
+                             showgene = showgene, geneTrackTitle = showgene,
+                             colorByStrand = TRUE, 
+                             condColors = c(pos = "blue", neg = "red"),
+                             scaleDataTracks = TRUE)
   grDevices::dev.off()
   
   p2 <- ggplot(sumdfg %>% dplyr::filter(gene == showgene) %>%

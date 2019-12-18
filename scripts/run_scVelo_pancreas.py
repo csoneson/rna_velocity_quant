@@ -18,7 +18,7 @@ if len(sys.argv) >= 5:
 	adfileout = sys.argv[3]
 	genesetfile = sys.argv[4]
 else:
-	raise ValueError("must have >=three arguments (loomfiles, h5adfile, plotdir)")
+	raise ValueError("must have >=four arguments (adfile, plotdir, adfileout, genesetfile)")
 
 print("input adfile: ", adfile)
 print("output directory: ", plotdir)
@@ -72,7 +72,6 @@ scv.tl.velocity_graph(adata2)
 scv.settings.figdir = plotdir + '/' + base + basegs + '/'
 scv.settings.plot_prefix = base + basegs + '_scvelo_'
 # scv.settings.set_figure_params(dpi_save = 300, vector_friendly = True)
-# color='cluster'
 scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(12,9), show=False, color='clusters', title=mname)
 scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(12,9), show=False, color='clusters', title=mname)
 scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(12,9), show=False, color='clusters', title=mname)
@@ -94,6 +93,9 @@ scv.pl.velocity_embedding_stream(adata2, basis='UMAP_velocyto_concatenated', sav
 scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream_S.png", figsize=(12,9), show=False, color='S_score', title=mname)
 
 scv.pl.velocity_graph(adata2, basis='UMAP_alevin_spliced', save='UMAP_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='clusters', title=mname)
+
+scv.tl.velocity_embedding(adata2, basis = 'UMAP_alevin_spliced', all_comps = False)
+pd.DataFrame(adata2.obsm['velocity_UMAP_alevin_spliced'], index = adata2.obs.index).to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_velocity_UMAP_alevin_spliced.csv")
 
 try:
 	scv.tl.recover_latent_time(adata2)

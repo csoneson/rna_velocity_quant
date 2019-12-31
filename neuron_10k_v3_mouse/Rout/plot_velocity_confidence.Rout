@@ -344,7 +344,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Tue Dec 17 13:40:10 2019"
+[1] "Tue Dec 31 17:39:21 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -379,7 +379,7 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] beeswarm_0.2.3           tidyselect_0.2.5         purrr_0.3.3             
  [4] BiocSingular_1.2.0       lattice_0.20-38          colorspace_1.4-1        
- [7] vctrs_0.2.0              viridisLite_0.3.0        rlang_0.4.2             
+ [7] vctrs_0.2.1              viridisLite_0.3.0        rlang_0.4.2             
 [10] pillar_1.4.2             glue_1.3.1               withr_2.1.2             
 [13] RColorBrewer_1.1-2       plyr_1.8.5               GenomeInfoDbData_1.2.2  
 [16] lifecycle_0.1.0          zlibbioc_1.32.0          munsell_0.5.0           
@@ -396,4 +396,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 12.979   1.001  14.639 
+ 11.316   1.163  12.825 

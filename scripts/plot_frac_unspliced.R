@@ -17,6 +17,7 @@ names(methods) <- methods
 
 print(plothelperscript)
 print(topdir)
+print(refdir)  ## directory where uniqueness files are
 print(tx2gene)
 print(methods)
 print(outrds)
@@ -39,7 +40,7 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
 }))
 
 tx2gene <- readRDS(tx2gene)
-uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
+uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
 
 ## ------------------------------------------------------------------------- ##
 ## Velocity

@@ -42,6 +42,8 @@ Type 'q()' to quit R.
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse"
+> print(refdir)  ## directory where uniqueness files are
+[1] "reference"
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(methods)
@@ -95,7 +97,7 @@ Type 'q()' to quit R.
 + }))
 > 
 > ## Add info about uniqueness
-> uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
+> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
 Warning messages:
 1: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 2: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
@@ -197,7 +199,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Tue Dec 17 13:28:57 2019"
+[1] "Tue Dec 31 17:43:07 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -242,7 +244,7 @@ loaded via a namespace (and not attached):
  [28] acepack_1.4.1            htmltools_0.4.0          prettyunits_1.0.2       
  [31] tools_3.6.1              rsvd_1.0.2               gtable_0.3.0            
  [34] glue_1.3.1               GenomeInfoDbData_1.2.2   reshape2_1.4.3          
- [37] rappdirs_0.3.1           Rcpp_1.0.3               vctrs_0.2.0             
+ [37] rappdirs_0.3.1           Rcpp_1.0.3               vctrs_0.2.1             
  [40] Biostrings_2.54.0        rtracklayer_1.46.0       DelayedMatrixStats_1.8.0
  [43] xfun_0.11                stringr_1.4.0            lifecycle_0.1.0         
  [46] irlba_2.3.3              ensembldb_2.10.2         XML_3.98-1.20           
@@ -267,4 +269,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-256.439  15.637 272.836 
+223.869  13.337 237.907 

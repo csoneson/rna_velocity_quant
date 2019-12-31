@@ -214,7 +214,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Tue Dec 17 13:24:57 2019"
+[1] "Tue Dec 31 17:39:37 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -252,7 +252,7 @@ loaded via a namespace (and not attached):
 [13] tibble_2.1.3           gtable_0.3.0           lattice_0.20-38       
 [16] pkgconfig_2.0.3        rlang_0.4.2            Matrix_1.2-18         
 [19] gridExtra_2.3          GenomeInfoDbData_1.2.2 stringr_1.4.0         
-[22] withr_2.1.2            vctrs_0.2.0            grid_3.6.1            
+[22] withr_2.1.2            vctrs_0.2.1            grid_3.6.1            
 [25] tidyselect_0.2.5       glue_1.3.1             R6_2.4.1              
 [28] tidyr_1.0.0            farver_2.0.1           purrr_0.3.3           
 [31] magrittr_1.5           ellipsis_0.3.0         backports_1.1.5       
@@ -262,4 +262,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 29.460   1.894  32.145 
+ 25.580   1.729  27.998 

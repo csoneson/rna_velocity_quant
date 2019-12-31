@@ -22,8 +22,17 @@ scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scrip
 
 flanklength := 150
 
-genestoplot := Thap8 Rnf41 Trim3 Apoe Nrxn2 Spaca6 Dtnbos Zfp423 Cul9 Thbs3 Dpp4 Gm11425 Gm5561 Gpr142 Tgm7 Ppp1ccb Ins2 Malat1 Txn2 Mirt1 Per3 Otulin Usp50 Fen1 Usf2 \
-Ccl9 Nectin2 Dqx1 Traf5 Rrm2b Gm37350 Gse1 Kxd1 Cbx3 Irf6 Mast1 Tdg Slc24a5 Myef2 Meg3 Gm37376 Gm24276
+genestoplot := Thap8 Rnf41 Trim3 Apoe Nrxn2 Spaca6 \
+Dtnbos Zfp423 Cul9 Thbs3 Dpp4 \
+Gm11425 Gm5561 Gpr142 Tgm7 Ppp1ccb \
+Ins2 Fbh1 Elovl1 Rpl29 Ints1 Malat1 Txn2 \
+Mirt1 Per3 Otulin Hif1a Insrr \
+Usp50 Fen1 Usf2 Slc24a5 \
+Ccl9 Nectin2 Dqx1 Nnat Nop16 Zfp773 \
+Traf5 Rrm2b Gm37350 Acadl \
+Gse1 Kxd1 Cbx3 Gm20503 Srp54a \
+Irf6 Mast1 Tdg Nfs1 Rab5a Ube2s \
+Myef2 Meg3 Gm37376 Gm24276
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
@@ -449,7 +458,7 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 plots/spliced_unspliced_mds/pancreas_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
@@ -465,7 +474,7 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/velocity_confidence/pancreas_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
@@ -516,7 +525,7 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' gtf='$(gtf)' bigwigfileplus='$$(word 1,$$^)' bigwigfileminus='$$(word 2,$$^)' samplename='Pancreas' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' gtf='$(gtf)' bigwigfileplus='$$(word 1,$$^)' bigwigfileminus='$$(word 2,$$^)' samplename='Pancreas' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
 endef
 $(foreach g,$(genestoplot),$(eval $(call plotgenerule,$(g))))
 

@@ -17,6 +17,7 @@ methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
 
 print(topdir)
+print(refdir)  ## directory where uniqueness files are
 print(plothelperscript)
 print(gtf)
 print(tx2gene)
@@ -51,7 +52,7 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
   )
 }))
 
-uniq <- merge_uniq(topdir, tx2gene)
+uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
 
 methods_short <- shorten_methods(methods)
 

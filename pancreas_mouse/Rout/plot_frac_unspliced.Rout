@@ -38,6 +38,8 @@ Type 'q()' to quit R.
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(refdir)  ## directory where uniqueness files are
+[1] "reference"
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(methods)
@@ -86,7 +88,7 @@ Type 'q()' to quit R.
 + }))
 > 
 > tx2gene <- readRDS(tx2gene)
-> uniq <- merge_uniq(topdir = topdir, tx2gene = tx2gene)
+> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
 Warning messages:
 1: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 2: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
@@ -286,7 +288,7 @@ pdf
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Dec 17 13:20:51 2019"
+[1] "Tue Dec 31 17:28:16 2019"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -334,11 +336,11 @@ loaded via a namespace (and not attached):
 [43] grid_3.6.1             gtable_0.3.0           lifecycle_0.1.0       
 [46] magrittr_1.5           scales_1.1.0           stringi_1.4.3         
 [49] farver_2.0.1           XVector_0.26.0         latticeExtra_0.6-28   
-[52] ellipsis_0.3.0         vctrs_0.2.0            Formula_1.2-3         
+[52] ellipsis_0.3.0         vctrs_0.2.1            Formula_1.2-3         
 [55] RColorBrewer_1.1-2     tools_3.6.1            glue_1.3.1            
 [58] purrr_0.3.3            hms_0.5.2              survival_3.1-8        
 [61] colorspace_1.4-1       cluster_2.1.0          knitr_1.26            
 > 
 > proc.time()
    user  system elapsed 
- 87.006   4.647  94.274 
+ 86.169   4.768  92.277 

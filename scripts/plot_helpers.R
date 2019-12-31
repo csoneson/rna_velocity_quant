@@ -24,10 +24,10 @@ shorten_methods <- function(methods) {
 base_method_colors <- c(alevin = "#999999", `kallisto|bus` = "#009E73",
                         starsolo = "#0072B2", velocyto = "#CC79A7")
 
-merge_uniq <- function(topdir, tx2gene) {
+merge_uniq <- function(refdir, tx2gene) {
   uniq <- dplyr::bind_rows(
     read.delim(
-      file.path(topdir, "reference/prepref_isoseparate_uniqueness.txt"),
+      file.path(refdir, "prepref_isoseparate_uniqueness.txt"),
       header = TRUE, as.is = TRUE
     ) %>% 
       dplyr::mutate(ctype = c("exonic", "intronic")[grepl("I\\.", gene) + 1]) %>%
@@ -36,7 +36,7 @@ merge_uniq <- function(topdir, tx2gene) {
       dplyr::select(gene, ctype, frac_unique) %>%
       dplyr::mutate(atype = "separate"),
     read.delim(
-      file.path(topdir, "reference/prepref_isocollapse_uniqueness.txt"),
+      file.path(refdir, "prepref_isocollapse_uniqueness.txt"),
       header = TRUE, as.is = TRUE
     ) %>% 
       dplyr::mutate(ctype = c("exonic", "intronic")[grepl("I\\.", gene) + 1]) %>%
@@ -45,7 +45,7 @@ merge_uniq <- function(topdir, tx2gene) {
       dplyr::select(gene, ctype, frac_unique) %>%
       dplyr::mutate(atype = "collapse"),
     read.delim(
-      file.path(topdir, "reference/prepref_isoseparate_uniqueness_overall.txt"),
+      file.path(refdir, "prepref_isoseparate_uniqueness_overall.txt"),
       header = TRUE, as.is = TRUE
     ) %>% 
       dplyr::mutate(ctype = "overall") %>%
@@ -54,7 +54,7 @@ merge_uniq <- function(topdir, tx2gene) {
       dplyr::select(gene, ctype, frac_unique) %>%
       dplyr::mutate(atype = "separate"),
     read.delim(
-      file.path(topdir, "reference/prepref_isocollapse_uniqueness_overall.txt"),
+      file.path(refdir, "prepref_isocollapse_uniqueness_overall.txt"),
       header = TRUE, as.is = TRUE
     ) %>% 
       dplyr::mutate(ctype = "overall") %>%

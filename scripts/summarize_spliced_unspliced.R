@@ -157,7 +157,16 @@ sces <- lapply(sces, function(w) {
   w
 })
 
-for (m in c("alevin_spliced_unspliced", "velocyto")) {
+## From starsolo
+sces <- lapply(sces, function(w) {
+  reducedDim(w, "PCA_starsolo") <- reducedDim(sces[["starsolo"]], "PCA")
+  reducedDim(w, "TSNE_starsolo") <- reducedDim(sces[["starsolo"]], "TSNE")
+  reducedDim(w, "UMAP_starsolo") <- reducedDim(sces[["starsolo"]], "UMAP")
+  w$cluster_starsolo <- sces[["starsolo"]]$cluster
+  w
+})
+
+for (m in c("starsolo")) {
   message(m)
   ## Concatenated spliced and unspliced
   tmp <- SingleCellExperiment(
@@ -184,6 +193,19 @@ for (m in c("alevin_spliced_unspliced", "velocyto")) {
     colData(w)[[paste0("cluster_", m, "_summed")]] <- tmp$cluster
     w
   })
+
+  ## Only unspliced
+  tmp <- SingleCellExperiment(
+    assays = list(counts = assay(sces[[m]], "unspliced")))
+  tmp <- do_dimred(tmp)
+  sces <- lapply(sces, function(w) {
+    reducedDim(w, paste0("PCA_", m, "_unspliced")) <- reducedDim(tmp, "PCA")
+    reducedDim(w, paste0("TSNE_", m, "_unspliced")) <- reducedDim(tmp, "TSNE")
+    reducedDim(w, paste0("UMAP_", m, "_unspliced")) <- reducedDim(tmp, "UMAP")
+    colData(w)[[paste0("cluster_", m, "_unspliced")]] <- tmp$cluster
+    w
+  })
+  
 }
 
 ## ========================================================================= ##

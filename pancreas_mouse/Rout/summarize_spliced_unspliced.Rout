@@ -283,7 +283,16 @@ kallisto_bustools_prepref_isocollapse_include
 +   w
 + })
 > 
-> for (m in c("alevin_spliced_unspliced", "velocyto")) {
+> ## From starsolo
+> sces <- lapply(sces, function(w) {
++   reducedDim(w, "PCA_starsolo") <- reducedDim(sces[["starsolo"]], "PCA")
++   reducedDim(w, "TSNE_starsolo") <- reducedDim(sces[["starsolo"]], "TSNE")
++   reducedDim(w, "UMAP_starsolo") <- reducedDim(sces[["starsolo"]], "UMAP")
++   w$cluster_starsolo <- sces[["starsolo"]]$cluster
++   w
++ })
+> 
+> for (m in c("starsolo")) {
 +   message(m)
 +   ## Concatenated spliced and unspliced
 +   tmp <- SingleCellExperiment(
@@ -310,9 +319,21 @@ kallisto_bustools_prepref_isocollapse_include
 +     colData(w)[[paste0("cluster_", m, "_summed")]] <- tmp$cluster
 +     w
 +   })
++ 
++   ## Only unspliced
++   tmp <- SingleCellExperiment(
++     assays = list(counts = assay(sces[[m]], "unspliced")))
++   tmp <- do_dimred(tmp)
++   sces <- lapply(sces, function(w) {
++     reducedDim(w, paste0("PCA_", m, "_unspliced")) <- reducedDim(tmp, "PCA")
++     reducedDim(w, paste0("TSNE_", m, "_unspliced")) <- reducedDim(tmp, "TSNE")
++     reducedDim(w, paste0("UMAP_", m, "_unspliced")) <- reducedDim(tmp, "UMAP")
++     colData(w)[[paste0("cluster_", m, "_unspliced")]] <- tmp$cluster
++     w
++   })
++   
 + }
-alevin_spliced_unspliced
-velocyto
+starsolo
 > 
 > ## ========================================================================= ##
 > ## Save
@@ -328,7 +349,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sat Dec 14 05:17:36 2019"
+[1] "Wed Jan  1 15:31:47 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -351,13 +372,13 @@ attached base packages:
 
 other attached packages:
  [1] GenomicFeatures_1.38.0      AnnotationDbi_1.48.0       
- [3] readr_1.3.1                 scater_1.14.4              
- [5] velocyto.R_0.6              Matrix_1.2-17              
+ [3] readr_1.3.1                 scater_1.14.5              
+ [5] velocyto.R_0.6              Matrix_1.2-18              
  [7] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
  [9] DelayedArray_0.12.0         matrixStats_0.55.0         
 [11] Biobase_2.46.0              GenomicRanges_1.38.0       
 [13] GenomeInfoDb_1.22.0         IRanges_2.20.1             
-[15] S4Vectors_0.24.0            BiocGenerics_0.32.0        
+[15] S4Vectors_0.24.1            BiocGenerics_0.32.0        
 [17] BUSpaRse_1.0.0              zeallot_0.1.0              
 [19] ggplot2_3.2.1               dplyr_0.8.3                
 [21] tximeta_1.4.2               BiocSingular_1.2.0         
@@ -366,32 +387,32 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
  [4] XVector_0.26.0           BiocNeighbors_1.4.1      bit64_0.9-7             
- [7] RSpectra_0.15-0          splines_3.6.1            tximport_1.14.0         
+ [7] RSpectra_0.16-0          splines_3.6.1            tximport_1.14.0         
 [10] jsonlite_1.6             Rsamtools_2.2.1          cluster_2.1.0           
-[13] dbplyr_1.4.2             uwot_0.1.4               compiler_3.6.1          
+[13] dbplyr_1.4.2             uwot_0.1.5               compiler_3.6.1          
 [16] httr_1.4.1               dqrng_0.2.1              backports_1.1.5         
 [19] assertthat_0.2.1         lazyeval_0.2.2           limma_3.42.0            
 [22] prettyunits_1.0.2        tools_3.6.1              rsvd_1.0.2              
-[25] igraph_1.2.4.1           gtable_0.3.0             glue_1.3.1              
+[25] igraph_1.2.4.2           gtable_0.3.0             glue_1.3.1              
 [28] GenomeInfoDbData_1.2.2   rappdirs_0.3.1           Rcpp_1.0.3              
-[31] vctrs_0.2.0              Biostrings_2.54.0        nlme_3.1-142            
+[31] vctrs_0.2.1              Biostrings_2.54.0        nlme_3.1-143            
 [34] rtracklayer_1.46.0       DelayedMatrixStats_1.8.0 stringr_1.4.0           
-[37] plyranges_1.6.4          lifecycle_0.1.0          irlba_2.3.3             
+[37] plyranges_1.6.5          lifecycle_0.1.0          irlba_2.3.3             
 [40] ensembldb_2.10.2         gtools_3.8.1             statmod_1.4.32          
 [43] XML_3.98-1.20            edgeR_3.28.0             zlibbioc_1.32.0         
 [46] MASS_7.3-51.4            scales_1.1.0             BSgenome_1.54.0         
 [49] pcaMethods_1.78.0        hms_0.5.2                ProtGenerics_1.18.0     
-[52] AnnotationFilter_1.10.0  curl_4.2                 memoise_1.1.0           
+[52] AnnotationFilter_1.10.0  curl_4.3                 memoise_1.1.0           
 [55] gridExtra_2.3            biomaRt_2.42.0           stringi_1.4.3           
-[58] RSQLite_2.1.2            scran_1.14.5             rlang_0.4.2             
+[58] RSQLite_2.1.4            scran_1.14.5             rlang_0.4.2             
 [61] pkgconfig_2.0.3          bitops_1.0-6             lattice_0.20-38         
 [64] purrr_0.3.3              GenomicAlignments_1.22.1 bit_1.1-14              
 [67] tidyselect_0.2.5         magrittr_1.5             R6_2.4.1                
-[70] fishpond_1.2.0           DBI_1.0.0                pillar_1.4.2            
+[70] fishpond_1.2.0           DBI_1.1.0                pillar_1.4.2            
 [73] withr_2.1.2              mgcv_1.8-31              RCurl_1.95-4.12         
 [76] tibble_2.1.3             crayon_1.3.4             hdf5r_1.3.0             
 [79] BiocFileCache_1.10.2     viridis_0.5.1            progress_1.2.2          
-[82] locfit_1.5-9.1           grid_3.6.1               data.table_1.12.6       
+[82] locfit_1.5-9.1           grid_3.6.1               data.table_1.12.8       
 [85] blob_1.2.0               FNN_1.1.3                digest_0.6.23           
 [88] tidyr_1.0.0              openssl_1.4.1            RcppParallel_4.4.4      
 [91] munsell_0.5.0            beeswarm_0.2.3           viridisLite_0.3.0       
@@ -399,4 +420,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-1517.900   79.884 1622.200 
+1331.852   68.145 1405.841 

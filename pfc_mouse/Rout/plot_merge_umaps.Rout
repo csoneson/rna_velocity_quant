@@ -25,13 +25,19 @@ Type 'q()' to quit R.
 > suppressPackageStartupMessages({
 +   library(cowplot)
 +   library(magick)
++   library(ggplot2)
 + })
+> source(plothelperscript)
 > 
 > methods <- strsplit(methods, ",")[[1]]
 > names(methods) <- methods
 > 
 > print(topdir)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pfc_mouse"
+> print(plothelperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(dimred)
+[1] "TSNE"
 > print(methods)
                                        velocyto 
                                      "velocyto" 
@@ -60,16 +66,23 @@ Type 'q()' to quit R.
 > print(outrds)
 [1] "plots/merge_umaps/pfc_plot_merge_umaps.rds"
 > 
+> methods_short <- shorten_methods(methods)
+> 
 > ## Individually chosen genes
 > umaps <- lapply(methods, function(m) {
 +   file.path(topdir, "plots/velocity",
 +             paste0("anndata_", m), 
-+             paste0("anndata_", m, "_scvelo_UMAP_alevin_spliced_stream.png"))
++             paste0("anndata_", m, "_scvelo_", dimred,
++                    "_alevin_spliced_stream.png"))
 + })
 > 
-> pdf(gsub("\\.rds$", ".pdf", outrds), width = 8, height = 9)
-> cowplot::plot_grid(plotlist = lapply(umaps, function(w) {
-+   cowplot::ggdraw() + cowplot::draw_image(w)
+> pdf(gsub("\\.rds$", paste0("_", dimred, ".pdf"), outrds), width = 8, height = 9)
+> cowplot::plot_grid(plotlist = lapply(names(umaps), function(nm) {
++   title <- cowplot::ggdraw() + cowplot::draw_label(methods_short$method_short[match(nm, methods_short$method)], size = 7)
++   w <- umaps[[nm]]
++   ump <- cowplot::ggdraw() + cowplot::draw_image(w)
++   cowplot::plot_grid(title, ump + theme(panel.background = element_rect(color = "black")), 
++                      ncol = 1, rel_heights = c(0.1, 1))
 + }), ncol = 3)
 > dev.off()
 null device 
@@ -79,12 +92,17 @@ null device
 > umapss <- lapply(methods, function(m) {
 +   file.path(topdir, "plots/velocity",
 +             paste0("anndata_", m, "_shared_genes"), 
-+             paste0("anndata_", m, "_shared_genes_scvelo_UMAP_alevin_spliced_stream.png"))
++             paste0("anndata_", m, "_shared_genes_scvelo_", dimred,
++                    "_alevin_spliced_stream.png"))
 + })
 > 
-> pdf(gsub("\\.rds$", "_shared_genes.pdf", outrds), width = 8, height = 9)
-> cowplot::plot_grid(plotlist = lapply(umapss, function(w) {
-+   cowplot::ggdraw() + cowplot::draw_image(w)
+> pdf(gsub("\\.rds$", paste0("_", dimred, "_shared_genes.pdf"), outrds), width = 8, height = 9)
+> cowplot::plot_grid(plotlist = lapply(names(umapss), function(nm) {
++   title <- cowplot::ggdraw() + cowplot::draw_label(methods_short$method_short[match(nm, methods_short$method)], size = 7)
++   w <- umapss[[nm]]
++   ump <- cowplot::ggdraw() + cowplot::draw_image(w)
++   cowplot::plot_grid(title, ump + theme(panel.background = element_rect(color = "black")), 
++                      ncol = 1, rel_heights = c(0.1, 1))
 + }), ncol = 3)
 > dev.off()
 null device 
@@ -92,7 +110,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sat Dec 21 07:39:51 2019"
+[1] "Fri Jan 10 20:39:01 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -113,16 +131,17 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] magick_2.2    cowplot_1.0.0
+[1] ggplot2_3.2.1 magick_2.2    cowplot_1.0.0
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3       assertthat_0.2.1 crayon_1.3.4     dplyr_0.8.3     
- [5] grid_3.6.1       R6_2.4.1         lifecycle_0.1.0  gtable_0.3.0    
- [9] magrittr_1.5     scales_1.1.0     ggplot2_3.2.1    pillar_1.4.2    
-[13] rlang_0.4.2      lazyeval_0.2.2   glue_1.3.1       purrr_0.3.3     
-[17] munsell_0.5.0    compiler_3.6.1   pkgconfig_2.0.3  colorspace_1.4-1
-[21] tidyselect_0.2.5 tibble_2.1.3    
+ [1] Rcpp_1.0.3       withr_2.1.2      assertthat_0.2.1 crayon_1.3.4    
+ [5] dplyr_0.8.3      grid_3.6.1       R6_2.4.1         lifecycle_0.1.0 
+ [9] gtable_0.3.0     magrittr_1.5     scales_1.1.0     pillar_1.4.2    
+[13] stringi_1.4.3    rlang_0.4.2      lazyeval_0.2.2   tools_3.6.1     
+[17] stringr_1.4.0    glue_1.3.1       purrr_0.3.3      munsell_0.5.0   
+[21] compiler_3.6.1   pkgconfig_2.0.3  colorspace_1.4-1 tidyselect_0.2.5
+[25] tibble_2.1.3    
 > 
 > proc.time()
    user  system elapsed 
-  8.900   0.494   9.755 
+  8.738   0.451   9.795 

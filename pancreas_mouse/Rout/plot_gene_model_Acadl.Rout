@@ -105,14 +105,15 @@ Type 'q()' to quit R.
 +   )
 + }))
 > 
-> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
+> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene,
++                    keepgenes = sumdf_bygene$gene)
 Warning messages:
 1: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 2: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 > 
 > methods_short <- shorten_methods(methods)
 > 
-> plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
+> plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
 +   
 +   rn <- round(1e7 * runif(1))
 +   tmpdir <- tempdir()
@@ -125,11 +126,11 @@ Warning messages:
 +                              condColors = c(pos = "blue", neg = "red"),
 +                              scaleDataTracks = TRUE)
 +   grDevices::dev.off()
-+   
++ 
 +   p2 <- ggplot(sumdfg %>% dplyr::filter(gene == showgene) %>%
 +                  dplyr::select(gene, method, spliced, unspliced) %>%
 +                  tidyr::gather(key = "ctype", value = "count", spliced, unspliced) %>%
-+                  dplyr::left_join(methods_short, by = "method"),
++                  dplyr::left_join(methodsdf, by = "method"),
 +                aes(x = method_short, y = count, fill = mtype)) + 
 +     geom_bar(stat = "identity") + facet_wrap(~ ctype, nrow = 1) + 
 +     theme_bw() + 
@@ -163,7 +164,7 @@ Warning messages:
 + }
 > 
 > pdf(outpdf, width = 8, height = 6)
-> print(plot_gene_model(gr = gr, bwf = bwf, showgene = showgene,
+> print(plot_gene_model(gr = gr, bwf = bwf, bwc = bwc, showgene = showgene,
 +                       sumdfg = sumdf_bygene, methodsdf = methods_short,
 +                       uniq = uniq))
 > dev.off()
@@ -171,7 +172,7 @@ null device
           1 
 > 
 > date()
-[1] "Tue Dec 31 17:31:34 2019"
+[1] "Mon Jan  6 20:26:58 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -200,7 +201,7 @@ other attached packages:
  [9] IRanges_2.20.1              S4Vectors_0.24.1           
 [11] BiocGenerics_0.32.0         magick_2.2                 
 [13] dplyr_0.8.3                 cowplot_1.0.0              
-[15] ggplot2_3.2.1               swissknife_0.15            
+[15] ggplot2_3.2.1               swissknife_0.16.1          
 
 loaded via a namespace (and not attached):
  [1] ProtGenerics_1.18.0      bitops_1.0-6             bit64_0.9-7             
@@ -238,4 +239,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-135.358   6.628 142.322 
+135.266   6.435 142.080 

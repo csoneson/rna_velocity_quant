@@ -25,6 +25,8 @@ print(outrds)
 
 source(plothelperscript)
 
+methods_short <- shorten_methods(methods)
+
 cellinfo <- lapply(methods, function(nm) {
   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
                          "_cell_info.csv")) %>%
@@ -40,7 +42,8 @@ velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
   w %>% dplyr::select(index, method, contains("clusters"), velocity_confidence, 
                       velocity_confidence_transition, velocity_self_transition, 
                       velocity_length, velocity_pseudotime, latent_time)
-}))
+})) %>%
+  dplyr::left_join(methods_short, by = "method")
 if ("clusters" %in% colnames(velocity_confidence) && !is.null(cluster_levels[[dataset]])) {
   velocity_confidence$clusters <- factor(
     as.character(velocity_confidence$clusters), 
@@ -52,7 +55,8 @@ velocity_genes <- do.call(dplyr::bind_rows, lapply(geneinfo, function(w) {
   w %>% dplyr::select(index, method, 
                       velocity_score, fit_alpha, fit_beta, fit_gamma, 
                       fit_likelihood)
-}))
+})) %>%
+  dplyr::left_join(methods_short, by = "method")
 
 pdf(gsub("rds$", "pdf", outrds), width = 10, height = 10)
 
@@ -65,9 +69,10 @@ if ("clusters" %in% colnames(velocity_confidence)) {
     labs(title = "Latent time vs cluster")
 }
 
-ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25) + 
+ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
   theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Velocity confidence, per cell",
@@ -75,18 +80,20 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) +
                          "agree with the neighboring velocities, \ni.e. ", 
                          "a kind of smoothness score"))
 
-ggplot(velocity_confidence, aes(x = method, y = velocity_length)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25) + 
+ggplot(velocity_confidence, aes(x = method_short, y = velocity_length)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
   theme_bw() + 
   scale_y_log10() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Velocity length, per cell",
        subtitle = "")
 
-ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25) + 
+ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence_transition)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
   theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Velocity confidence (transition), per cell",
@@ -95,26 +102,55 @@ ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition))
                          "probabilities truly reflect the velocities ", 
                          "in high dimensional space."))
 
-ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25) + 
+ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
   theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Velocity self-transition, per cell",
        subtitle = paste0(""))
 
-ggplot(velocity_genes, aes(x = method, y = velocity_score)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25) + 
+if ("clusters" %in% colnames(velocity_confidence)) {
+  print(
+    ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
+      geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
+      theme_bw() + 
+      facet_wrap(~ clusters) + 
+      scale_fill_manual(values = base_method_colors, name = "") + 
+      theme(legend.position = "none",
+            axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+      labs(title = "Velocity self-transition, per cell",
+           x = "",
+           y = "Self-transition probability"))
+  
+  print(
+    ggplot(velocity_confidence, aes(x = clusters, y = velocity_self_transition)) + 
+      geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
+      theme_bw() + 
+      facet_wrap(~ method_short) + 
+      scale_fill_manual(values = base_method_colors, name = "") + 
+      theme(legend.position = "none",
+            axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+      labs(title = "Velocity self-transition, per cell",
+           x = "",
+           y = "Self-transition probability"))
+}
+
+ggplot(velocity_genes, aes(x = method_short, y = velocity_score)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
   scale_y_sqrt() + 
   theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Velocity score, per gene",
        subtitle = paste0(""))
 
-ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) + 
-  geom_boxplot(aes(fill = method), alpha = 0.25, scale = "width") + 
+ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.25, scale = "width") + 
   theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
   labs(title = "Fit likelihood, per gene",
@@ -122,6 +158,8 @@ ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) +
 
 dev.off()
 
-saveRDS(NULL, file = outrds)
+saveRDS(list(cell_vel = velocity_confidence %>% dplyr::mutate(dataset = dataset),
+             gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
+        file = outrds)
 date()
 sessionInfo()

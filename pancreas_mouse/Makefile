@@ -32,7 +32,14 @@ Ccl9 Nectin2 Dqx1 Nnat Nop16 Zfp773 \
 Traf5 Rrm2b Gm37350 Acadl \
 Gse1 Kxd1 Cbx3 Gm20503 Srp54a \
 Irf6 Mast1 Tdg Nfs1 Rab5a Ube2s \
-Myef2 Meg3 Gm37376 Gm24276
+Myef2 Meg3 Gm37376 Gm24276 \
+Rpl13 \
+Pde2a 1810034E14Rik Rab43 Gm21983 Tax1bp3 \
+Cldn10 Dek Dtymk Gm35409 Krt23 Spink4 \
+Fam241b Nkx2-2 Mtch1 Tcp11 Rnase4 Cd164l2 Cpe Map1b \
+Krit1 Sfxn2 Tmem39a Gpr45 Socs2 \
+Rab40c Tmem120b Zfp143 \
+Ppp4r3a Ei24 Sil1 Rpgrip1 Tgif2 Mia 
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
@@ -87,7 +94,9 @@ plots/frac_unspliced/pancreas_plot_frac_unspliced.rds \
 $(foreach g,$(genestoplot),plots/genes/pancreas_$(g).pdf) \
 plots/merge_umaps/pancreas_plot_merge_umaps.rds \
 plots/compare_velocity_projections/pancreas_plot_compare_velocity_projections.rds \
-plots/shared_genes_scvelo/pancreas_plot_shared_genes_scvelo.rds
+plots/shared_genes_scvelo/pancreas_plot_shared_genes_scvelo.rds \
+plots/compare_dimred_velocities/pancreas_plot_compare_dimred_velocities.rds \
+plots/velocity_mds/pancreas_plot_velocity_mds.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -484,19 +493,20 @@ $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='Pancreas' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
 plots/count_correlation/pancreas_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
-$(scriptdir)/plot_count_correlation.R 
+$(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
 plots/merge_umaps/pancreas_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
+$(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 plots/compare_velocity_projections/pancreas_plot_compare_velocity_projections.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
@@ -506,6 +516,22 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+
+plots/compare_dimred_velocities/pancreas_plot_compare_dimred_velocities.rds: \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_compare_dimred_velocities.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_dimred_velocities.R Rout/plot_compare_dimred_velocities.Rout
+
+plots/velocity_mds/pancreas_plot_velocity_mds.rds: output/genesets/shared_genes.txt \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Pancreas' methods='$(methodsc)' genetxt='$<' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
 
 plots/shared_genes_scvelo/pancreas_plot_shared_genes_scvelo.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \

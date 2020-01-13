@@ -1,0 +1,55 @@
+args <- (commandArgs(trailingOnly = TRUE))
+for (i in seq_len(length(args))) {
+  eval(parse(text = args[[i]]))
+}
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(ggplot2)
+  library(SummarizedExperiment)
+  library(SingleCellExperiment)
+  library(scater)
+  library(readr)
+  library(UpSetR)
+  library(pheatmap)
+})
+
+
+topdir <- ".."
+plothelperscript <- paste0(topdir, "/scripts/plot_helpers.R")
+datasets <- c("neuron_10k_v3_mouse", "dentate_gyrus_mouse", "pancreas_mouse", "pfc_mouse")
+
+source(plothelperscript)
+
+files <- lapply(datasets, function(ds) {
+  readRDS(file.path(topdir, ds, "plots/velocity_confidence", 
+                    paste0(gsub("_10k_v3", "", gsub("_mouse", "", ds)), 
+                           "_plot_velocity_confidence.rds")))
+})
+
+cellinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$cell_vel))
+geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel))
+
+pdf("summary_velocity.pdf", width = 8, height = 8)
+g1 <- ggplot(cellinfo, aes(x = method_short, y = velocity_confidence)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.5, size = 0.5) + 
+  theme_bw() + facet_wrap(~ dataset, ncol = 1) + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  labs(title = "Velocity confidence, per cell", y = "Velocity confidence", x = "")
+
+g2 <- ggplot(geneinfo, aes(x = method_short, y = fit_likelihood)) + 
+  geom_boxplot(aes(fill = mtype), alpha = 0.5, size = 0.5) + 
+  theme_bw() + facet_wrap(~ dataset, ncol = 1) + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+  labs(title = "Fit likelihood, per gene", y = "Fit likelihood", x = "")
+
+cowplot::plot_grid(g1, g2, nrow = 1, labels = c("A", "B"))
+dev.off()
+
+date()
+sessionInfo()
+

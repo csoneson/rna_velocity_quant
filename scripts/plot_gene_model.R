@@ -52,11 +52,12 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
   )
 }))
 
-uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
+uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene,
+                   keepgenes = sumdf_bygene$gene)
 
 methods_short <- shorten_methods(methods)
 
-plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
+plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
   
   rn <- round(1e7 * runif(1))
   tmpdir <- tempdir()
@@ -69,11 +70,11 @@ plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
                              condColors = c(pos = "blue", neg = "red"),
                              scaleDataTracks = TRUE)
   grDevices::dev.off()
-  
+
   p2 <- ggplot(sumdfg %>% dplyr::filter(gene == showgene) %>%
                  dplyr::select(gene, method, spliced, unspliced) %>%
                  tidyr::gather(key = "ctype", value = "count", spliced, unspliced) %>%
-                 dplyr::left_join(methods_short, by = "method"),
+                 dplyr::left_join(methodsdf, by = "method"),
                aes(x = method_short, y = count, fill = mtype)) + 
     geom_bar(stat = "identity") + facet_wrap(~ ctype, nrow = 1) + 
     theme_bw() + 
@@ -107,7 +108,7 @@ plot_gene_model <- function(gr, bwf, showgene, sumdfg, methodsdf, uniq) {
 }
 
 pdf(outpdf, width = 8, height = 6)
-print(plot_gene_model(gr = gr, bwf = bwf, showgene = showgene,
+print(plot_gene_model(gr = gr, bwf = bwf, bwc = bwc, showgene = showgene,
                       sumdfg = sumdf_bygene, methodsdf = methods_short,
                       uniq = uniq))
 dev.off()

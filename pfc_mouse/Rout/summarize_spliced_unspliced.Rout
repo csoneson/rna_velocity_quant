@@ -283,7 +283,16 @@ kallisto_bustools_prepref_isocollapse_include
 +   w
 + })
 > 
-> for (m in c("alevin_spliced_unspliced", "velocyto")) {
+> ## From starsolo
+> sces <- lapply(sces, function(w) {
++   reducedDim(w, "PCA_starsolo") <- reducedDim(sces[["starsolo"]], "PCA")
++   reducedDim(w, "TSNE_starsolo") <- reducedDim(sces[["starsolo"]], "TSNE")
++   reducedDim(w, "UMAP_starsolo") <- reducedDim(sces[["starsolo"]], "UMAP")
++   w$cluster_starsolo <- sces[["starsolo"]]$cluster
++   w
++ })
+> 
+> for (m in c("starsolo")) {
 +   message(m)
 +   ## Concatenated spliced and unspliced
 +   tmp <- SingleCellExperiment(
@@ -310,9 +319,21 @@ kallisto_bustools_prepref_isocollapse_include
 +     colData(w)[[paste0("cluster_", m, "_summed")]] <- tmp$cluster
 +     w
 +   })
++ 
++   ## Only unspliced
++   tmp <- SingleCellExperiment(
++     assays = list(counts = assay(sces[[m]], "unspliced")))
++   tmp <- do_dimred(tmp)
++   sces <- lapply(sces, function(w) {
++     reducedDim(w, paste0("PCA_", m, "_unspliced")) <- reducedDim(tmp, "PCA")
++     reducedDim(w, paste0("TSNE_", m, "_unspliced")) <- reducedDim(tmp, "TSNE")
++     reducedDim(w, paste0("UMAP_", m, "_unspliced")) <- reducedDim(tmp, "UMAP")
++     colData(w)[[paste0("cluster_", m, "_unspliced")]] <- tmp$cluster
++     w
++   })
++   
 + }
-alevin_spliced_unspliced
-velocyto
+starsolo
 > 
 > ## ========================================================================= ##
 > ## Save
@@ -328,7 +349,7 @@ velocyto
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Dec 20 19:56:22 2019"
+[1] "Wed Jan  1 17:24:58 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -399,4 +420,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-468.330  27.389 503.941 
+378.457  15.273 400.615 

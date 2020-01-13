@@ -9,6 +9,8 @@ suppressPackageStartupMessages({
   library(SummarizedExperiment)
   library(SingleCellExperiment)
   library(cowplot)
+  library(ggrepel)
+  library(cdata)
 })
 source(plothelperscript)
 
@@ -22,6 +24,9 @@ print(tx2gene)
 print(methods)
 print(outrds)
 
+## ------------------------------------------------------------------------- ##
+## Read data
+## ------------------------------------------------------------------------- ##
 sces <- lapply(methods, function(nm) {
   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
 })
@@ -34,13 +39,15 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
              spliced = rowSums(assay(w, "spliced")),
              unspliced = rowSums(assay(w, "unspliced")),
              total = rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced")),
-             frac_unspliced = rowSums(assay(w, "unspliced"))/(rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
+             frac_unspliced = rowSums(assay(w, "unspliced"))/
+               (rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
              stringsAsFactors = FALSE
   )
 }))
 
 tx2gene <- readRDS(tx2gene)
-uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
+uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene, 
+                   keepgenes = sumdf_bygene$gene)
 
 ## ------------------------------------------------------------------------- ##
 ## Velocity
@@ -61,12 +68,16 @@ sumdf_bygene$scvelo_selected_nbr[is.na(sumdf_bygene$scvelo_selected_nbr)] <- 0
 ## Summarize across methods
 sumdf_bygene_acrossmethods <- sumdf_bygene %>%
   dplyr::group_by(gene, scvelo_selected, scvelo_selected_nbr) %>%
-  dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced))
+  dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced),
+                   mean_frac_unspliced = mean(frac_unspliced),
+                   min_frac_unspliced = min(frac_unspliced),
+                   max_frac_unspliced = max(frac_unspliced))
 
 ## Plot ----
 sumdf_bygene_acrossmethods_scvelosel <- 
   sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
 qtl <- quantile(sumdf_bygene_acrossmethods_scvelosel$sd_frac_unspliced, 0.9, na.rm = TRUE)
+pdf(gsub("\\.rds$", "_fracunspliced_sd_distr.pdf", outrds))
 ggplot(sumdf_bygene_acrossmethods_scvelosel, 
        aes(x = sd_frac_unspliced)) + 
   geom_histogram(bins = 100, fill = "lightgrey") + 
@@ -75,12 +86,15 @@ ggplot(sumdf_bygene_acrossmethods_scvelosel,
   labs(x = "Standard deviation of fraction UMIs in unspliced targets",
        y = "Number of genes",
        title = "Variability of the unspliced fractions across quantifications, by gene",
-       subtitle = "Only genes selected by scVelo for at least one quantification") 
+       subtitle = paste0("Only genes selected by scVelo for at least one quantification (n=", 
+                         nrow(sumdf_bygene_acrossmethods_scvelosel), ")")) 
+dev.off()
 
 ## Retain top 10% ---- 
 genes_to_keep <- sumdf_bygene_acrossmethods_scvelosel %>%
   dplyr::filter(sd_frac_unspliced > qtl) %>%
   dplyr::pull(gene)
+print(length(genes_to_keep))
 
 ## Cluster the selected genes based on their unspliced fraction pattern across methods ---- 
 clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
@@ -102,10 +116,11 @@ hcl <- hclust(d = as.dist(sqrt(2 - 2*cor(t(clstdata)))))
 clusters <- cutree(hcl, k = 10)
 
 pdf(gsub("\\.rds$", "_fracunspliced_clustering.pdf", outrds), 
-    width = 10, height = 35)
+    width = 10, height = 25)
 print(pheatmap::pheatmap(
   clstdata, cluster_rows = hcl, cutree_rows = 10, 
-  scale = "none", fontsize_row = 4))
+  scale = "none", fontsize_row = 4,
+  annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters))))
 dev.off()
 
 for (i in unique(clusters)) {
@@ -120,6 +135,45 @@ for (i in unique(clusters)) {
     dev.off()
   }
 }
+
+## Summarize each cluster by its centroid
+ms <- split(clstdata, f = clusters)
+m <- do.call(dplyr::bind_rows, lapply(ms, colMeans))
+
+## Find most similar gene in each cluster
+cl_rep <- do.call(dplyr::bind_rows, lapply(unique(clusters), function(w) {
+  tmp <- cor(t(ms[[w]]), t(m[w, , drop = FALSE]))
+  data.frame(cluster = w, 
+             gene = rownames(tmp),
+             cor = tmp[, 1],
+             stringsAsFactors = FALSE)
+}))
+print(do.call(dplyr::bind_rows, 
+              lapply(split(cl_rep, cl_rep$cluster), 
+                     function(w) w %>% arrange(desc(cor)) %>% head(3))))
+write.table(cl_rep %>% dplyr::arrange(cluster, desc(cor)), 
+            file = gsub("\\.rds$", "_fracunspliced_cluster_centroid_corrs.txt", outrds),
+            row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+      
+## Plot centroids and correlations within each cluster
+rn <- round(1e7 * runif(1))
+tmpdir <- tempdir()
+png(paste0(tmpdir, "/pheatmap", rn, ".png"), width = 6,
+    height = 5, unit = "in", res = 400)
+print(pheatmap::pheatmap(m, cluster_rows = FALSE, cluster_cols = TRUE, treeheight_col = 10, 
+                         main = "Centroid cluster profiles"))
+dev.off()
+g <- ggplot(cl_rep, aes(x = factor(cluster), y = cor)) + geom_boxplot(outlier.size = -1) + 
+  geom_jitter(width = 0.2, height = 0) + theme_bw() + 
+  labs(x = "Cluster", y = "Correlations with centroid profile")
+pdf(gsub("\\.rds$", "_fracunspliced_cluster_centroids.pdf", outrds), width = 10, height = 5)
+cowplot::plot_grid(
+  cowplot::ggdraw() +
+    cowplot::draw_image(paste0(tmpdir, "/pheatmap", rn, ".png")),
+  g,
+  nrow = 1, rel_widths = c(6, 4), labels = c("A", "B")
+)
+dev.off()
 
 ## Uniqueness for each cluster
 uniqsub <- uniq %>% 

@@ -1,0 +1,1298 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(tximeta)
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++   library(Seurat)
++ })
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(plothelperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(methods)
+[1] "velocyto,kallisto_bustools_prepref_isocollapse_exclude,kallisto_bustools_prepref_isoseparate_exclude,kallisto_bustools_prepref_isocollapse_include,kallisto_bustools_prepref_isoseparate_include,alevin_prepref_isocollapse_cdna_introns,alevin_prepref_isoseparate_cdna_introns,alevin_prepref_isocollapse_cdna_introns_decoy,alevin_prepref_isoseparate_cdna_introns_decoy,alevin_spliced_unspliced,starsolo,starsolo_subtr"
+> print(outrds)
+[1] "plots/compare_dimred_velocities/pancreas_plot_compare_dimred_velocities.rds"
+> 
+> ## Number of neighbors
+> nn <- 10
+> 
+> source(plothelperscript)
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> methods_short <- shorten_methods(methods)
+> 
+> dimreds <- c("PCA", "TSNE", "UMAP")
+> inputs <- c("alevin_spliced", "starsolo", "starsolo_unspliced",
++             "starsolo_summed", "starsolo_concatenated")
+> 
+> dfiles <- expand.grid(dimreds, inputs) %>%
++   tidyr::unite(col = "dfile", Var1, Var2, sep = "_") %>% 
++   dplyr::pull(dfile)
+> dfiles <- expand.grid(methods, dfiles) %>%
++   dplyr::mutate(file = paste0(topdir, "/plots/velocity/anndata_", Var1, 
++                               "/anndata_", Var1, "_velocity_", Var2, ".csv"),
++                 sce = paste0(topdir, "/output/sce/sce_", Var1, ".rds"))
+> stopifnot(all(file.exists(dfiles$file)))
+> stopifnot(all(file.exists(dfiles$sce)))
+> 
+> ## Calculate the length of the velocity projection for each cell
+> ## The idea here is that if this projection is long, one is relatively 
+> ## sure of which direction a cell is heading. 
+> res <- do.call(dplyr::bind_rows, lapply(seq_len(nrow(dfiles)), function(i) {
++   read.csv(dfiles$file[i], header = TRUE, as.is = TRUE) %>%
++     dplyr::mutate(velocity_length = sqrt(X0 ^ 2 + X1 ^ 2),
++                   method = dfiles$Var1[i], 
++                   dimred = dfiles$Var2[i]) %>%
++     dplyr::left_join(methods_short, by = "method") %>%
++     dplyr::select(method_short, mtype, rtype, dimred, velocity_length)
++ }))
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> pdf(gsub("rds", "pdf", outrds), width = 10, height = 10)
+> 
+> ggplot(res, aes(x = dimred, y = velocity_length, fill = mtype)) + 
++   geom_boxplot() + 
++   facet_wrap(~ method_short) + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
++   theme_bw() + 
++   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   labs(x = "", y = "Projected velocity length",
++        title = "Length of projected velocity vector")
+> 
+> ## Calculate the average dot product between the velocity projection of 
+> ## a cell and those of its nearest neighbors. 
+> ## The idea is that if the low-dimensional representation is good, the 
+> ## dynamics should be visible in there (and the dot product should be high)
+> resdot <- do.call(dplyr::bind_rows, lapply(seq_len(nrow(dfiles)), function(i) {
++   print(dfiles[i, ])
++   a <- read.csv(dfiles$file[i], header = TRUE, as.is = TRUE) %>%
++     tibble::column_to_rownames("index") %>%
++     as.matrix()
++   sce <- readRDS(dfiles$sce[i])
++   ## dot product of velocity projections
++   dots <- a %*% t(a)
++   ## distances in low-dimensional representation
++   dists <- as.matrix(dist(reducedDim(sce, dfiles$Var2[i])))
++   stopifnot(all(rownames(dots) == rownames(dists)))
++   stopifnot(all(colnames(dots) == colnames(dists)))
++   data.frame(cell = rownames(dists),
++              method = dfiles$Var1[i],
++              dimred = dfiles$Var2[i],
++              nn = nn,
++              ave_dot = rowSums(dots * t(apply(dists, 1, function(x) {
++                seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
++              }))),
++              stringsAsFactors = FALSE) %>%
++     dplyr::left_join(methods_short, by = "method") %>%
++     dplyr::select(method_short, mtype, rtype, dimred, ave_dot)
++ }))
+      Var1               Var2
+1 velocyto PCA_alevin_spliced
+                                                                                                                                                           file
+1 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_PCA_alevin_spliced.csv
+                                                                                                       sce
+1 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                           Var1               Var2
+2 kallisto_bustools_prepref_isocollapse_exclude PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+2 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+2 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                           Var1               Var2
+3 kallisto_bustools_prepref_isoseparate_exclude PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+3 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+3 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                           Var1               Var2
+4 kallisto_bustools_prepref_isocollapse_include PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+4 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+4 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                           Var1               Var2
+5 kallisto_bustools_prepref_isoseparate_include PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+5 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+5 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                     Var1               Var2
+6 alevin_prepref_isocollapse_cdna_introns PCA_alevin_spliced
+                                                                                                                                                                                                                         file
+6 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_PCA_alevin_spliced.csv
+                                                                                                                                      sce
+6 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                     Var1               Var2
+7 alevin_prepref_isoseparate_cdna_introns PCA_alevin_spliced
+                                                                                                                                                                                                                         file
+7 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_PCA_alevin_spliced.csv
+                                                                                                                                      sce
+7 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                           Var1               Var2
+8 alevin_prepref_isocollapse_cdna_introns_decoy PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+8 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+8 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                           Var1               Var2
+9 alevin_prepref_isoseparate_cdna_introns_decoy PCA_alevin_spliced
+                                                                                                                                                                                                                                     file
+9 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_PCA_alevin_spliced.csv
+                                                                                                                                            sce
+9 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1               Var2
+10 alevin_spliced_unspliced PCA_alevin_spliced
+                                                                                                                                                                                            file
+10 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_PCA_alevin_spliced.csv
+                                                                                                                        sce
+10 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1               Var2
+11 starsolo PCA_alevin_spliced
+                                                                                                                                                            file
+11 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_PCA_alevin_spliced.csv
+                                                                                                        sce
+11 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1               Var2
+12 starsolo_subtr PCA_alevin_spliced
+                                                                                                                                                                        file
+12 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_PCA_alevin_spliced.csv
+                                                                                                              sce
+12 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1                Var2
+13 velocyto TSNE_alevin_spliced
+                                                                                                                                                             file
+13 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_TSNE_alevin_spliced.csv
+                                                                                                        sce
+13 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1                Var2
+14 kallisto_bustools_prepref_isocollapse_exclude TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+14 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+14 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1                Var2
+15 kallisto_bustools_prepref_isoseparate_exclude TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+15 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+15 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1                Var2
+16 kallisto_bustools_prepref_isocollapse_include TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+16 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+16 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1                Var2
+17 kallisto_bustools_prepref_isoseparate_include TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+17 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+17 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1                Var2
+18 alevin_prepref_isocollapse_cdna_introns TSNE_alevin_spliced
+                                                                                                                                                                                                                           file
+18 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                       sce
+18 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1                Var2
+19 alevin_prepref_isoseparate_cdna_introns TSNE_alevin_spliced
+                                                                                                                                                                                                                           file
+19 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                       sce
+19 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1                Var2
+20 alevin_prepref_isocollapse_cdna_introns_decoy TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+20 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+20 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1                Var2
+21 alevin_prepref_isoseparate_cdna_introns_decoy TSNE_alevin_spliced
+                                                                                                                                                                                                                                       file
+21 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_TSNE_alevin_spliced.csv
+                                                                                                                                             sce
+21 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1                Var2
+22 alevin_spliced_unspliced TSNE_alevin_spliced
+                                                                                                                                                                                             file
+22 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_TSNE_alevin_spliced.csv
+                                                                                                                        sce
+22 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1                Var2
+23 starsolo TSNE_alevin_spliced
+                                                                                                                                                             file
+23 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_TSNE_alevin_spliced.csv
+                                                                                                        sce
+23 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1                Var2
+24 starsolo_subtr TSNE_alevin_spliced
+                                                                                                                                                                         file
+24 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_TSNE_alevin_spliced.csv
+                                                                                                              sce
+24 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1                Var2
+25 velocyto UMAP_alevin_spliced
+                                                                                                                                                             file
+25 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_UMAP_alevin_spliced.csv
+                                                                                                        sce
+25 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1                Var2
+26 kallisto_bustools_prepref_isocollapse_exclude UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+26 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+26 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1                Var2
+27 kallisto_bustools_prepref_isoseparate_exclude UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+27 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+27 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1                Var2
+28 kallisto_bustools_prepref_isocollapse_include UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+28 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+28 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1                Var2
+29 kallisto_bustools_prepref_isoseparate_include UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+29 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+29 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1                Var2
+30 alevin_prepref_isocollapse_cdna_introns UMAP_alevin_spliced
+                                                                                                                                                                                                                           file
+30 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                       sce
+30 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1                Var2
+31 alevin_prepref_isoseparate_cdna_introns UMAP_alevin_spliced
+                                                                                                                                                                                                                           file
+31 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                       sce
+31 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1                Var2
+32 alevin_prepref_isocollapse_cdna_introns_decoy UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+32 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+32 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1                Var2
+33 alevin_prepref_isoseparate_cdna_introns_decoy UMAP_alevin_spliced
+                                                                                                                                                                                                                                       file
+33 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_UMAP_alevin_spliced.csv
+                                                                                                                                             sce
+33 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1                Var2
+34 alevin_spliced_unspliced UMAP_alevin_spliced
+                                                                                                                                                                                             file
+34 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_UMAP_alevin_spliced.csv
+                                                                                                                        sce
+34 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1                Var2
+35 starsolo UMAP_alevin_spliced
+                                                                                                                                                             file
+35 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_UMAP_alevin_spliced.csv
+                                                                                                        sce
+35 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1                Var2
+36 starsolo_subtr UMAP_alevin_spliced
+                                                                                                                                                                         file
+36 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_UMAP_alevin_spliced.csv
+                                                                                                              sce
+36 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1         Var2
+37 velocyto PCA_starsolo
+                                                                                                                                                      file
+37 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_PCA_starsolo.csv
+                                                                                                        sce
+37 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1         Var2
+38 kallisto_bustools_prepref_isocollapse_exclude PCA_starsolo
+                                                                                                                                                                                                                                file
+38 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+38 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1         Var2
+39 kallisto_bustools_prepref_isoseparate_exclude PCA_starsolo
+                                                                                                                                                                                                                                file
+39 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+39 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1         Var2
+40 kallisto_bustools_prepref_isocollapse_include PCA_starsolo
+                                                                                                                                                                                                                                file
+40 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+40 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1         Var2
+41 kallisto_bustools_prepref_isoseparate_include PCA_starsolo
+                                                                                                                                                                                                                                file
+41 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+41 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1         Var2
+42 alevin_prepref_isocollapse_cdna_introns PCA_starsolo
+                                                                                                                                                                                                                    file
+42 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_PCA_starsolo.csv
+                                                                                                                                       sce
+42 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1         Var2
+43 alevin_prepref_isoseparate_cdna_introns PCA_starsolo
+                                                                                                                                                                                                                    file
+43 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_PCA_starsolo.csv
+                                                                                                                                       sce
+43 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1         Var2
+44 alevin_prepref_isocollapse_cdna_introns_decoy PCA_starsolo
+                                                                                                                                                                                                                                file
+44 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+44 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1         Var2
+45 alevin_prepref_isoseparate_cdna_introns_decoy PCA_starsolo
+                                                                                                                                                                                                                                file
+45 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_PCA_starsolo.csv
+                                                                                                                                             sce
+45 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1         Var2
+46 alevin_spliced_unspliced PCA_starsolo
+                                                                                                                                                                                      file
+46 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_PCA_starsolo.csv
+                                                                                                                        sce
+46 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1         Var2
+47 starsolo PCA_starsolo
+                                                                                                                                                      file
+47 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_PCA_starsolo.csv
+                                                                                                        sce
+47 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1         Var2
+48 starsolo_subtr PCA_starsolo
+                                                                                                                                                                  file
+48 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_PCA_starsolo.csv
+                                                                                                              sce
+48 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1          Var2
+49 velocyto TSNE_starsolo
+                                                                                                                                                       file
+49 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_TSNE_starsolo.csv
+                                                                                                        sce
+49 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1          Var2
+50 kallisto_bustools_prepref_isocollapse_exclude TSNE_starsolo
+                                                                                                                                                                                                                                 file
+50 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+50 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1          Var2
+51 kallisto_bustools_prepref_isoseparate_exclude TSNE_starsolo
+                                                                                                                                                                                                                                 file
+51 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+51 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1          Var2
+52 kallisto_bustools_prepref_isocollapse_include TSNE_starsolo
+                                                                                                                                                                                                                                 file
+52 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+52 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1          Var2
+53 kallisto_bustools_prepref_isoseparate_include TSNE_starsolo
+                                                                                                                                                                                                                                 file
+53 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+53 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1          Var2
+54 alevin_prepref_isocollapse_cdna_introns TSNE_starsolo
+                                                                                                                                                                                                                     file
+54 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_TSNE_starsolo.csv
+                                                                                                                                       sce
+54 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1          Var2
+55 alevin_prepref_isoseparate_cdna_introns TSNE_starsolo
+                                                                                                                                                                                                                     file
+55 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_TSNE_starsolo.csv
+                                                                                                                                       sce
+55 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1          Var2
+56 alevin_prepref_isocollapse_cdna_introns_decoy TSNE_starsolo
+                                                                                                                                                                                                                                 file
+56 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+56 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1          Var2
+57 alevin_prepref_isoseparate_cdna_introns_decoy TSNE_starsolo
+                                                                                                                                                                                                                                 file
+57 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_TSNE_starsolo.csv
+                                                                                                                                             sce
+57 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1          Var2
+58 alevin_spliced_unspliced TSNE_starsolo
+                                                                                                                                                                                       file
+58 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_TSNE_starsolo.csv
+                                                                                                                        sce
+58 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1          Var2
+59 starsolo TSNE_starsolo
+                                                                                                                                                       file
+59 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_TSNE_starsolo.csv
+                                                                                                        sce
+59 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1          Var2
+60 starsolo_subtr TSNE_starsolo
+                                                                                                                                                                   file
+60 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_TSNE_starsolo.csv
+                                                                                                              sce
+60 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1          Var2
+61 velocyto UMAP_starsolo
+                                                                                                                                                       file
+61 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_UMAP_starsolo.csv
+                                                                                                        sce
+61 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1          Var2
+62 kallisto_bustools_prepref_isocollapse_exclude UMAP_starsolo
+                                                                                                                                                                                                                                 file
+62 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+62 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1          Var2
+63 kallisto_bustools_prepref_isoseparate_exclude UMAP_starsolo
+                                                                                                                                                                                                                                 file
+63 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+63 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1          Var2
+64 kallisto_bustools_prepref_isocollapse_include UMAP_starsolo
+                                                                                                                                                                                                                                 file
+64 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+64 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1          Var2
+65 kallisto_bustools_prepref_isoseparate_include UMAP_starsolo
+                                                                                                                                                                                                                                 file
+65 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+65 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1          Var2
+66 alevin_prepref_isocollapse_cdna_introns UMAP_starsolo
+                                                                                                                                                                                                                     file
+66 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_UMAP_starsolo.csv
+                                                                                                                                       sce
+66 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1          Var2
+67 alevin_prepref_isoseparate_cdna_introns UMAP_starsolo
+                                                                                                                                                                                                                     file
+67 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_UMAP_starsolo.csv
+                                                                                                                                       sce
+67 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1          Var2
+68 alevin_prepref_isocollapse_cdna_introns_decoy UMAP_starsolo
+                                                                                                                                                                                                                                 file
+68 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+68 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1          Var2
+69 alevin_prepref_isoseparate_cdna_introns_decoy UMAP_starsolo
+                                                                                                                                                                                                                                 file
+69 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_UMAP_starsolo.csv
+                                                                                                                                             sce
+69 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1          Var2
+70 alevin_spliced_unspliced UMAP_starsolo
+                                                                                                                                                                                       file
+70 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_UMAP_starsolo.csv
+                                                                                                                        sce
+70 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1          Var2
+71 starsolo UMAP_starsolo
+                                                                                                                                                       file
+71 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_UMAP_starsolo.csv
+                                                                                                        sce
+71 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1          Var2
+72 starsolo_subtr UMAP_starsolo
+                                                                                                                                                                   file
+72 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_UMAP_starsolo.csv
+                                                                                                              sce
+72 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1                   Var2
+73 velocyto PCA_starsolo_unspliced
+                                                                                                                                                                file
+73 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_PCA_starsolo_unspliced.csv
+                                                                                                        sce
+73 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1                   Var2
+74 kallisto_bustools_prepref_isocollapse_exclude PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+74 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+74 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1                   Var2
+75 kallisto_bustools_prepref_isoseparate_exclude PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+75 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+75 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1                   Var2
+76 kallisto_bustools_prepref_isocollapse_include PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+76 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+76 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1                   Var2
+77 kallisto_bustools_prepref_isoseparate_include PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+77 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+77 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1                   Var2
+78 alevin_prepref_isocollapse_cdna_introns PCA_starsolo_unspliced
+                                                                                                                                                                                                                              file
+78 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                       sce
+78 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1                   Var2
+79 alevin_prepref_isoseparate_cdna_introns PCA_starsolo_unspliced
+                                                                                                                                                                                                                              file
+79 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                       sce
+79 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1                   Var2
+80 alevin_prepref_isocollapse_cdna_introns_decoy PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+80 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+80 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1                   Var2
+81 alevin_prepref_isoseparate_cdna_introns_decoy PCA_starsolo_unspliced
+                                                                                                                                                                                                                                          file
+81 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                                             sce
+81 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1                   Var2
+82 alevin_spliced_unspliced PCA_starsolo_unspliced
+                                                                                                                                                                                                file
+82 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_PCA_starsolo_unspliced.csv
+                                                                                                                        sce
+82 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1                   Var2
+83 starsolo PCA_starsolo_unspliced
+                                                                                                                                                                file
+83 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_PCA_starsolo_unspliced.csv
+                                                                                                        sce
+83 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1                   Var2
+84 starsolo_subtr PCA_starsolo_unspliced
+                                                                                                                                                                            file
+84 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_PCA_starsolo_unspliced.csv
+                                                                                                              sce
+84 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1                    Var2
+85 velocyto TSNE_starsolo_unspliced
+                                                                                                                                                                 file
+85 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                        sce
+85 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1                    Var2
+86 kallisto_bustools_prepref_isocollapse_exclude TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+86 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+86 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1                    Var2
+87 kallisto_bustools_prepref_isoseparate_exclude TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+87 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+87 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                            Var1                    Var2
+88 kallisto_bustools_prepref_isocollapse_include TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+88 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+88 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                            Var1                    Var2
+89 kallisto_bustools_prepref_isoseparate_include TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+89 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+89 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                      Var1                    Var2
+90 alevin_prepref_isocollapse_cdna_introns TSNE_starsolo_unspliced
+                                                                                                                                                                                                                               file
+90 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                       sce
+90 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                      Var1                    Var2
+91 alevin_prepref_isoseparate_cdna_introns TSNE_starsolo_unspliced
+                                                                                                                                                                                                                               file
+91 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                       sce
+91 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                            Var1                    Var2
+92 alevin_prepref_isocollapse_cdna_introns_decoy TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+92 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+92 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                            Var1                    Var2
+93 alevin_prepref_isoseparate_cdna_introns_decoy TSNE_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+93 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                                             sce
+93 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                       Var1                    Var2
+94 alevin_spliced_unspliced TSNE_starsolo_unspliced
+                                                                                                                                                                                                 file
+94 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                                        sce
+94 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+       Var1                    Var2
+95 starsolo TSNE_starsolo_unspliced
+                                                                                                                                                                 file
+95 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                        sce
+95 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+             Var1                    Var2
+96 starsolo_subtr TSNE_starsolo_unspliced
+                                                                                                                                                                             file
+96 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_TSNE_starsolo_unspliced.csv
+                                                                                                              sce
+96 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+       Var1                    Var2
+97 velocyto UMAP_starsolo_unspliced
+                                                                                                                                                                 file
+97 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                        sce
+97 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                            Var1                    Var2
+98 kallisto_bustools_prepref_isocollapse_exclude UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+98 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                             sce
+98 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                            Var1                    Var2
+99 kallisto_bustools_prepref_isoseparate_exclude UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                           file
+99 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                             sce
+99 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                    Var2
+100 kallisto_bustools_prepref_isocollapse_include UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                            file
+100 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                              sce
+100 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                    Var2
+101 kallisto_bustools_prepref_isoseparate_include UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                            file
+101 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                              sce
+101 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                    Var2
+102 alevin_prepref_isocollapse_cdna_introns UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                file
+102 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                        sce
+102 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                    Var2
+103 alevin_prepref_isoseparate_cdna_introns UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                file
+103 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                        sce
+103 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                    Var2
+104 alevin_prepref_isocollapse_cdna_introns_decoy UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                            file
+104 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                              sce
+104 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                    Var2
+105 alevin_prepref_isoseparate_cdna_introns_decoy UMAP_starsolo_unspliced
+                                                                                                                                                                                                                                            file
+105 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                                              sce
+105 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                    Var2
+106 alevin_spliced_unspliced UMAP_starsolo_unspliced
+                                                                                                                                                                                                  file
+106 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                                         sce
+106 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                    Var2
+107 starsolo UMAP_starsolo_unspliced
+                                                                                                                                                                  file
+107 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                         sce
+107 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                    Var2
+108 starsolo_subtr UMAP_starsolo_unspliced
+                                                                                                                                                                              file
+108 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_UMAP_starsolo_unspliced.csv
+                                                                                                               sce
+108 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                Var2
+109 velocyto PCA_starsolo_summed
+                                                                                                                                                              file
+109 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_PCA_starsolo_summed.csv
+                                                                                                         sce
+109 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                Var2
+110 kallisto_bustools_prepref_isocollapse_exclude PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+110 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+110 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                Var2
+111 kallisto_bustools_prepref_isoseparate_exclude PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+111 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+111 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                Var2
+112 kallisto_bustools_prepref_isocollapse_include PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+112 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+112 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                Var2
+113 kallisto_bustools_prepref_isoseparate_include PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+113 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+113 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                Var2
+114 alevin_prepref_isocollapse_cdna_introns PCA_starsolo_summed
+                                                                                                                                                                                                                            file
+114 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_PCA_starsolo_summed.csv
+                                                                                                                                        sce
+114 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                Var2
+115 alevin_prepref_isoseparate_cdna_introns PCA_starsolo_summed
+                                                                                                                                                                                                                            file
+115 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_PCA_starsolo_summed.csv
+                                                                                                                                        sce
+115 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                Var2
+116 alevin_prepref_isocollapse_cdna_introns_decoy PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+116 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+116 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                Var2
+117 alevin_prepref_isoseparate_cdna_introns_decoy PCA_starsolo_summed
+                                                                                                                                                                                                                                        file
+117 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_PCA_starsolo_summed.csv
+                                                                                                                                              sce
+117 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                Var2
+118 alevin_spliced_unspliced PCA_starsolo_summed
+                                                                                                                                                                                              file
+118 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_PCA_starsolo_summed.csv
+                                                                                                                         sce
+118 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                Var2
+119 starsolo PCA_starsolo_summed
+                                                                                                                                                              file
+119 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_PCA_starsolo_summed.csv
+                                                                                                         sce
+119 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                Var2
+120 starsolo_subtr PCA_starsolo_summed
+                                                                                                                                                                          file
+120 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_PCA_starsolo_summed.csv
+                                                                                                               sce
+120 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                 Var2
+121 velocyto TSNE_starsolo_summed
+                                                                                                                                                               file
+121 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_TSNE_starsolo_summed.csv
+                                                                                                         sce
+121 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                 Var2
+122 kallisto_bustools_prepref_isocollapse_exclude TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+122 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+122 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                 Var2
+123 kallisto_bustools_prepref_isoseparate_exclude TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+123 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+123 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                 Var2
+124 kallisto_bustools_prepref_isocollapse_include TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+124 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+124 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                 Var2
+125 kallisto_bustools_prepref_isoseparate_include TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+125 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+125 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                 Var2
+126 alevin_prepref_isocollapse_cdna_introns TSNE_starsolo_summed
+                                                                                                                                                                                                                             file
+126 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                        sce
+126 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                 Var2
+127 alevin_prepref_isoseparate_cdna_introns TSNE_starsolo_summed
+                                                                                                                                                                                                                             file
+127 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                        sce
+127 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                 Var2
+128 alevin_prepref_isocollapse_cdna_introns_decoy TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+128 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+128 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                 Var2
+129 alevin_prepref_isoseparate_cdna_introns_decoy TSNE_starsolo_summed
+                                                                                                                                                                                                                                         file
+129 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_TSNE_starsolo_summed.csv
+                                                                                                                                              sce
+129 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                 Var2
+130 alevin_spliced_unspliced TSNE_starsolo_summed
+                                                                                                                                                                                               file
+130 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_TSNE_starsolo_summed.csv
+                                                                                                                         sce
+130 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                 Var2
+131 starsolo TSNE_starsolo_summed
+                                                                                                                                                               file
+131 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_TSNE_starsolo_summed.csv
+                                                                                                         sce
+131 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                 Var2
+132 starsolo_subtr TSNE_starsolo_summed
+                                                                                                                                                                           file
+132 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_TSNE_starsolo_summed.csv
+                                                                                                               sce
+132 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                 Var2
+133 velocyto UMAP_starsolo_summed
+                                                                                                                                                               file
+133 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_UMAP_starsolo_summed.csv
+                                                                                                         sce
+133 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                 Var2
+134 kallisto_bustools_prepref_isocollapse_exclude UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+134 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+134 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                 Var2
+135 kallisto_bustools_prepref_isoseparate_exclude UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+135 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+135 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                 Var2
+136 kallisto_bustools_prepref_isocollapse_include UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+136 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+136 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                 Var2
+137 kallisto_bustools_prepref_isoseparate_include UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+137 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+137 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                 Var2
+138 alevin_prepref_isocollapse_cdna_introns UMAP_starsolo_summed
+                                                                                                                                                                                                                             file
+138 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                        sce
+138 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                 Var2
+139 alevin_prepref_isoseparate_cdna_introns UMAP_starsolo_summed
+                                                                                                                                                                                                                             file
+139 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                        sce
+139 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                 Var2
+140 alevin_prepref_isocollapse_cdna_introns_decoy UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+140 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+140 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                 Var2
+141 alevin_prepref_isoseparate_cdna_introns_decoy UMAP_starsolo_summed
+                                                                                                                                                                                                                                         file
+141 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_UMAP_starsolo_summed.csv
+                                                                                                                                              sce
+141 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                 Var2
+142 alevin_spliced_unspliced UMAP_starsolo_summed
+                                                                                                                                                                                               file
+142 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_UMAP_starsolo_summed.csv
+                                                                                                                         sce
+142 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                 Var2
+143 starsolo UMAP_starsolo_summed
+                                                                                                                                                               file
+143 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_UMAP_starsolo_summed.csv
+                                                                                                         sce
+143 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                 Var2
+144 starsolo_subtr UMAP_starsolo_summed
+                                                                                                                                                                           file
+144 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_UMAP_starsolo_summed.csv
+                                                                                                               sce
+144 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                      Var2
+145 velocyto PCA_starsolo_concatenated
+                                                                                                                                                                    file
+145 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_PCA_starsolo_concatenated.csv
+                                                                                                         sce
+145 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                      Var2
+146 kallisto_bustools_prepref_isocollapse_exclude PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+146 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+146 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                      Var2
+147 kallisto_bustools_prepref_isoseparate_exclude PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+147 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+147 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                      Var2
+148 kallisto_bustools_prepref_isocollapse_include PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+148 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+148 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                      Var2
+149 kallisto_bustools_prepref_isoseparate_include PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+149 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+149 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                      Var2
+150 alevin_prepref_isocollapse_cdna_introns PCA_starsolo_concatenated
+                                                                                                                                                                                                                                  file
+150 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                        sce
+150 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                      Var2
+151 alevin_prepref_isoseparate_cdna_introns PCA_starsolo_concatenated
+                                                                                                                                                                                                                                  file
+151 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                        sce
+151 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                      Var2
+152 alevin_prepref_isocollapse_cdna_introns_decoy PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+152 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+152 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                      Var2
+153 alevin_prepref_isoseparate_cdna_introns_decoy PCA_starsolo_concatenated
+                                                                                                                                                                                                                                              file
+153 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                                              sce
+153 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                      Var2
+154 alevin_spliced_unspliced PCA_starsolo_concatenated
+                                                                                                                                                                                                    file
+154 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_PCA_starsolo_concatenated.csv
+                                                                                                                         sce
+154 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                      Var2
+155 starsolo PCA_starsolo_concatenated
+                                                                                                                                                                    file
+155 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_PCA_starsolo_concatenated.csv
+                                                                                                         sce
+155 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                      Var2
+156 starsolo_subtr PCA_starsolo_concatenated
+                                                                                                                                                                                file
+156 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_PCA_starsolo_concatenated.csv
+                                                                                                               sce
+156 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                       Var2
+157 velocyto TSNE_starsolo_concatenated
+                                                                                                                                                                     file
+157 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                         sce
+157 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                       Var2
+158 kallisto_bustools_prepref_isocollapse_exclude TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+158 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+158 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                       Var2
+159 kallisto_bustools_prepref_isoseparate_exclude TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+159 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+159 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                       Var2
+160 kallisto_bustools_prepref_isocollapse_include TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+160 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+160 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                       Var2
+161 kallisto_bustools_prepref_isoseparate_include TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+161 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+161 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                       Var2
+162 alevin_prepref_isocollapse_cdna_introns TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                   file
+162 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                        sce
+162 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                       Var2
+163 alevin_prepref_isoseparate_cdna_introns TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                   file
+163 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                        sce
+163 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                       Var2
+164 alevin_prepref_isocollapse_cdna_introns_decoy TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+164 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+164 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                       Var2
+165 alevin_prepref_isoseparate_cdna_introns_decoy TSNE_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+165 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                                              sce
+165 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                       Var2
+166 alevin_spliced_unspliced TSNE_starsolo_concatenated
+                                                                                                                                                                                                     file
+166 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                                         sce
+166 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                       Var2
+167 starsolo TSNE_starsolo_concatenated
+                                                                                                                                                                     file
+167 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                         sce
+167 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                       Var2
+168 starsolo_subtr TSNE_starsolo_concatenated
+                                                                                                                                                                                 file
+168 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_TSNE_starsolo_concatenated.csv
+                                                                                                               sce
+168 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+        Var1                       Var2
+169 velocyto UMAP_starsolo_concatenated
+                                                                                                                                                                     file
+169 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_velocyto/anndata_velocyto_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                         sce
+169 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_velocyto.rds
+                                             Var1                       Var2
+170 kallisto_bustools_prepref_isocollapse_exclude UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+170 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude/anndata_kallisto_bustools_prepref_isocollapse_exclude_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+170 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_exclude.rds
+                                             Var1                       Var2
+171 kallisto_bustools_prepref_isoseparate_exclude UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+171 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_exclude/anndata_kallisto_bustools_prepref_isoseparate_exclude_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+171 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_exclude.rds
+                                             Var1                       Var2
+172 kallisto_bustools_prepref_isocollapse_include UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+172 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_include/anndata_kallisto_bustools_prepref_isocollapse_include_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+172 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds
+                                             Var1                       Var2
+173 kallisto_bustools_prepref_isoseparate_include UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+173 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include/anndata_kallisto_bustools_prepref_isoseparate_include_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+173 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_kallisto_bustools_prepref_isoseparate_include.rds
+                                       Var1                       Var2
+174 alevin_prepref_isocollapse_cdna_introns UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                   file
+174 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                        sce
+174 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns.rds
+                                       Var1                       Var2
+175 alevin_prepref_isoseparate_cdna_introns UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                   file
+175 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns/anndata_alevin_prepref_isoseparate_cdna_introns_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                        sce
+175 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds
+                                             Var1                       Var2
+176 alevin_prepref_isocollapse_cdna_introns_decoy UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+176 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+176 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isocollapse_cdna_introns_decoy.rds
+                                             Var1                       Var2
+177 alevin_prepref_isoseparate_cdna_introns_decoy UMAP_starsolo_concatenated
+                                                                                                                                                                                                                                               file
+177 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_prepref_isoseparate_cdna_introns_decoy/anndata_alevin_prepref_isoseparate_cdna_introns_decoy_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                                              sce
+177 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_prepref_isoseparate_cdna_introns_decoy.rds
+                        Var1                       Var2
+178 alevin_spliced_unspliced UMAP_starsolo_concatenated
+                                                                                                                                                                                                     file
+178 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_alevin_spliced_unspliced/anndata_alevin_spliced_unspliced_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                                         sce
+178 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_alevin_spliced_unspliced.rds
+        Var1                       Var2
+179 starsolo UMAP_starsolo_concatenated
+                                                                                                                                                                     file
+179 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo/anndata_starsolo_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                         sce
+179 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo.rds
+              Var1                       Var2
+180 starsolo_subtr UMAP_starsolo_concatenated
+                                                                                                                                                                                 file
+180 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/plots/velocity/anndata_starsolo_subtr/anndata_starsolo_subtr_velocity_UMAP_starsolo_concatenated.csv
+                                                                                                               sce
+180 /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse/output/sce/sce_starsolo_subtr.rds
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> ggplot(resdot, aes(x = dimred, y = ave_dot, fill = mtype)) + 
++   geom_boxplot() + 
++   facet_wrap(~ method_short) + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
++   theme_bw() + 
++   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++   labs(x = "", y = "Average dot product",
++        title = "Average dot product with projected velocities of neighboring cells")
+> 
+> dev.off()
+null device 
+          1 
+> 
+> saveRDS(NULL, file = outrds)
+> date()
+[1] "Fri Jan 10 18:25:49 2020"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] Seurat_3.1.2                scater_1.14.5              
+ [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
+ [5] DelayedArray_0.12.0         BiocParallel_1.20.0        
+ [7] matrixStats_0.55.0          Biobase_2.46.0             
+ [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[11] IRanges_2.20.1              S4Vectors_0.24.1           
+[13] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[15] dplyr_0.8.3                 tximeta_1.4.2              
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.5          BiocFileCache_1.10.2     sn_1.5-4                
+  [4] plyr_1.8.5               igraph_1.2.4.2           lazyeval_0.2.2          
+  [7] splines_3.6.1            listenv_0.8.0            TH.data_1.0-10          
+ [10] digest_0.6.23            htmltools_0.4.0          ensembldb_2.10.2        
+ [13] viridis_0.5.1            gdata_2.18.0             magrittr_1.5            
+ [16] memoise_1.1.0            cluster_2.1.0            ROCR_1.0-7              
+ [19] globals_0.12.5           Biostrings_2.54.0        RcppParallel_4.4.4      
+ [22] R.utils_2.9.2            sandwich_2.5-1           askpass_1.1             
+ [25] prettyunits_1.0.2        colorspace_1.4-1         blob_1.2.0              
+ [28] rappdirs_0.3.1           ggrepel_0.8.1            crayon_1.3.4            
+ [31] RCurl_1.95-4.12          jsonlite_1.6             tximport_1.14.0         
+ [34] zeallot_0.1.0            survival_3.1-8           zoo_1.8-6               
+ [37] ape_5.3                  glue_1.3.1               gtable_0.3.0            
+ [40] zlibbioc_1.32.0          XVector_0.26.0           leiden_0.3.1            
+ [43] BiocSingular_1.2.0       future.apply_1.3.0       scales_1.1.0            
+ [46] mvtnorm_1.0-11           DBI_1.1.0                bibtex_0.4.2            
+ [49] Rcpp_1.0.3               plotrix_3.7-7            metap_1.2               
+ [52] viridisLite_0.3.0        progress_1.2.2           reticulate_1.13         
+ [55] bit_1.1-14               rsvd_1.0.2               SDMTools_1.1-221.2      
+ [58] tsne_0.1-3               htmlwidgets_1.5.1        httr_1.4.1              
+ [61] gplots_3.0.1.1           RColorBrewer_1.1-2       ellipsis_0.3.0          
+ [64] TFisher_0.2.0            ica_1.0-2                farver_2.0.1            
+ [67] pkgconfig_2.0.3          XML_3.98-1.20            R.methodsS3_1.7.1       
+ [70] uwot_0.1.5               dbplyr_1.4.2             labeling_0.3            
+ [73] reshape2_1.4.3           tidyselect_0.2.5         rlang_0.4.2             
+ [76] AnnotationDbi_1.48.0     munsell_0.5.0            tools_3.6.1             
+ [79] RSQLite_2.1.4            ggridges_0.5.1           stringr_1.4.0           
+ [82] npsurv_0.4-0             bit64_0.9-7              fitdistrplus_1.0-14     
+ [85] caTools_1.17.1.3         purrr_0.3.3              RANN_2.6.1              
+ [88] AnnotationFilter_1.10.0  pbapply_1.4-2            future_1.15.1           
+ [91] nlme_3.1-143             R.oo_1.23.0              biomaRt_2.42.0          
+ [94] compiler_3.6.1           png_0.1-7                plotly_4.9.1            
+ [97] beeswarm_0.2.3           curl_4.3                 lsei_1.2-0              
+[100] tibble_2.1.3             stringi_1.4.3            GenomicFeatures_1.38.0  
+[103] lattice_0.20-38          ProtGenerics_1.18.0      Matrix_1.2-18           
+[106] multtest_2.42.0          vctrs_0.2.1              mutoss_0.1-12           
+[109] pillar_1.4.2             lifecycle_0.1.0          Rdpack_0.11-1           
+[112] lmtest_0.9-37            RcppAnnoy_0.0.14         BiocNeighbors_1.4.1     
+[115] data.table_1.12.8        cowplot_1.0.0            bitops_1.0-6            
+[118] irlba_2.3.3              gbRd_0.4-11              rtracklayer_1.46.0      
+[121] R6_2.4.1                 KernSmooth_2.23-16       gridExtra_2.3           
+[124] vipor_0.4.5              codetools_0.2-16         MASS_7.3-51.4           
+[127] gtools_3.8.1             assertthat_0.2.1         openssl_1.4.1           
+[130] withr_2.1.2              sctransform_0.2.0        mnormt_1.5-5            
+[133] GenomicAlignments_1.22.1 Rsamtools_2.2.1          multcomp_1.4-11         
+[136] GenomeInfoDbData_1.2.2   hms_0.5.2                grid_3.6.1              
+[139] tidyr_1.0.0              DelayedMatrixStats_1.8.0 Rtsne_0.15              
+[142] numDeriv_2016.8-1.1      ggbeeswarm_0.6.0        
+> 
+> proc.time()
+    user   system  elapsed 
+1339.765   60.566 1439.487 

@@ -97,12 +97,12 @@ Type 'q()' to quit R.
 +   df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), los_over_sol = tmp$los_over_sol,
 +                    stringsAsFactors = FALSE)
 +   ggplot(df, aes(x = X1, y = X2, color = los_over_sol)) + 
-+     geom_point() +
++     geom_point(size = 1, alpha = 0.5) +
 +     scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
 +                           name = "Concordance between velocity projections") + 
 +     labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
 +          title = sm) + 
-+     theme_bw()
++     theme_void()
 + })
 > 
 > pdf(gsub("\\.rds", "_all_vs_shared_genes_bymethod.pdf", outrds), width = 8, height = 12)
@@ -162,7 +162,7 @@ null device
 > df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), speed_ratio = speeds$speed_ratio,
 +                  stringsAsFactors = FALSE)
 > g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
-+   geom_point() +
++   geom_point(alpha = 0.5) +
 +   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
 +                         name = "Concordance between velocity projections") + 
 +   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
@@ -189,7 +189,7 @@ null device
 > df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), speed_ratio = speeds$speed_ratio,
 +                  stringsAsFactors = FALSE)
 > g2 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
-+   geom_point() +
++   geom_point(alpha = 0.5) +
 +   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
 +                         name = "Concordance between velocity projections") + 
 +   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
@@ -212,7 +212,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Tue Dec 31 17:36:04 2019"
+[1] "Fri Jan 10 20:27:38 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -260,4 +260,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 11.411   1.057  12.962 
+ 12.493   1.173  13.952 

@@ -72,6 +72,8 @@ Type 'q()' to quit R.
 > 
 > source(plothelperscript)
 > 
+> methods_short <- shorten_methods(methods)
+> 
 > cellinfo <- lapply(methods, function(nm) {
 +   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
 +                          "_cell_info.csv")) %>%
@@ -279,7 +281,8 @@ See spec(...) for full column specifications.
 +   w %>% dplyr::select(index, method, contains("clusters"), velocity_confidence, 
 +                       velocity_confidence_transition, velocity_self_transition, 
 +                       velocity_length, velocity_pseudotime, latent_time)
-+ }))
++ })) %>%
++   dplyr::left_join(methods_short, by = "method")
 > if ("clusters" %in% colnames(velocity_confidence) && !is.null(cluster_levels[[dataset]])) {
 +   velocity_confidence$clusters <- factor(
 +     as.character(velocity_confidence$clusters), 
@@ -291,7 +294,8 @@ See spec(...) for full column specifications.
 +   w %>% dplyr::select(index, method, 
 +                       velocity_score, fit_alpha, fit_beta, fit_gamma, 
 +                       fit_likelihood)
-+ }))
++ })) %>%
++   dplyr::left_join(methods_short, by = "method")
 > 
 > pdf(gsub("rds$", "pdf", outrds), width = 10, height = 10)
 > 
@@ -304,9 +308,10 @@ See spec(...) for full column specifications.
 +     labs(title = "Latent time vs cluster")
 + }
 > 
-> ggplot(velocity_confidence, aes(x = method, y = velocity_confidence)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25) + 
+> ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity confidence, per cell",
@@ -314,18 +319,20 @@ See spec(...) for full column specifications.
 +                          "agree with the neighboring velocities, \ni.e. ", 
 +                          "a kind of smoothness score"))
 > 
-> ggplot(velocity_confidence, aes(x = method, y = velocity_length)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25) + 
+> ggplot(velocity_confidence, aes(x = method_short, y = velocity_length)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   theme_bw() + 
 +   scale_y_log10() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity length, per cell",
 +        subtitle = "")
 > 
-> ggplot(velocity_confidence, aes(x = method, y = velocity_confidence_transition)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25) + 
+> ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence_transition)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity confidence (transition), per cell",
@@ -334,26 +341,55 @@ See spec(...) for full column specifications.
 +                          "probabilities truly reflect the velocities ", 
 +                          "in high dimensional space."))
 > 
-> ggplot(velocity_confidence, aes(x = method, y = velocity_self_transition)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25) + 
+> ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity self-transition, per cell",
 +        subtitle = paste0(""))
 > 
-> ggplot(velocity_genes, aes(x = method, y = velocity_score)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25) + 
+> if ("clusters" %in% colnames(velocity_confidence)) {
++   print(
++     ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
++       geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
++       theme_bw() + 
++       facet_wrap(~ clusters) + 
++       scale_fill_manual(values = base_method_colors, name = "") + 
++       theme(legend.position = "none",
++             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++       labs(title = "Velocity self-transition, per cell",
++            x = "",
++            y = "Self-transition probability"))
++   
++   print(
++     ggplot(velocity_confidence, aes(x = clusters, y = velocity_self_transition)) + 
++       geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
++       theme_bw() + 
++       facet_wrap(~ method_short) + 
++       scale_fill_manual(values = base_method_colors, name = "") + 
++       theme(legend.position = "none",
++             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
++       labs(title = "Velocity self-transition, per cell",
++            x = "",
++            y = "Self-transition probability"))
++ }
+> 
+> ggplot(velocity_genes, aes(x = method_short, y = velocity_score)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   scale_y_sqrt() + 
 +   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity score, per gene",
 +        subtitle = paste0(""))
 > 
-> ggplot(velocity_genes, aes(x = method, y = fit_likelihood)) + 
-+   geom_boxplot(aes(fill = method), alpha = 0.25, scale = "width") + 
+> ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) + 
++   geom_boxplot(aes(fill = mtype), alpha = 0.25, scale = "width") + 
 +   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Fit likelihood, per gene",
@@ -366,9 +402,11 @@ Removed 7 rows containing non-finite values (stat_boxplot).
 null device 
           1 
 > 
-> saveRDS(NULL, file = outrds)
+> saveRDS(list(cell_vel = velocity_confidence %>% dplyr::mutate(dataset = dataset),
++              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
++         file = outrds)
 > date()
-[1] "Tue Dec 31 17:26:57 2019"
+[1] "Sat Jan 11 11:24:37 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -401,23 +439,24 @@ other attached packages:
 [17] dplyr_0.8.3                
 
 loaded via a namespace (and not attached):
- [1] beeswarm_0.2.3           tidyselect_0.2.5         purrr_0.3.3             
- [4] BiocSingular_1.2.0       lattice_0.20-38          colorspace_1.4-1        
- [7] vctrs_0.2.1              viridisLite_0.3.0        rlang_0.4.2             
-[10] pillar_1.4.2             glue_1.3.1               withr_2.1.2             
-[13] RColorBrewer_1.1-2       plyr_1.8.5               GenomeInfoDbData_1.2.2  
-[16] lifecycle_0.1.0          zlibbioc_1.32.0          munsell_0.5.0           
-[19] gtable_0.3.0             rsvd_1.0.2               labeling_0.3            
-[22] vipor_0.4.5              irlba_2.3.3              BiocNeighbors_1.4.1     
-[25] Rcpp_1.0.3               scales_1.1.0             backports_1.1.5         
-[28] XVector_0.26.0           farver_2.0.1             gridExtra_2.3           
-[31] hms_0.5.2                grid_3.6.1               bitops_1.0-6            
-[34] tools_3.6.1              magrittr_1.5             lazyeval_0.2.2          
-[37] RCurl_1.95-4.12          tibble_2.1.3             crayon_1.3.4            
-[40] pkgconfig_2.0.3          zeallot_0.1.0            Matrix_1.2-18           
-[43] DelayedMatrixStats_1.8.0 ggbeeswarm_0.6.0         assertthat_0.2.1        
-[46] viridis_0.5.1            R6_2.4.1                 compiler_3.6.1          
+ [1] Rcpp_1.0.3               rsvd_1.0.2               lattice_0.20-38         
+ [4] assertthat_0.2.1         zeallot_0.1.0            R6_2.4.1                
+ [7] plyr_1.8.5               backports_1.1.5          pillar_1.4.2            
+[10] zlibbioc_1.32.0          rlang_0.4.2              lazyeval_0.2.2          
+[13] irlba_2.3.3              Matrix_1.2-18            BiocNeighbors_1.4.1     
+[16] labeling_0.3             stringr_1.4.0            RCurl_1.95-4.12         
+[19] munsell_0.5.0            compiler_3.6.1           vipor_0.4.5             
+[22] BiocSingular_1.2.0       pkgconfig_2.0.3          ggbeeswarm_0.6.0        
+[25] tidyselect_0.2.5         tibble_2.1.3             gridExtra_2.3           
+[28] GenomeInfoDbData_1.2.2   viridisLite_0.3.0        crayon_1.3.4            
+[31] withr_2.1.2              bitops_1.0-6             grid_3.6.1              
+[34] gtable_0.3.0             lifecycle_0.1.0          magrittr_1.5            
+[37] scales_1.1.0             stringi_1.4.3            farver_2.0.1            
+[40] XVector_0.26.0           viridis_0.5.1            DelayedMatrixStats_1.8.0
+[43] vctrs_0.2.1              RColorBrewer_1.1-2       tools_3.6.1             
+[46] glue_1.3.1               beeswarm_0.2.3           purrr_0.3.3             
+[49] hms_0.5.2                colorspace_1.4-1        
 > 
 > proc.time()
    user  system elapsed 
- 11.786   0.957  13.373 
+ 13.243   0.949  14.798 

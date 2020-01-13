@@ -24,7 +24,7 @@ shorten_methods <- function(methods) {
 base_method_colors <- c(alevin = "#999999", `kallisto|bus` = "#009E73",
                         starsolo = "#0072B2", velocyto = "#CC79A7")
 
-merge_uniq <- function(refdir, tx2gene) {
+merge_uniq <- function(refdir, tx2gene, keepgenes) {
   uniq <- dplyr::bind_rows(
     read.delim(
       file.path(refdir, "prepref_isoseparate_uniqueness.txt"),
@@ -66,7 +66,7 @@ merge_uniq <- function(refdir, tx2gene) {
     dplyr::mutate(frac_unique_bin = Hmisc::cut2(frac_unique, 
                                                 cuts = c(0, 0.001, 0.5, 0.999, 1))) %>% 
     dplyr::mutate(gene = tx2gene$gene_name[match(gene, tx2gene$gene_id)]) %>%
-    dplyr::filter(gene %in% sumdf_bygene$gene) %>%
+    dplyr::filter(gene %in% keepgenes) %>%
     dplyr::group_by(ctype, atype, frac_unique_bin) %>%
     dplyr::mutate(nbr_genes = length(gene)) %>% 
     dplyr::ungroup() %>%

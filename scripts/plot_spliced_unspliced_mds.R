@@ -32,6 +32,8 @@ methods_short <- shorten_methods(methods)
 ## ------------------------------------------------------------------------- ##
 rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
   do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
+    stopifnot(all(rownames(sces[[s1]]) == rownames(sces[[s2]])))
+    stopifnot(all(colnames(sces[[s1]]) == colnames(sces[[s2]])))
     data.frame(m1 = s1, m2 = s2, 
                RMSEspliced = sqrt(mean((assay(sces[[s1]], "spliced") - 
                                           assay(sces[[s2]], "spliced"))^2)),
@@ -40,6 +42,8 @@ rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
                stringsAsFactors = FALSE)
   }))
 }))
+
+## Create separate distance matrices for spliced and unspliced counts
 rmses <- rmse %>% dplyr::select(m1, m2, RMSEspliced) %>% 
   tidyr::spread(key = m2, value = RMSEspliced) %>%
   as.data.frame() %>%
@@ -51,12 +55,15 @@ rmseu <- rmse %>% dplyr::select(m1, m2, RMSEunspliced) %>%
   tibble::column_to_rownames("m1") %>%
   as.matrix()
 
+stopifnot(all(rownames(rmses) == colnames(rmses)))
+stopifnot(all(rownames(rmseu) == colnames(rmseu)))
+
 ## MDS
-cmdspliced <- as.data.frame(cmdscale(rmses, k = 2)) %>%
+cmdspliced <- as.data.frame(cmdscale(d = rmses, k = 2)) %>%
   tibble::rownames_to_column("method") %>%
   dplyr::left_join(methods_short, by = "method")
 
-cmdunspliced <- as.data.frame(cmdscale(rmseu, k = 2)) %>%
+cmdunspliced <- as.data.frame(cmdscale(d = rmseu, k = 2)) %>%
   tibble::rownames_to_column("method") %>%
   dplyr::left_join(methods_short, by = "method")
 

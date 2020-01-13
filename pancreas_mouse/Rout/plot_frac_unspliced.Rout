@@ -28,6 +28,8 @@ Type 'q()' to quit R.
 +   library(SummarizedExperiment)
 +   library(SingleCellExperiment)
 +   library(cowplot)
++   library(ggrepel)
++   library(cdata)
 + })
 > source(plothelperscript)
 > 
@@ -70,6 +72,9 @@ Type 'q()' to quit R.
 > print(outrds)
 [1] "plots/frac_unspliced/pancreas_plot_frac_unspliced.rds"
 > 
+> ## ------------------------------------------------------------------------- ##
+> ## Read data
+> ## ------------------------------------------------------------------------- ##
 > sces <- lapply(methods, function(nm) {
 +   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
 + })
@@ -82,13 +87,15 @@ Type 'q()' to quit R.
 +              spliced = rowSums(assay(w, "spliced")),
 +              unspliced = rowSums(assay(w, "unspliced")),
 +              total = rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced")),
-+              frac_unspliced = rowSums(assay(w, "unspliced"))/(rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
++              frac_unspliced = rowSums(assay(w, "unspliced"))/
++                (rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
 +              stringsAsFactors = FALSE
 +   )
 + }))
 > 
 > tx2gene <- readRDS(tx2gene)
-> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene)
+> uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene, 
++                    keepgenes = sumdf_bygene$gene)
 Warning messages:
 1: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
 2: Factor `frac_unique_bin` contains implicit NA, consider using `forcats::fct_explicit_na` 
@@ -196,12 +203,16 @@ See spec(...) for full column specifications.
 > ## Summarize across methods
 > sumdf_bygene_acrossmethods <- sumdf_bygene %>%
 +   dplyr::group_by(gene, scvelo_selected, scvelo_selected_nbr) %>%
-+   dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced))
++   dplyr::summarize(sd_frac_unspliced = sd(frac_unspliced),
++                    mean_frac_unspliced = mean(frac_unspliced),
++                    min_frac_unspliced = min(frac_unspliced),
++                    max_frac_unspliced = max(frac_unspliced))
 > 
 > ## Plot ----
 > sumdf_bygene_acrossmethods_scvelosel <- 
 +   sumdf_bygene_acrossmethods %>% dplyr::filter(scvelo_selected)
 > qtl <- quantile(sumdf_bygene_acrossmethods_scvelosel$sd_frac_unspliced, 0.9, na.rm = TRUE)
+> pdf(gsub("\\.rds$", "_fracunspliced_sd_distr.pdf", outrds))
 > ggplot(sumdf_bygene_acrossmethods_scvelosel, 
 +        aes(x = sd_frac_unspliced)) + 
 +   geom_histogram(bins = 100, fill = "lightgrey") + 
@@ -210,14 +221,20 @@ See spec(...) for full column specifications.
 +   labs(x = "Standard deviation of fraction UMIs in unspliced targets",
 +        y = "Number of genes",
 +        title = "Variability of the unspliced fractions across quantifications, by gene",
-+        subtitle = "Only genes selected by scVelo for at least one quantification") 
++        subtitle = paste0("Only genes selected by scVelo for at least one quantification (n=", 
++                          nrow(sumdf_bygene_acrossmethods_scvelosel), ")")) 
 Warning message:
 Removed 49 rows containing non-finite values (stat_bin). 
+> dev.off()
+null device 
+          1 
 > 
 > ## Retain top 10% ---- 
 > genes_to_keep <- sumdf_bygene_acrossmethods_scvelosel %>%
 +   dplyr::filter(sd_frac_unspliced > qtl) %>%
 +   dplyr::pull(gene)
+> print(length(genes_to_keep))
+[1] 439
 > 
 > ## Cluster the selected genes based on their unspliced fraction pattern across methods ---- 
 > clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
@@ -241,13 +258,14 @@ Joining, by = "method"
 > clusters <- cutree(hcl, k = 10)
 > 
 > pdf(gsub("\\.rds$", "_fracunspliced_clustering.pdf", outrds), 
-+     width = 10, height = 35)
++     width = 10, height = 25)
 > print(pheatmap::pheatmap(
 +   clstdata, cluster_rows = hcl, cutree_rows = 10, 
-+   scale = "none", fontsize_row = 4))
++   scale = "none", fontsize_row = 4,
++   annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters))))
 > dev.off()
-pdf 
-  3 
+null device 
+          1 
 > 
 > for (i in unique(clusters)) {
 +   gn <- names(clusters[clusters == i])
@@ -261,6 +279,80 @@ pdf
 +     dev.off()
 +   }
 + }
+> 
+> ## Summarize each cluster by its centroid
+> ms <- split(clstdata, f = clusters)
+> m <- do.call(dplyr::bind_rows, lapply(ms, colMeans))
+> 
+> ## Find most similar gene in each cluster
+> cl_rep <- do.call(dplyr::bind_rows, lapply(unique(clusters), function(w) {
++   tmp <- cor(t(ms[[w]]), t(m[w, , drop = FALSE]))
++   data.frame(cluster = w, 
++              gene = rownames(tmp),
++              cor = tmp[, 1],
++              stringsAsFactors = FALSE)
++ }))
+> print(do.call(dplyr::bind_rows, 
++               lapply(split(cl_rep, cl_rep$cluster), 
++                      function(w) w %>% arrange(desc(cor)) %>% head(3))))
+   cluster          gene       cor
+1        1         Krit1 0.9920229
+2        1         Sfxn2 0.9916033
+3        1       Tmem39a 0.9912074
+4        2          Dpp4 0.9814198
+5        2        Rab40c 0.9810357
+6        2      Tmem120b 0.9810290
+7        3          Tgm7 0.9804291
+8        3 1810019D21Rik 0.9329424
+9        3       Gm11425 0.8789196
+10       4         Rpl29 0.9928011
+11       4       ccdc198 0.9914090
+12       4        Elovl1 0.9901163
+13       5         Insrr 0.9639123
+14       5         Xndc1 0.9583967
+15       5 4930404N11Rik 0.9492539
+16       6       Ppp4r3a 0.9991763
+17       6          Ei24 0.9975534
+18       6          Sil1 0.9968861
+19       7          Dqx1 0.9047392
+20       7       Sec61a1 0.9012039
+21       7         Brsk2 0.8947552
+22       8         Rrm2b 0.9023074
+23       8         Traf5 0.8927355
+24       8       Gm37350 0.7053503
+25       9          Kxd1 0.8497832
+26       9          Cbx3 0.8475533
+27       9        Tm9sf1 0.8424895
+28      10         Ube2s 0.9782186
+29      10          Dstn 0.9636414
+30      10         Rab5a 0.9598013
+> write.table(cl_rep %>% dplyr::arrange(cluster, desc(cor)), 
++             file = gsub("\\.rds$", "_fracunspliced_cluster_centroid_corrs.txt", outrds),
++             row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
+>       
+> ## Plot centroids and correlations within each cluster
+> rn <- round(1e7 * runif(1))
+> tmpdir <- tempdir()
+> png(paste0(tmpdir, "/pheatmap", rn, ".png"), width = 6,
++     height = 5, unit = "in", res = 400)
+> print(pheatmap::pheatmap(m, cluster_rows = FALSE, cluster_cols = TRUE, treeheight_col = 10, 
++                          main = "Centroid cluster profiles"))
+> dev.off()
+null device 
+          1 
+> g <- ggplot(cl_rep, aes(x = factor(cluster), y = cor)) + geom_boxplot(outlier.size = -1) + 
++   geom_jitter(width = 0.2, height = 0) + theme_bw() + 
++   labs(x = "Cluster", y = "Correlations with centroid profile")
+> pdf(gsub("\\.rds$", "_fracunspliced_cluster_centroids.pdf", outrds), width = 10, height = 5)
+> cowplot::plot_grid(
++   cowplot::ggdraw() +
++     cowplot::draw_image(paste0(tmpdir, "/pheatmap", rn, ".png")),
++   g,
++   nrow = 1, rel_widths = c(6, 4), labels = c("A", "B")
++ )
+> dev.off()
+null device 
+          1 
 > 
 > ## Uniqueness for each cluster
 > uniqsub <- uniq %>% 
@@ -282,13 +374,13 @@ Joining, by = "gene"
 +   labs(x = "Cluster", y = "Uniqueness") + 
 +   theme(legend.position = "none")
 > dev.off()
-pdf 
-  3 
+null device 
+          1 
 > 
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Dec 31 17:28:16 2019"
+[1] "Mon Jan  6 16:35:36 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -310,37 +402,40 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] cowplot_1.0.0               SingleCellExperiment_1.8.0 
- [3] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
- [5] BiocParallel_1.20.0         matrixStats_0.55.0         
- [7] Biobase_2.46.0              GenomicRanges_1.38.0       
- [9] GenomeInfoDb_1.22.0         IRanges_2.20.1             
-[11] S4Vectors_0.24.1            BiocGenerics_0.32.0        
-[13] ggplot2_3.2.1               dplyr_0.8.3                
+ [1] cdata_1.1.3                 ggrepel_0.8.1              
+ [3] cowplot_1.0.0               SingleCellExperiment_1.8.0 
+ [5] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
+ [7] BiocParallel_1.20.0         matrixStats_0.55.0         
+ [9] Biobase_2.46.0              GenomicRanges_1.38.0       
+[11] GenomeInfoDb_1.22.0         IRanges_2.20.1             
+[13] S4Vectors_0.24.1            BiocGenerics_0.32.0        
+[15] ggplot2_3.2.1               dplyr_0.8.3                
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3             lattice_0.20-38        tidyr_1.0.0           
- [4] zeallot_0.1.0          assertthat_0.2.1       digest_0.6.23         
- [7] R6_2.4.1               backports_1.1.5        acepack_1.4.1         
-[10] pillar_1.4.2           zlibbioc_1.32.0        rlang_0.4.2           
-[13] lazyeval_0.2.2         data.table_1.12.8      rstudioapi_0.10       
-[16] rpart_4.1-15           Matrix_1.2-18          checkmate_1.9.4       
-[19] labeling_0.3           splines_3.6.1          readr_1.3.1           
-[22] stringr_1.4.0          foreign_0.8-72         htmlwidgets_1.5.1     
-[25] pheatmap_1.0.12        RCurl_1.95-4.12        munsell_0.5.0         
-[28] compiler_3.6.1         xfun_0.11              pkgconfig_2.0.3       
-[31] base64enc_0.1-3        htmltools_0.4.0        nnet_7.3-12           
-[34] tidyselect_0.2.5       tibble_2.1.3           gridExtra_2.3         
-[37] htmlTable_1.13.3       GenomeInfoDbData_1.2.2 Hmisc_4.3-0           
-[40] crayon_1.3.4           withr_2.1.2            bitops_1.0-6          
-[43] grid_3.6.1             gtable_0.3.0           lifecycle_0.1.0       
-[46] magrittr_1.5           scales_1.1.0           stringi_1.4.3         
-[49] farver_2.0.1           XVector_0.26.0         latticeExtra_0.6-28   
-[52] ellipsis_0.3.0         vctrs_0.2.1            Formula_1.2-3         
-[55] RColorBrewer_1.1-2     tools_3.6.1            glue_1.3.1            
-[58] purrr_0.3.3            hms_0.5.2              survival_3.1-8        
-[61] colorspace_1.4-1       cluster_2.1.0          knitr_1.26            
+ [1] tidyr_1.0.0            splines_3.6.1          rquery_1.4.0          
+ [4] Formula_1.2-3          assertthat_0.2.1       latticeExtra_0.6-28   
+ [7] wrapr_1.9.3            GenomeInfoDbData_1.2.2 pillar_1.4.2          
+[10] backports_1.1.5        lattice_0.20-38        glue_1.3.1            
+[13] digest_0.6.23          RColorBrewer_1.1-2     XVector_0.26.0        
+[16] checkmate_1.9.4        colorspace_1.4-1       htmltools_0.4.0       
+[19] Matrix_1.2-18          pkgconfig_2.0.3        pheatmap_1.0.12       
+[22] magick_2.2             zlibbioc_1.32.0        purrr_0.3.3           
+[25] scales_1.1.0           htmlTable_1.13.3       tibble_2.1.3          
+[28] farver_2.0.1           ellipsis_0.3.0         withr_2.1.2           
+[31] nnet_7.3-12            lazyeval_0.2.2         survival_3.1-8        
+[34] magrittr_1.5           crayon_1.3.4           foreign_0.8-72        
+[37] tools_3.6.1            data.table_1.12.8      hms_0.5.2             
+[40] lifecycle_0.1.0        stringr_1.4.0          munsell_0.5.0         
+[43] cluster_2.1.0          compiler_3.6.1         rqdatatable_1.2.4     
+[46] rlang_0.4.2            grid_3.6.1             RCurl_1.95-4.12       
+[49] rstudioapi_0.10        htmlwidgets_1.5.1      labeling_0.3          
+[52] bitops_1.0-6           base64enc_0.1-3        gtable_0.3.0          
+[55] R6_2.4.1               gridExtra_2.3          knitr_1.26            
+[58] zeallot_0.1.0          Hmisc_4.3-0            readr_1.3.1           
+[61] stringi_1.4.3          Rcpp_1.0.3             vctrs_0.2.1           
+[64] rpart_4.1-15           acepack_1.4.1          tidyselect_0.2.5      
+[67] xfun_0.11             
 > 
 > proc.time()
    user  system elapsed 
- 86.169   4.768  92.277 
+ 82.658   4.277  87.635 

@@ -12,27 +12,29 @@ suppressPackageStartupMessages({
   library(scater)
   library(Seurat)
 })
+source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
 
 print(topdir)
+print(plothelperscript)
 print(methods)
 print(genetxt)
 print(outrds)
 
+methods_short <- shorten_methods(methods)
+
 sces <- lapply(methods, function(nm) {
   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
 })
-for (nm in names(sces)) {
-  metadata(sces[[nm]]) <- list(dataset = nm)
-}
 
 genes <- read.delim(genetxt, header = FALSE, as.is = TRUE)[, 1]
 sces <- lapply(sces, function(w) w[match(genes, rownames(w)), ])
 
 seurats <- lapply(methods, function(nm) {
-  w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", nm, "_shared_genes_with_velocity.h5ad")))
+  w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
+                                         nm, "_shared_genes_with_velocity.h5ad")))
   stopifnot(all(rownames(w) == genes))
   w
 })
@@ -46,51 +48,85 @@ gene_corrs <- do.call(
       lapply((j + 1):(length(methods)), function(k) {
         kk <- methods[k]
         message(jj, " - ", kk)
-        a <- scale(t(as.matrix(assay(sces[[jj]], "spliced"))), center = TRUE, scale = TRUE)
-        b <- scale(t(as.matrix(assay(sces[[kk]], "spliced"))), center = TRUE, scale = TRUE)
+        a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))), center = TRUE, scale = TRUE)
+        b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))), center = TRUE, scale = TRUE)
         corrs_spliced <- colSums(a * b)/(nrow(a) - 1)
-        a <- scale(t(as.matrix(assay(sces[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-        b <- scale(t(as.matrix(assay(sces[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
+        a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
+        b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))), center = TRUE, scale = TRUE)
         corrs_unspliced <- colSums(a * b)/(nrow(a) - 1)
         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))), center = TRUE, scale = TRUE)
         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity")))), center = TRUE, scale = TRUE)
         corrs_velocity <- colSums(a * b)/(nrow(a) - 1)
-        a <- scale(t(as.matrix(assay(sces[[jj]], "spliced"))) + 
-                     t(as.matrix(assay(sces[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-        b <- scale(t(as.matrix(assay(sces[[kk]], "spliced"))) + 
-                     t(as.matrix(assay(sces[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
+        a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
+                     t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
+        b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))) + 
+                     t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))), center = TRUE, scale = TRUE)
         corrs_total <- colSums(a * b)/(nrow(a) - 1)
         dplyr::bind_rows(
           data.frame(method1 = jj,
                      method2 = kk, 
                      gene = names(corrs_spliced), 
                      ctype = "spliced",
+                     dtype = "gene",
                      corrs = corrs_spliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      gene = names(corrs_unspliced), 
                      ctype = "unspliced",
+                     dtype = "gene",
                      corrs = corrs_unspliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      gene = names(corrs_velocity), 
                      ctype = "velocity",
+                     dtype = "gene",
                      corrs = corrs_velocity, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      gene = names(corrs_total), 
                      ctype = "total",
+                     dtype = "gene",
                      corrs = corrs_total, 
                      stringsAsFactors = FALSE)
         )
       }))
-  }))
+  })) %>%
+  dplyr::mutate(method1 = methods_short$method_short[match(method1, methods_short$method)],
+                method2 = methods_short$method_short[match(method2, methods_short$method)])
+gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+gene_corrs$method2 <- factor(gene_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
 
-gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods[methods %in% gene_corrs$method1])
-gene_corrs$method2 <- factor(gene_corrs$method2, levels = methods[methods %in% gene_corrs$method2])
+gene_corrs_within <- do.call(
+  dplyr::bind_rows, 
+  lapply(seq_len(length(methods)), function(j) {
+    jj <- methods[j]
+    a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))), center = TRUE, scale = TRUE)
+    b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
+    corrs_spliced_unspliced <- colSums(a * b)/(nrow(a) - 1)
+    a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
+                 t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
+    b <- scale(t(abs(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))), center = TRUE, scale = TRUE)
+    corrs_total_abs_velocity <- colSums(a * b)/(nrow(a) - 1)
+    dplyr::bind_rows(
+      data.frame(method = jj,
+                 gene = names(corrs_spliced_unspliced), 
+                 ctype = "spliced_unspliced",
+                 dtype = "gene",
+                 corrs = corrs_spliced_unspliced, 
+                 stringsAsFactors = FALSE),
+      data.frame(method = jj,
+                 gene = names(corrs_total_abs_velocity), 
+                 ctype = "total_abs_velocity",
+                 dtype = "gene",
+                 corrs = corrs_total_abs_velocity, 
+                 stringsAsFactors = FALSE)
+    )
+  })) %>%
+  dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
+gene_corrs_within$method <- factor(gene_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 
 ## Same but for cells
 cell_corrs <- do.call(
@@ -102,70 +138,138 @@ cell_corrs <- do.call(
       lapply((j + 1):(length(methods)), function(k) {
         kk <- methods[k]
         message(jj, " - ", kk)
-        a <- scale(as.matrix(assay(sces[[jj]], "spliced")), center = TRUE, scale = TRUE)
-        b <- scale(as.matrix(assay(sces[[kk]], "spliced")), center = TRUE, scale = TRUE)
+        a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))), center = TRUE, scale = TRUE)
+        b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))), center = TRUE, scale = TRUE)
         tmp <- a * b
         corrs_spliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-        a <- scale(as.matrix(assay(sces[[jj]], "unspliced")), center = TRUE, scale = TRUE)
-        b <- scale(as.matrix(assay(sces[[kk]], "unspliced")), center = TRUE, scale = TRUE)
+        a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
+        b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
         tmp <- a * b
         corrs_unspliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))), center = TRUE, scale = TRUE)
         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity"))), center = TRUE, scale = TRUE)
         tmp <- a * b
         corrs_velocity <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-        a <- scale(as.matrix(assay(sces[[jj]], "spliced")) + 
-                     as.matrix(assay(sces[[jj]], "unspliced")), center = TRUE, scale = TRUE)
-        b <- scale(as.matrix(assay(sces[[kk]], "spliced")) + 
-                     as.matrix(assay(sces[[kk]], "unspliced")), center = TRUE, scale = TRUE)
+        a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
+                     as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
+        b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))) + 
+                     as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
         tmp <- a * b
         corrs_total <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
+        if ("clusters" %in% colnames(colData(sces[[jj]]))) {
+          clsce <- sces[[jj]]$clusters
+          clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
+        } else {
+          clsce <- rep(NA, ncol(sces[[jj]]))
+          clseu <- rep(NA, ncol(sces[[jj]]))
+        }
         dplyr::bind_rows(
           data.frame(method1 = jj,
                      method2 = kk, 
                      cell = names(corrs_spliced), 
-                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
-                                      sces[[jj]]$clusters,
-                                      NA),
+                     cluster = clseu,
                      ctype = "spliced",
+                     dtype = "cell",
                      corrs = corrs_spliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_unspliced), 
-                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
-                                      sces[[jj]]$clusters,
-                                      NA),
+                     cluster = clseu,
                      ctype = "unspliced",
+                     dtype = "cell",
                      corrs = corrs_unspliced, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_velocity), 
-                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
-                                      levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1],
-                                      NA),
+                     cluster = clseu,
                      ctype = "velocity",
+                     dtype = "cell",
                      corrs = corrs_velocity, 
                      stringsAsFactors = FALSE),
           data.frame(method1 = jj,
                      method2 = kk,
                      cell = names(corrs_total), 
-                     cluster = ifelse("clusters" %in% colnames(colData(sces[[jj]])), 
-                                      sces[[jj]]$clusters,
-                                      NA),
+                     cluster = clseu,
                      ctype = "total",
+                     dtype = "cell",
                      corrs = corrs_total, 
                      stringsAsFactors = FALSE)
         )
       }))
-  }))
+  })) %>%
+  dplyr::mutate(method1 = methods_short$method_short[match(method1, methods_short$method)],
+                method2 = methods_short$method_short[match(method2, methods_short$method)])
+cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+cell_corrs$method2 <- factor(cell_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
 
-cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods[methods %in% cell_corrs$method1])
-cell_corrs$method2 <- factor(cell_corrs$method2, levels = methods[methods %in% cell_corrs$method2])
+cell_corrs_within <- do.call(
+  dplyr::bind_rows, 
+  lapply(seq_len(length(methods)), function(j) {
+    jj <- methods[j]
+    a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))), center = TRUE, scale = TRUE)
+    b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
+    tmp <- a * b
+    corrs_spliced_unspliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
+    a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
+                 as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
+    b <- scale(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))), center = TRUE, scale = TRUE)
+    tmp <- a * b
+    corrs_total_abs_velocity <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
+    if ("clusters" %in% colnames(colData(sces[[jj]]))) {
+      clsce <- sces[[jj]]$clusters
+      clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
+    } else {
+      clsce <- rep(NA, ncol(sces[[jj]]))
+      clseu <- rep(NA, ncol(sces[[jj]]))
+    }
+    dplyr::bind_rows(
+      data.frame(method = jj,
+                 cell = names(corrs_spliced_unspliced), 
+                 cluster = clseu,
+                 ctype = "spliced_unspliced",
+                 dtype = "cell",
+                 corrs = corrs_spliced_unspliced, 
+                 stringsAsFactors = FALSE),
+      data.frame(method = jj,
+                 cell = names(corrs_total_abs_velocity), 
+                 cluster = clseu,
+                 ctype = "total_abs_velocity",
+                 dtype = "cell",
+                 corrs = corrs_total_abs_velocity, 
+                 stringsAsFactors = FALSE)
+    )
+  })) %>%
+  dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
+cell_corrs_within$method <- factor(cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
+
+## Combine gene and cell correlations
+gene_cell_corrs <- dplyr::bind_rows(
+  gene_corrs %>% dplyr::rename(m1 = method1) %>%
+    dplyr::rename(method1 = method2,
+                  method2 = m1) %>%
+    tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
+    dplyr::select(method1, method2, ctype, dtype, cdtype, corrs),
+  cell_corrs %>% 
+    tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
+    dplyr::select(method1, method2, ctype, dtype, cdtype, corrs)
+)
+gene_cell_corrs$method1 <- factor(gene_cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+gene_cell_corrs$method2 <- factor(gene_cell_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
+
+gene_cell_corrs_within <- dplyr::bind_rows(
+  gene_corrs_within %>% 
+    tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
+    dplyr::select(method, ctype, dtype, cdtype, corrs),
+  cell_corrs_within %>% 
+    tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
+    dplyr::select(method, ctype, dtype, cdtype, corrs)
+)
+gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 
 
-pdf(gsub("rds$", "pdf", outrds), width = 20, height = 20)
+pdf(gsub("rds$", "pdf", outrds), width = 15, height = 13)
 
 ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
   geom_boxplot() + 
@@ -173,8 +277,9 @@ ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 5),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 20)) + 
-  labs(title = "Correlation, counts and velocities, by gene",
+        title = element_text(size = 20),
+        legend.position = "none") + 
+  labs(title = "Correlation, abundances and velocities, by gene",
        subtitle = "For genes selected by all methods")
 
 ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
@@ -184,7 +289,7 @@ ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) +
   theme(strip.text = element_text(size = 5),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
         title = element_text(size = 20)) + 
-  labs(title = "Correlation, counts and velocities, by cell",
+  labs(title = "Correlation, abundances and velocities, by cell",
        subtitle = "Over genes selected by all methods")
 
 if (!any(is.na(cell_corrs$cluster))) {
@@ -202,6 +307,36 @@ if (!any(is.na(cell_corrs$cluster))) {
   }
 }
 
+dev.off()
+
+pdf(gsub("\\.rds$", "_genes_plus_cells.pdf", outrds), width = 15, height = 13)
+ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
+  geom_boxplot() + 
+  facet_grid(method1 ~ method2) + 
+  theme_bw() + 
+  theme(strip.text = element_text(size = 5),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        title = element_text(size = 18)) + 
+  labs(title = "Correlation, abundances and velocities, by gene and cell",
+       subtitle = "Using genes selected by all methods",
+       x = "", y = "Correlation") + 
+  scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
+dev.off()
+
+pdf(gsub("\\.rds$", "_genes_plus_cells_within.pdf", outrds), width = 9, height = 9)
+ggplot(gene_cell_corrs_within, aes(x = cdtype, y = corrs, fill = dtype)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
+  geom_boxplot() + 
+  facet_wrap(~ method) + 
+  theme_bw() + 
+  theme(strip.text = element_text(size = 8),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        title = element_text(size = 18)) + 
+  labs(title = "Correlation, abundances and velocities, by gene and cell",
+       subtitle = "Using genes selected by all methods",
+       x = "", y = "Correlation") + 
+  scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
 dev.off()
 
 saveRDS(NULL, file = outrds)

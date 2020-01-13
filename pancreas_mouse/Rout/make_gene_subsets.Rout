@@ -172,7 +172,7 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Tue Dec 17 11:17:31 2019"
+[1] "Fri Jan 10 17:11:57 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -206,7 +206,7 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] beeswarm_0.2.3           tidyselect_0.2.5         purrr_0.3.3             
  [4] BiocSingular_1.2.0       lattice_0.20-38          colorspace_1.4-1        
- [7] vctrs_0.2.0              viridisLite_0.3.0        rlang_0.4.2             
+ [7] vctrs_0.2.1              viridisLite_0.3.0        rlang_0.4.2             
 [10] pillar_1.4.2             glue_1.3.1               withr_2.1.2             
 [13] GenomeInfoDbData_1.2.2   lifecycle_0.1.0          zlibbioc_1.32.0         
 [16] munsell_0.5.0            gtable_0.3.0             rsvd_1.0.2              
@@ -223,4 +223,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  6.497   0.976  10.244 
+  6.374   0.980   9.553 

@@ -118,7 +118,12 @@ cowplot::plot_grid(
 )
 dev.off()
 
-
+## Find genes with largest variability of velocities
+vs <- Reduce('+', velocities)
+vs <- apply(vs, 1, function(w) sqrt(sum(w ^ 2)))
+sn <- lapply(velocities, function(w) apply(w, 1, function(w) sqrt(sum(w ^ 2))))
+sn <- Reduce('+', sn)
+concordance <- vs/sn
 
 
 

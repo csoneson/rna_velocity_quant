@@ -705,7 +705,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Jan 10 20:30:00 2020"
+[1] "Thu Jan 16 22:26:11 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -727,9 +727,9 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] Seurat_3.1.2                scater_1.14.5              
- [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.0
- [5] DelayedArray_0.12.0         BiocParallel_1.20.0        
+ [1] Seurat_3.1.2                scater_1.14.6              
+ [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.1
+ [5] DelayedArray_0.12.2         BiocParallel_1.20.1        
  [7] matrixStats_0.55.0          Biobase_2.46.0             
  [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
 [11] IRanges_2.20.1              S4Vectors_0.24.1           
@@ -737,8 +737,8 @@ other attached packages:
 [15] dplyr_0.8.3                 tximeta_1.4.2              
 
 loaded via a namespace (and not attached):
-  [1] reticulate_1.13          R.utils_2.9.2            tidyselect_0.2.5        
-  [4] RSQLite_2.1.4            AnnotationDbi_1.48.0     htmlwidgets_1.5.1       
+  [1] reticulate_1.14          R.utils_2.9.2            tidyselect_0.2.5        
+  [4] RSQLite_2.2.0            AnnotationDbi_1.48.0     htmlwidgets_1.5.1       
   [7] grid_3.6.1               Rtsne_0.15               munsell_0.5.0           
  [10] codetools_0.2-16         mutoss_0.1-12            ica_1.0-2               
  [13] future_1.15.1            withr_2.1.2              colorspace_1.4-1        
@@ -749,21 +749,21 @@ loaded via a namespace (and not attached):
  [28] BiocFileCache_1.10.2     R6_2.4.1                 ggbeeswarm_0.6.0        
  [31] rsvd_1.0.2               hdf5r_1.3.0              AnnotationFilter_1.10.0 
  [34] bitops_1.0-6             assertthat_0.2.1         SDMTools_1.1-221.2      
- [37] scales_1.1.0             multcomp_1.4-11          beeswarm_0.2.3          
+ [37] scales_1.1.0             multcomp_1.4-12          beeswarm_0.2.3          
  [40] gtable_0.3.0             npsurv_0.4-0             globals_0.12.5          
  [43] sandwich_2.5-1           ensembldb_2.10.2         rlang_0.4.2             
  [46] zeallot_0.1.0            splines_3.6.1            rtracklayer_1.46.0      
  [49] lazyeval_0.2.2           reshape2_1.4.3           GenomicFeatures_1.38.0  
  [52] backports_1.1.5          tools_3.6.1              ellipsis_0.3.0          
- [55] gplots_3.0.1.1           RColorBrewer_1.1-2       ggridges_0.5.1          
+ [55] gplots_3.0.1.2           RColorBrewer_1.1-2       ggridges_0.5.2          
  [58] TFisher_0.2.0            Rcpp_1.0.3               plyr_1.8.5              
  [61] progress_1.2.2           zlibbioc_1.32.0          purrr_0.3.3             
- [64] RCurl_1.95-4.12          prettyunits_1.0.2        openssl_1.4.1           
+ [64] RCurl_1.95-4.12          prettyunits_1.1.0        openssl_1.4.1           
  [67] pbapply_1.4-2            viridis_0.5.1            cowplot_1.0.0           
- [70] zoo_1.8-6                ggrepel_0.8.1            cluster_2.1.0           
+ [70] zoo_1.8-7                ggrepel_0.8.1            cluster_2.1.0           
  [73] magrittr_1.5             data.table_1.12.8        lmtest_0.9-37           
- [76] RANN_2.6.1               mvtnorm_1.0-11           ProtGenerics_1.18.0     
- [79] fitdistrplus_1.0-14      hms_0.5.2                lsei_1.2-0              
+ [76] RANN_2.6.1               mvtnorm_1.0-12           ProtGenerics_1.18.0     
+ [79] fitdistrplus_1.0-14      hms_0.5.3                lsei_1.2-0              
  [82] XML_3.98-1.20            gridExtra_2.3            compiler_3.6.1          
  [85] biomaRt_2.42.0           tibble_2.1.3             KernSmooth_2.23-16      
  [88] crayon_1.3.4             R.oo_1.23.0              htmltools_0.4.0         
@@ -773,19 +773,19 @@ loaded via a namespace (and not attached):
 [100] metap_1.2                igraph_1.2.4.2           pkgconfig_2.0.3         
 [103] sn_1.5-4                 GenomicAlignments_1.22.1 numDeriv_2016.8-1.1     
 [106] plotly_4.9.1             vipor_0.4.5              multtest_2.42.0         
-[109] XVector_0.26.0           bibtex_0.4.2             stringr_1.4.0           
-[112] digest_0.6.23            sctransform_0.2.0        RcppAnnoy_0.0.14        
+[109] XVector_0.26.0           bibtex_0.4.2.2           stringr_1.4.0           
+[112] digest_0.6.23            sctransform_0.2.1        RcppAnnoy_0.0.14        
 [115] tsne_0.1-3               Biostrings_2.54.0        leiden_0.3.1            
 [118] uwot_0.1.5               DelayedMatrixStats_1.8.0 curl_4.3                
 [121] Rsamtools_2.2.1          gtools_3.8.1             lifecycle_0.1.0         
 [124] nlme_3.1-143             jsonlite_1.6             BiocNeighbors_1.4.1     
-[127] viridisLite_0.3.0        askpass_1.1              pillar_1.4.2            
+[127] viridisLite_0.3.0        askpass_1.1              pillar_1.4.3            
 [130] lattice_0.20-38          httr_1.4.1               plotrix_3.7-7           
 [133] survival_3.1-8           glue_1.3.1               png_0.1-7               
-[136] bit_1.1-14               stringi_1.4.3            blob_1.2.0              
-[139] BiocSingular_1.2.0       caTools_1.17.1.3         memoise_1.1.0           
-[142] irlba_2.3.3              future.apply_1.3.0       ape_5.3                 
+[136] bit_1.1-15               stringi_1.4.5            blob_1.2.0              
+[139] BiocSingular_1.2.1       caTools_1.17.1.4         memoise_1.1.0           
+[142] irlba_2.3.3              future.apply_1.4.0       ape_5.3                 
 > 
 > proc.time()
    user  system elapsed 
-140.850   5.092 156.290 
+145.943   4.150 154.920 

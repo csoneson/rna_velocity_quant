@@ -53,7 +53,7 @@ plotlist <- lapply(methods, function(m) {
   df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), los_over_sol = tmp$los_over_sol,
                    stringsAsFactors = FALSE)
   ggplot(df, aes(x = X1, y = X2, color = los_over_sol)) + 
-    geom_point(size = 1, alpha = 0.5) +
+    geom_point(size = 0.8, alpha = 0.5) +
     scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
                           name = "Concordance between velocity projections") + 
     labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
@@ -61,7 +61,8 @@ plotlist <- lapply(methods, function(m) {
     theme_void()
 })
 
-pdf(gsub("\\.rds", "_all_vs_shared_genes_bymethod.pdf", outrds), width = 8, height = 12)
+png(gsub("\\.rds", "_all_vs_shared_genes_bymethod.png", outrds), width = 8, height = 12,
+    unit = "in", res = 200)
 print(cowplot::plot_grid(
   cowplot::plot_grid(plotlist = lapply(plotlist, function(w) w + theme(legend.position = "none")), ncol = 3),
   cowplot::get_legend(plotlist[[1]] + theme(legend.position = "bottom")),
@@ -151,7 +152,8 @@ g2 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) +
   theme_bw() + theme(legend.position = "bottom")
 
 
-pdf(gsub("\\.rds", "_across_methods.pdf", outrds), width = 8, height = 4.5)
+png(gsub("\\.rds", "_across_methods.png", outrds), width = 8, height = 4.5,
+    unit = "in", res = 200)
 print(cowplot::plot_grid(
   cowplot::plot_grid(
     g1 + theme(legend.position = "none"), 

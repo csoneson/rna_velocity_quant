@@ -9,6 +9,8 @@ shorten_methods <- function(methods) {
                                         gsub("iso", "", 
                                              gsub("prepref_", "",
                                                   gsub("_cdna_introns", "", method)))))))) %>%
+    dplyr::mutate(method_short = replace(method_short, method_short == "starsolo_subtr", 
+                                         "starsolo_diff")) %>%
     dplyr::mutate(
       mtype = stringr::str_extract(
         method_short, "alevin|kallisto\\|bus|starsolo|velocyto"

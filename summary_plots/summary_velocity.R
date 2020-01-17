@@ -30,6 +30,22 @@ files <- lapply(datasets, function(ds) {
 cellinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$cell_vel))
 geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel))
 
+pdf("velocity_sd_latent_time.pdf")
+ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>% 
+         dplyr::group_by(dataset, method_short, mtype, clusters) %>% 
+         dplyr::summarize(ltsd = sd(latent_time)), 
+       aes(x = dataset, y = ltsd)) + 
+  geom_boxplot(outlier.size = -1, aes(fill = mtype)) + 
+  geom_jitter(width = 0.2, height = 0) + 
+  facet_wrap(~ method_short) + 
+  theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+  labs(x = "Data set", 
+       y = "Within-cell type standard deviation of latent time estimate")
+dev.off()  
+
 pdf("summary_velocity.pdf", width = 8, height = 8)
 g1 <- ggplot(cellinfo, aes(x = method_short, y = velocity_confidence)) + 
   geom_boxplot(aes(fill = mtype), alpha = 0.5, size = 0.5) + 

@@ -380,7 +380,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Mon Jan  6 16:35:36 2020"
+[1] "Thu Jan 16 21:35:21 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -402,40 +402,40 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] cdata_1.1.3                 ggrepel_0.8.1              
+ [1] cdata_1.1.4                 ggrepel_0.8.1              
  [3] cowplot_1.0.0               SingleCellExperiment_1.8.0 
- [5] SummarizedExperiment_1.16.0 DelayedArray_0.12.0        
- [7] BiocParallel_1.20.0         matrixStats_0.55.0         
+ [5] SummarizedExperiment_1.16.1 DelayedArray_0.12.2        
+ [7] BiocParallel_1.20.1         matrixStats_0.55.0         
  [9] Biobase_2.46.0              GenomicRanges_1.38.0       
 [11] GenomeInfoDb_1.22.0         IRanges_2.20.1             
 [13] S4Vectors_0.24.1            BiocGenerics_0.32.0        
 [15] ggplot2_3.2.1               dplyr_0.8.3                
 
 loaded via a namespace (and not attached):
- [1] tidyr_1.0.0            splines_3.6.1          rquery_1.4.0          
- [4] Formula_1.2-3          assertthat_0.2.1       latticeExtra_0.6-28   
- [7] wrapr_1.9.3            GenomeInfoDbData_1.2.2 pillar_1.4.2          
+ [1] tidyr_1.0.0            splines_3.6.1          rquery_1.4.1          
+ [4] Formula_1.2-3          assertthat_0.2.1       latticeExtra_0.6-29   
+ [7] wrapr_1.9.3            GenomeInfoDbData_1.2.2 pillar_1.4.3          
 [10] backports_1.1.5        lattice_0.20-38        glue_1.3.1            
 [13] digest_0.6.23          RColorBrewer_1.1-2     XVector_0.26.0        
 [16] checkmate_1.9.4        colorspace_1.4-1       htmltools_0.4.0       
 [19] Matrix_1.2-18          pkgconfig_2.0.3        pheatmap_1.0.12       
 [22] magick_2.2             zlibbioc_1.32.0        purrr_0.3.3           
-[25] scales_1.1.0           htmlTable_1.13.3       tibble_2.1.3          
-[28] farver_2.0.1           ellipsis_0.3.0         withr_2.1.2           
-[31] nnet_7.3-12            lazyeval_0.2.2         survival_3.1-8        
-[34] magrittr_1.5           crayon_1.3.4           foreign_0.8-72        
-[37] tools_3.6.1            data.table_1.12.8      hms_0.5.2             
-[40] lifecycle_0.1.0        stringr_1.4.0          munsell_0.5.0         
-[43] cluster_2.1.0          compiler_3.6.1         rqdatatable_1.2.4     
-[46] rlang_0.4.2            grid_3.6.1             RCurl_1.95-4.12       
-[49] rstudioapi_0.10        htmlwidgets_1.5.1      labeling_0.3          
-[52] bitops_1.0-6           base64enc_0.1-3        gtable_0.3.0          
-[55] R6_2.4.1               gridExtra_2.3          knitr_1.26            
-[58] zeallot_0.1.0          Hmisc_4.3-0            readr_1.3.1           
-[61] stringi_1.4.3          Rcpp_1.0.3             vctrs_0.2.1           
-[64] rpart_4.1-15           acepack_1.4.1          tidyselect_0.2.5      
-[67] xfun_0.11             
+[25] scales_1.1.0           jpeg_0.1-8.1           htmlTable_1.13.3      
+[28] tibble_2.1.3           farver_2.0.1           ellipsis_0.3.0        
+[31] withr_2.1.2            nnet_7.3-12            lazyeval_0.2.2        
+[34] survival_3.1-8         magrittr_1.5           crayon_1.3.4          
+[37] foreign_0.8-72         tools_3.6.1            data.table_1.12.8     
+[40] hms_0.5.3              lifecycle_0.1.0        stringr_1.4.0         
+[43] munsell_0.5.0          cluster_2.1.0          compiler_3.6.1        
+[46] rqdatatable_1.2.5      rlang_0.4.2            grid_3.6.1            
+[49] RCurl_1.95-4.12        rstudioapi_0.10        htmlwidgets_1.5.1     
+[52] labeling_0.3           bitops_1.0-6           base64enc_0.1-3       
+[55] gtable_0.3.0           R6_2.4.1               gridExtra_2.3         
+[58] knitr_1.26             zeallot_0.1.0          Hmisc_4.3-0           
+[61] readr_1.3.1            stringi_1.4.5          Rcpp_1.0.3            
+[64] vctrs_0.2.1            rpart_4.1-15           acepack_1.4.1         
+[67] png_0.1-7              tidyselect_0.2.5       xfun_0.12             
 > 
 > proc.time()
    user  system elapsed 
- 82.658   4.277  87.635 
+ 85.186   4.836  91.712 

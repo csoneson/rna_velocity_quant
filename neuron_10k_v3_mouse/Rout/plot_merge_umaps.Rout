@@ -110,7 +110,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Fri Jan 10 21:24:13 2020"
+[1] "Thu Jan 16 22:28:55 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -136,12 +136,12 @@ other attached packages:
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.3       withr_2.1.2      assertthat_0.2.1 crayon_1.3.4    
  [5] dplyr_0.8.3      grid_3.6.1       R6_2.4.1         lifecycle_0.1.0 
- [9] gtable_0.3.0     magrittr_1.5     scales_1.1.0     pillar_1.4.2    
-[13] stringi_1.4.3    rlang_0.4.2      lazyeval_0.2.2   tools_3.6.1     
+ [9] gtable_0.3.0     magrittr_1.5     scales_1.1.0     pillar_1.4.3    
+[13] stringi_1.4.5    rlang_0.4.2      lazyeval_0.2.2   tools_3.6.1     
 [17] stringr_1.4.0    glue_1.3.1       purrr_0.3.3      munsell_0.5.0   
 [21] compiler_3.6.1   pkgconfig_2.0.3  colorspace_1.4-1 tidyselect_0.2.5
 [25] tibble_2.1.3    
 > 
 > proc.time()
    user  system elapsed 
- 10.987   0.515  11.835 
+ 11.339   0.809  12.714 

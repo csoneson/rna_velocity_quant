@@ -22,24 +22,7 @@ scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scrip
 
 flanklength := 150
 
-genestoplot := Thap8 Rnf41 Trim3 Apoe Nrxn2 Spaca6 \
-Dtnbos Zfp423 Cul9 Thbs3 Dpp4 \
-Gm11425 Gm5561 Gpr142 Tgm7 Ppp1ccb \
-Ins2 Fbh1 Elovl1 Rpl29 Ints1 Malat1 Txn2 \
-Mirt1 Per3 Otulin Hif1a Insrr \
-Usp50 Fen1 Usf2 Slc24a5 \
-Ccl9 Nectin2 Dqx1 Nnat Nop16 Zfp773 \
-Traf5 Rrm2b Gm37350 Acadl \
-Gse1 Kxd1 Cbx3 Gm20503 Srp54a \
-Irf6 Mast1 Tdg Nfs1 Rab5a Ube2s \
-Myef2 Meg3 Gm37376 Gm24276 \
-Rpl13 \
-Pde2a 1810034E14Rik Rab43 Gm21983 Tax1bp3 \
-Cldn10 Dek Dtymk Gm35409 Krt23 Spink4 \
-Fam241b Nkx2-2 Mtch1 Tcp11 Rnase4 Cd164l2 Cpe Map1b \
-Krit1 Sfxn2 Tmem39a Gpr45 Socs2 \
-Rab40c Tmem120b Zfp143 \
-Ppp4r3a Ei24 Sil1 Rpgrip1 Tgif2 Mia 
+genestoplot := Ccl9 Ei24 Gm11425 Irf6 Krit1 Kxd1 Rpl29 Rrm2b Slc24a5 Zfp143
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \

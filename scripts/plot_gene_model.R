@@ -70,21 +70,41 @@ plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
                              condColors = c(pos = "blue", neg = "red"),
                              scaleDataTracks = TRUE)
   grDevices::dev.off()
-
-  p2 <- ggplot(sumdfg %>% dplyr::filter(gene == showgene) %>%
-                 dplyr::select(gene, method, spliced, unspliced) %>%
-                 tidyr::gather(key = "ctype", value = "count", spliced, unspliced) %>%
-                 dplyr::left_join(methodsdf, by = "method"),
+  
+  plotdfg <- sumdfg %>% dplyr::filter(gene == showgene) %>%
+    dplyr::select(gene, method, spliced, unspliced, frac_unspliced) %>%
+    tidyr::gather(key = "ctype", value = "count", spliced, unspliced, frac_unspliced) %>%
+    dplyr::left_join(methodsdf, by = "method") %>%
+    dplyr::mutate(ctype = replace(ctype, ctype == "frac_unspliced", "frac unspl")) %>%
+    dplyr::mutate(ctype = factor(ctype, levels = c("spliced", "unspliced", "frac unspl")))
+  dummy <- data.frame(method_short = plotdfg$method_short[1], 
+                      ctype = c("spliced", "unspliced", "frac unspl"),
+                      mtype = plotdfg$mtype[1],
+                      count = c(rep(max(plotdfg$count), 2), 0),
+                      stringsAsFactors = FALSE) %>%
+    dplyr::mutate(ctype = factor(ctype, levels = c("spliced", "unspliced", "frac unspl")))
+  
+  p2 <- ggplot(plotdfg,
                aes(x = method_short, y = count, fill = mtype)) + 
-    geom_bar(stat = "identity") + facet_wrap(~ ctype, nrow = 1) + 
+    geom_blank(data = dummy) + 
+    geom_bar(stat = "identity") + 
+    facet_wrap(~ ctype, nrow = 1, scales = "free_x") + 
     theme_bw() + 
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
           legend.position = "none") + 
     scale_fill_manual(values = base_method_colors) + 
-    labs(x = "", title = "Total UMI count", y = "") + 
+    labs(x = "", title = "Total UMI count/fraction unspliced count", y = "") + 
     scale_y_continuous(expand = c(0, 0, 0.05, 0)) + 
     coord_flip()
   
+  ## Change relative widths of facets
+  ## See https://stackoverflow.com/questions/52341385/how-to-automatically-adjust-the-width-of-each-facet-for-facet-wrap
+  gp <- ggplotGrob(p2)
+  # get gtable columns corresponding to the facets
+  facet.columns <- gp$layout$l[grepl("panel", gp$layout$name)]
+  gp$widths[facet.columns] <- unit(c(1, 1, 0.5), "null")
+  p2 <- gp
+
   p3 <- ggplot(uniq %>% dplyr::filter(gene == showgene) %>%
                  tidyr::unite(col = "categ", ctype, atype, sep = "."),
                aes(x = categ, y = frac_unique)) + 
@@ -99,7 +119,7 @@ plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
   plt <- cowplot::plot_grid(
     cowplot::ggdraw() +
       cowplot::draw_image(paste0(tmpdir, "/gviz", rn, ".png")),
-    cowplot::plot_grid(p2, p3, nrow = 1, rel_widths = c(1, 0.5),
+    cowplot::plot_grid(p2, p3, nrow = 1, rel_widths = c(1, 0.45),
                        align = "h", axis = "b"),
     ncol = 1, rel_heights = c(1, 0.7), labels = ""
   )
@@ -107,7 +127,7 @@ plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
   plt
 }
 
-pdf(outpdf, width = 8, height = 6)
+pdf(outpdf, width = 8.5, height = 6)
 print(plot_gene_model(gr = gr, bwf = bwf, bwc = bwc, showgene = showgene,
                       sumdfg = sumdf_bygene, methodsdf = methods_short,
                       uniq = uniq))

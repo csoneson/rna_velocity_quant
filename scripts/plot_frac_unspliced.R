@@ -11,6 +11,8 @@ suppressPackageStartupMessages({
   library(cowplot)
   library(ggrepel)
   library(cdata)
+  library(pheatmap)
+  library(ggsci)
 })
 source(plothelperscript)
 
@@ -114,13 +116,23 @@ clstannot <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
 
 hcl <- hclust(d = as.dist(sqrt(2 - 2*cor(t(clstdata)))))
 clusters <- cutree(hcl, k = 10)
+nm <- names(clusters)
+## Relabel from top down
+ordr <- data.frame(current = unique(clusters[hcl$order]),
+                   future = 1:10)
+print(ordr)
+clusters <- ordr$future[match(clusters, ordr$current)]
+names(clusters) <- nm
 
 pdf(gsub("\\.rds$", "_fracunspliced_clustering.pdf", outrds), 
-    width = 10, height = 25)
+    width = 10, height = 10)
 print(pheatmap::pheatmap(
   clstdata, cluster_rows = hcl, cutree_rows = 10, 
   scale = "none", fontsize_row = 4,
-  annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters))))
+  show_rownames = FALSE, show_colnames = TRUE, 
+  annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters)),
+  color = colorRampPalette(colors = c("grey95", "steelblue"))(100),
+  annotation_colors = list(clusters = structure(ggsci::pal_npg()(10), names = 1:10))))
 dev.off()
 
 for (i in unique(clusters)) {
@@ -131,7 +143,8 @@ for (i in unique(clusters)) {
     print(pheatmap::pheatmap(
       clstdata[gn, ], scale = "none",
       fontsize_row = 5,
-      main = paste0("cluster ", i)))
+      main = paste0("cluster ", i),
+      color = colorRampPalette(colors = c("grey95", "steelblue"))(100)))
     dev.off()
   }
 }

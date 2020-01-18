@@ -226,7 +226,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0("Only genes selected by scVelo for at least one quantification (n=", 
 +                          nrow(sumdf_bygene_acrossmethods_scvelosel), ")")) 
 Warning message:
-Removed 49 rows containing non-finite values (stat_bin). 
+Removed 42 rows containing non-finite values (stat_bin). 
 > dev.off()
 null device 
           1 
@@ -236,7 +236,7 @@ null device
 +   dplyr::filter(sd_frac_unspliced > qtl) %>%
 +   dplyr::pull(gene)
 > print(length(genes_to_keep))
-[1] 439
+[1] 476
 > 
 > ## Cluster the selected genes based on their unspliced fraction pattern across methods ---- 
 > clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
@@ -264,16 +264,16 @@ Joining, by = "method"
 +                    future = 1:10)
 > print(ordr)
    current future
-1        6      1
-2        9      2
-3       10      3
-4        1      4
-5        3      5
-6        8      6
-7        2      7
-8        7      8
-9        4      9
-10       5     10
+1        9      1
+2        8      2
+3        5      3
+4        4      4
+5        6      5
+6        7      6
+7       10      7
+8        3      8
+9        2      9
+10       1     10
 > clusters <- ordr$future[match(clusters, ordr$current)]
 > names(clusters) <- nm
 > 
@@ -320,36 +320,36 @@ null device
 +               lapply(split(cl_rep, cl_rep$cluster), 
 +                      function(w) w %>% arrange(desc(cor)) %>% head(3))))
    cluster          gene       cor
-1        1       Ppp4r3a 0.9991763
-2        1          Ei24 0.9975534
-3        1          Sil1 0.9968861
-4        2          Kxd1 0.8497832
-5        2          Cbx3 0.8475533
-6        2        Tm9sf1 0.8424895
-7        3         Ube2s 0.9782186
-8        3          Dstn 0.9636414
-9        3         Rab5a 0.9598013
-10       4         Krit1 0.9920229
-11       4         Sfxn2 0.9916033
-12       4       Tmem39a 0.9912074
-13       5          Tgm7 0.9804291
-14       5 1810019D21Rik 0.9329424
-15       5       Gm11425 0.8789196
-16       6         Rrm2b 0.9023074
-17       6         Traf5 0.8927355
-18       6       Gm37350 0.7053503
-19       7          Dpp4 0.9814198
-20       7        Rab40c 0.9810357
-21       7      Tmem120b 0.9810290
-22       8          Dqx1 0.9047392
-23       8       Sec61a1 0.9012039
-24       8         Brsk2 0.8947552
-25       9         Rpl29 0.9928011
-26       9       ccdc198 0.9914090
-27       9        Elovl1 0.9901163
-28      10         Insrr 0.9639123
-29      10         Xndc1 0.9583967
-30      10 4930404N11Rik 0.9492539
+1        1         Tcp11 0.9903138
+2        1         Itga1 0.9737815
+3        1          Sv2c 0.9704660
+4        2 A130010J15Rik 0.9459357
+5        2         Rrm2b 0.8508669
+6        2         Traf5 0.8497072
+7        3          Tgm7 0.9883980
+8        3        Gm6083 0.9616330
+9        3       Gm11425 0.9616330
+10       4        Rab40c 0.9982726
+11       4         Tacc2 0.9980170
+12       4      Tmem120b 0.9976431
+13       5       Gm21983 0.9209801
+14       5       Gm20716 0.9083605
+15       5          Rdh5 0.9013117
+16       6         Kdm2b 0.9977718
+17       6         Icam1 0.9960824
+18       6        Rassf1 0.9951363
+19       7       Cyp39a1 0.9582580
+20       7          Rgs3 0.9505089
+21       7        Efcab1 0.9475418
+22       8           Id3 0.9924367
+23       8         Gspt2 0.9916020
+24       8          Apoe 0.9902423
+25       9        Tspan3 0.9982043
+26       9      Slc25a27 0.9961600
+27       9        Kif1bp 0.9956913
+28      10         Brsk2 0.9323452
+29      10         Sirt3 0.9203920
+30      10       Sec61a1 0.9069835
 > write.table(cl_rep %>% dplyr::arrange(cluster, desc(cor)), 
 +             file = gsub("\\.rds$", "_fracunspliced_cluster_centroid_corrs.txt", outrds),
 +             row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
@@ -404,7 +404,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Fri Jan 17 15:11:38 2020"
+[1] "Sat Jan 18 10:30:57 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -463,4 +463,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 84.640   4.934  92.838 
+ 96.943   9.324 107.564 

@@ -116,19 +116,35 @@ read_starsolo_subtract <- function(solodir, sampleid) {
 }
 
 sce_from_scounts_ucounts <- function(scounts, ucounts) {
-  ucounts <- ucounts[rownames(ucounts) %in% rownames(scounts), colnames(ucounts) %in% colnames(scounts)]
-  ucounts2 <- scounts
-  ucounts2[] <- 0
-  tm <- as(ucounts, "dgTMatrix")
-  ucounts2[cbind(match(rownames(ucounts)[tm@i + 1], rownames(ucounts2)), 
-                 match(colnames(ucounts)[tm@j + 1], colnames(ucounts2)))] <- tm@x
-  stopifnot(all(rownames(ucounts2) == rownames(scounts)))
-  stopifnot(all(colnames(ucounts2) == colnames(scounts)))
-  stopifnot(sum(ucounts2) == sum(ucounts))
+  ss <- sum(scounts)
+  su <- sum(ucounts)
+  
+  allgenes <- union(rownames(scounts), rownames(ucounts))
+  allcells <- union(colnames(scounts), colnames(ucounts))
+
+  scounts <- as.matrix(scounts)
+  scounts <- scounts[match(allgenes, rownames(scounts)), 
+                     match(allcells, colnames(scounts))]
+  scounts[is.na(scounts)] <- 0
+  rownames(scounts) <- allgenes
+  colnames(scounts) <- allcells
+    
+  ucounts <- as.matrix(ucounts)
+  ucounts <- ucounts[match(allgenes, rownames(ucounts)), 
+                     match(allcells, colnames(ucounts))]
+  ucounts[is.na(ucounts)] <- 0
+  rownames(ucounts) <- allgenes
+  colnames(ucounts) <- allcells
+  
+  stopifnot(all(rownames(ucounts) == rownames(scounts)))
+  stopifnot(all(colnames(ucounts) == colnames(scounts)))
+  stopifnot(sum(scounts) == ss)
+  stopifnot(sum(ucounts) == su)
+  
   SingleCellExperiment(
     assays = list(counts = as(scounts, "dgCMatrix"),
                   spliced = as(scounts, "dgCMatrix"),
-                  unspliced = as(ucounts2, "dgCMatrix"))
+                  unspliced = as(ucounts, "dgCMatrix"))
   )
 }
 
@@ -145,8 +161,8 @@ read_alevin_with_decoys <- function(spliceddir, unspliceddir, sampleid, tx2gene)
     stringsAsFactors = FALSE
   ), type = "alevin")
   introns <- introns[grep("I\\.*$", rownames(introns)), ]
-  ucounts <- round(assay(introns, "counts"))
-  scounts <- round(assay(cdna, "counts"))
+  ucounts <- assay(introns, "counts")
+  scounts <- assay(cdna, "counts")
   rownames(ucounts) <- gsub("\\.*I\\.*$", "", rownames(ucounts))
   rownames(scounts) <- gsub("\\.*$", "", rownames(scounts))
   cdna_introns_decoy <- sce_from_scounts_ucounts(scounts, ucounts)
@@ -165,8 +181,8 @@ read_alevin_cdna_introns <- function(alevindir, sampleid, tx2gene) {
   ), type = "alevin")
   uidx <- grep("\\.*I\\.*$", rownames(cdna_introns))
   sidx <- grep("\\.*I\\.*$", rownames(cdna_introns), invert = TRUE)
-  ucounts <- round(assay(cdna_introns, "counts")[uidx, ])
-  scounts <- round(assay(cdna_introns, "counts")[sidx, ])
+  ucounts <- assay(cdna_introns, "counts")[uidx, ]
+  scounts <- assay(cdna_introns, "counts")[sidx, ]
   rownames(ucounts) <- gsub("\\.*I\\.*$", "", rownames(ucounts))
   rownames(scounts) <- gsub("\\.*$", "", rownames(scounts))
   cdna_introns <- sce_from_scounts_ucounts(scounts, ucounts)
@@ -186,8 +202,8 @@ read_alevin_spliced_unspliced <- function(alevindir, sampleid, tx2gene) {
   ), type = "alevin")
   uidx <- grep("_unspliced$", rownames(spliced_unspliced))
   sidx <- grep("_unspliced$", rownames(spliced_unspliced), invert = TRUE)
-  ucounts <- round(assay(spliced_unspliced, "counts")[uidx, ])
-  scounts <- round(assay(spliced_unspliced, "counts")[sidx, ])
+  ucounts <- assay(spliced_unspliced, "counts")[uidx, ]
+  scounts <- assay(spliced_unspliced, "counts")[sidx, ]
   rownames(ucounts) <- gsub("_unspliced$", "", rownames(ucounts))
   spliced_unspliced <- sce_from_scounts_ucounts(scounts, ucounts)
   rownames(spliced_unspliced) <- scater::uniquifyFeatureNames(

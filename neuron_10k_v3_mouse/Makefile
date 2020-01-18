@@ -417,6 +417,14 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 ## -----------------------------------------------------------------------------------------------------
 ## Analysis
 ## -----------------------------------------------------------------------------------------------------
+## Assign cell types based on alevin_spliced
+output/neuron_singler_celltypes.csv: quants/alevin_spliced/lib_format_counts.json \
+$(scriptdir)/neuron_assign_celltypes.R $(scriptdir)/sce_helpers.R $(tx2genefull)
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' outcsv='$@'" $(scriptdir)/neuron_assign_celltypes.R Rout/neuron_assign_celltypes.Rout
+
 ## Create SCEs with shared genes/cells
 output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/summarize_spliced_unspliced.R \
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).mtx)))) \
@@ -426,11 +434,12 @@ $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_int
 quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
 quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
-quants/starsolo/Solo.out/Gene/Summary.csv
+quants/starsolo/Solo.out/Gene/Summary.csv \
+$(tx2genefull) output/neuron_singler_celltypes.csv
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='output/neuron_singler_celltypes.csv' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds

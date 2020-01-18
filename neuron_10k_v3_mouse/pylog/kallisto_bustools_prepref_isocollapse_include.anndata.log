@@ -1,6 +1,8 @@
 input sce:  ['output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds']
 output h5ad:  ['output/anndata/anndata_kallisto_bustools_prepref_isocollapse_include.h5ad']
   converting output/sce/sce_kallisto_bustools_prepref_isocollapse_include.rds to output/anndata/anndata_kallisto_bustools_prepref_isocollapse_include.h5ad...
+... storing 'clusters' as categorical
+... storing 'clusters_coarse' as categorical
   done
 
 

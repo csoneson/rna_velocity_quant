@@ -1,0 +1,175 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> ## Use SingleR to assign cell types to the neuron data set
+> suppressPackageStartupMessages({
++   library(SingleR)
++   library(SingleCellExperiment)
++   library(dplyr)
++   library(scater)
++ })
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse"
+> print(tx2gene)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
+> print(helperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/sce_helpers.R"
+> print(outcsv)
+[1] "output/neuron_singler_celltypes.csv"
+> 
+> source(helperscript)
+> tx2gene <- readRDS(tx2gene)
+> 
+> sce <- read_alevin_spliced(
++   alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
++   sampleid = "neuron", tx2gene = tx2gene
++ )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+found matching transcriptome:
+[ GENCODE - Mus musculus - release M21 ]
+loading existing TxDb created: 2020-01-18 07:09:27
+Loading required package: GenomicFeatures
+Loading required package: AnnotationDbi
+
+Attaching package: 'AnnotationDbi'
+
+The following object is masked from 'package:dplyr':
+
+    select
+
+generating gene ranges
+loading existing gene ranges created: 2020-01-18 07:10:10
+fetching genome info for GENCODE
+> sce <- scater::logNormCounts(sce)
+Error in (function (x)  : attempt to apply non-function
+Warning message:
+call dbDisconnect() when finished working with a connection 
+> 
+> ref <- SingleR::MouseRNAseqData()
+snapshotDate(): 2019-10-22
+see ?SingleR and browseVignettes('SingleR') for documentation
+loading from cache
+see ?SingleR and browseVignettes('SingleR') for documentation
+loading from cache
+> pred <- SingleR::SingleR(test = sce, ref = ref, labels = ref$label.fine, prune = FALSE)
+> 
+> df <- data.frame(index = rownames(pred), 
++                  clusters = pred$labels,
++                  clusters_coarse = pred$labels,
++                  stringsAsFactors = FALSE)
+> write.table(df, file = outcsv, row.names = FALSE, 
++             col.names = TRUE, sep = ",", quote = FALSE)
+> 
+> date()
+[1] "Sat Jan 18 12:24:25 2020"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] GenomicFeatures_1.38.0      AnnotationDbi_1.48.0       
+ [3] readr_1.3.1                 velocyto.R_0.6             
+ [5] Matrix_1.2-18               BUSpaRse_1.0.0             
+ [7] zeallot_0.1.0               tximeta_1.4.2              
+ [9] scater_1.14.6               ggplot2_3.2.1              
+[11] dplyr_0.8.3                 SingleCellExperiment_1.8.0 
+[13] SingleR_1.0.5               SummarizedExperiment_1.16.1
+[15] DelayedArray_0.12.2         BiocParallel_1.20.1        
+[17] matrixStats_0.55.0          Biobase_2.46.0             
+[19] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[21] IRanges_2.20.1              S4Vectors_0.24.1           
+[23] BiocGenerics_0.32.0        
+
+loaded via a namespace (and not attached):
+ [1] ggbeeswarm_0.6.0              colorspace_1.4-1             
+ [3] XVector_0.26.0                BiocNeighbors_1.4.1          
+ [5] bit64_0.9-7                   interactiveDisplayBase_1.24.0
+ [7] splines_3.6.1                 tximport_1.14.0              
+ [9] jsonlite_1.6                  Rsamtools_2.2.1              
+[11] cluster_2.1.0                 dbplyr_1.4.2                 
+[13] shiny_1.4.0                   BiocManager_1.30.10          
+[15] compiler_3.6.1                httr_1.4.1                   
+[17] backports_1.1.5               assertthat_0.2.1             
+[19] fastmap_1.0.1                 lazyeval_0.2.2               
+[21] later_1.0.0                   BiocSingular_1.2.1           
+[23] htmltools_0.4.0               prettyunits_1.1.0            
+[25] tools_3.6.1                   rsvd_1.0.2                   
+[27] gtable_0.3.0                  glue_1.3.1                   
+[29] GenomeInfoDbData_1.2.2        rappdirs_0.3.1               
+[31] Rcpp_1.0.3                    vctrs_0.2.1                  
+[33] Biostrings_2.54.0             nlme_3.1-143                 
+[35] ExperimentHub_1.12.0          rtracklayer_1.46.0           
+[37] DelayedMatrixStats_1.8.0      stringr_1.4.0                
+[39] plyranges_1.6.5               mime_0.8                     
+[41] lifecycle_0.1.0               irlba_2.3.3                  
+[43] ensembldb_2.10.2              gtools_3.8.1                 
+[45] XML_3.98-1.20                 AnnotationHub_2.18.0         
+[47] zlibbioc_1.32.0               MASS_7.3-51.4                
+[49] scales_1.1.0                  BSgenome_1.54.0              
+[51] pcaMethods_1.78.0             hms_0.5.3                    
+[53] promises_1.1.0                ProtGenerics_1.18.0          
+[55] AnnotationFilter_1.10.0       yaml_2.2.0                   
+[57] curl_4.3                      memoise_1.1.0                
+[59] gridExtra_2.3                 biomaRt_2.42.0               
+[61] stringi_1.4.5                 RSQLite_2.2.0                
+[63] BiocVersion_3.10.1            rlang_0.4.2                  
+[65] pkgconfig_2.0.3               bitops_1.0-6                 
+[67] lattice_0.20-38               purrr_0.3.3                  
+[69] GenomicAlignments_1.22.1      bit_1.1-15                   
+[71] tidyselect_0.2.5              magrittr_1.5                 
+[73] R6_2.4.1                      fishpond_1.2.0               
+[75] DBI_1.1.0                     pillar_1.4.3                 
+[77] withr_2.1.2                   mgcv_1.8-31                  
+[79] RCurl_1.95-4.12               tibble_2.1.3                 
+[81] crayon_1.3.4                  BiocFileCache_1.10.2         
+[83] viridis_0.5.1                 progress_1.2.2               
+[85] grid_3.6.1                    data.table_1.12.8            
+[87] blob_1.2.0                    digest_0.6.23                
+[89] xtable_1.8-4                  tidyr_1.0.0                  
+[91] httpuv_1.5.2                  openssl_1.4.1                
+[93] RcppParallel_4.4.4            munsell_0.5.0                
+[95] beeswarm_0.2.3                viridisLite_0.3.0            
+[97] vipor_0.4.5                   askpass_1.1                  
+> 
+> proc.time()
+   user  system elapsed 
+180.302  17.395 204.288 

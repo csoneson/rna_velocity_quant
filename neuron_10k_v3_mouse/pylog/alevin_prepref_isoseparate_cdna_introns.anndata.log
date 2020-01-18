@@ -1,6 +1,8 @@
 input sce:  ['output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds']
 output h5ad:  ['output/anndata/anndata_alevin_prepref_isoseparate_cdna_introns.h5ad']
   converting output/sce/sce_alevin_prepref_isoseparate_cdna_introns.rds to output/anndata/anndata_alevin_prepref_isoseparate_cdna_introns.h5ad...
+... storing 'clusters' as categorical
+... storing 'clusters_coarse' as categorical
   done
 
 

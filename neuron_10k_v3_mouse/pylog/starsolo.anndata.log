@@ -1,6 +1,8 @@
 input sce:  ['output/sce/sce_starsolo.rds']
 output h5ad:  ['output/anndata/anndata_starsolo.h5ad']
   converting output/sce/sce_starsolo.rds to output/anndata/anndata_starsolo.h5ad...
+... storing 'clusters' as categorical
+... storing 'clusters_coarse' as categorical
   done
 
 

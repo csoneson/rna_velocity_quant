@@ -73,31 +73,31 @@ scv.settings.figdir = plotdir + '/' + base + basegs + '/'
 scv.settings.plot_prefix = base + basegs + '_scvelo_'
 scv.settings.set_figure_params(dpi_save = 300, vector_friendly = True)
 
-scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='X_pca', save="PCA_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='X_tsne', save="TSNE_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_concatenated', save="PCA_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_concatenated', save="TSNE_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_concatenated', save="UMAP_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_concatenated', save="PCA_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_concatenated', save="TSNE_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_concatenated', save="UMAP_starsolo_concatenated_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_summed', save="PCA_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_summed', save="TSNE_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_summed', save="UMAP_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_summed', save="PCA_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_summed', save="TSNE_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_summed', save="UMAP_starsolo_summed_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_unspliced', save="PCA_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_unspliced', save="TSNE_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_unspliced', save="UMAP_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo_unspliced', save="PCA_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo_unspliced', save="TSNE_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo_unspliced', save="UMAP_starsolo_unspliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo', save="PCA_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo', save="TSNE_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo', save="UMAP_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo', save="PCA_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo', save="TSNE_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo', save="UMAP_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='cluster', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_graph(adata2, basis='UMAP_alevin_spliced', save='UMAP_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='cluster_alevin_spliced', title=mname)
+scv.pl.velocity_graph(adata2, basis='UMAP_alevin_spliced', save='UMAP_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='clusters', title=mname)
 
 scv.tl.velocity_embedding(adata2, basis = 'UMAP_alevin_spliced', all_comps = False, autoscale = False)
 pd.DataFrame(adata2.obsm['velocity_UMAP_alevin_spliced'], index = adata2.obs.index).to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_velocity_UMAP_alevin_spliced.csv")
@@ -114,7 +114,7 @@ except:
 	print('Latent time/top genes could not be extracted')
 
 try:
-	scv.tl.rank_velocity_genes(adata2, match_with = "cluster_alevin_spliced", n_genes = 25)
+	scv.tl.rank_velocity_genes(adata2, match_with = "clusters", n_genes = 25)
 	generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(25)
 	genescore = pd.DataFrame(adata2.uns['rank_velocity_genes']['scores']).head(25)
 	adata2.var.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_info.csv")
@@ -122,7 +122,7 @@ try:
 	genescore.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity_score.csv")
 	
 	genes = generank.iloc[0]
-	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='cluster_alevin_spliced', basis='UMAP_alevin_spliced', show=False)
+	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='clusters', basis='UMAP_alevin_spliced', show=False)
 except:
 	print('Velocity genes could not be extracted')
 

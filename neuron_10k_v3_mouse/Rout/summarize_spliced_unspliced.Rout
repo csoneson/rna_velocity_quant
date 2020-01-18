@@ -36,7 +36,7 @@ Type 'q()' to quit R.
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(cellfile)
-[1] ""
+[1] "output/neuron_singler_celltypes.csv"
 > print(samplename)
 [1] "neuron_10k_v3"
 > print(outrds)
@@ -349,7 +349,7 @@ starsolo
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sat Jan 18 10:21:54 2020"
+[1] "Sat Jan 18 14:09:41 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -420,4 +420,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-3688.565 1065.843 3870.778 
+3682.351 1214.184 3988.196 

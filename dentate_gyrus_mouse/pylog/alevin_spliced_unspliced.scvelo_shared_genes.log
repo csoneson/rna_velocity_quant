@@ -3,16 +3,15 @@ output directory:  plots/velocity
 output adfile:  output/anndata_with_velocity/anndata_alevin_spliced_unspliced_shared_genes_with_velocity.h5ad
 gene set file:  output/genesets/shared_genes.txt
 Abundance of ['spliced', 'unspliced']: [0.52 0.48]
-Normalized count data: X, spliced, unspliced.
 computing neighbors
-    finished (0:00:02) --> added to `.uns['neighbors']`
+    finished (0:00:03) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
     'connectivities', weighted adjacency matrix
 computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 5%... 9%... 13%... 17%... 22%... 27%... 32%... 36%... 41%... 44%... 48%... 52%... 56%... 63%... 67%... 72%... 76%... 79%... 83%... 88%... 92%... 94%... 98%... 100%    finished (0:01:17) --> added 
+... 4%... 9%... 12%... 15%... 19%... 23%... 27%... 31%... 36%... 40%... 44%... 48%... 52%... 55%... 59%... 63%... 69%... 73%... 76%... 80%... 84%... 89%... 92%... 97%... 100%    finished (0:01:21) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
@@ -133,4 +132,4 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_alevin_spliced_unspliced_shared_genes/anndata_alevin_spliced_unspliced_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-10 20:19.
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-18 11:34.

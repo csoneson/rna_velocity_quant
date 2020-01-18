@@ -5,14 +5,14 @@ gene set file:  output/genesets/shared_genes.txt
 Abundance of ['spliced', 'unspliced']: [0.62 0.38]
 Normalized count data: X, spliced, unspliced.
 computing neighbors
-    finished (0:00:02) --> added to `.uns['neighbors']`
+    finished (0:00:03) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
     'connectivities', weighted adjacency matrix
 computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 2%... 6%... 11%... 14%... 17%... 20%... 24%... 27%... 31%... 34%... 37%... 41%... 44%... 49%... 53%... 58%... 61%... 65%... 67%... 71%... 75%... 80%... 83%... 85%... 91%... 94%... 97%... 100%    finished (0:01:33) --> added 
+... 4%... 8%... 12%... 17%... 21%... 25%... 29%... 34%... 38%... 43%... 47%... 51%... 57%... 63%... 68%... 73%... 76%... 80%... 85%... 90%... 93%... 98%... 100%    finished (0:01:15) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
@@ -133,4 +133,4 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_kallisto_bustools_prepref_isoseparate_include_shared_genes/anndata_kallisto_bustools_prepref_isoseparate_include_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-10 20:20.
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-18 11:34.

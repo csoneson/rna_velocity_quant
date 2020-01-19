@@ -24,7 +24,8 @@ flanklength := 150
 
 genestoplot := Ccl9 Ei24 Gm11425 Irf6 Krit1 Kxd1 Rpl29 Slc24a5 Zfp143 \
 Tcp11 Itga1 A130010J15Rik Rrm2b Traf5 Tgm7 Gm6083 Rab40c Tacc2 Gm21983 Gm20716 \
-Kdm2b Icam1 Cyp39a1 Rgs3 Id3 Gspt2 Tspan3 Slc25a27 Brsk2 Sirt3
+Kdm2b Icam1 Cyp39a1 Rgs3 Id3 Gspt2 Tspan3 Slc25a27 Brsk2 Sirt3 \
+4930526A20Rik Cox4i1
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \

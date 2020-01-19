@@ -106,13 +106,6 @@ clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
   tidyr::spread(key = "method_short", value = "frac_unspliced") %>%
   as.data.frame() %>%
   tibble::column_to_rownames("gene")
-clstannot <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
-  dplyr::select(gene, method, total) %>%
-  dplyr::left_join(methods_short) %>% 
-  dplyr::select(gene, method_short, total) %>%
-  tidyr::spread(key = "method_short", value = "total") %>%
-  as.data.frame() %>%
-  tibble::column_to_rownames("gene")
 
 hcl <- hclust(d = as.dist(sqrt(2 - 2*cor(t(clstdata)))))
 clusters <- cutree(hcl, k = 10)
@@ -124,8 +117,16 @@ print(ordr)
 clusters <- ordr$future[match(clusters, ordr$current)]
 names(clusters) <- nm
 
-pdf(gsub("\\.rds$", "_fracunspliced_clustering.pdf", outrds), 
-    width = 10, height = 10)
+clstannot <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
+  dplyr::select(gene, method, total) %>%
+  dplyr::left_join(methods_short) %>% 
+  dplyr::select(gene, method_short, mtype, total) %>%
+  dplyr::group_by(gene) %>%
+  dplyr::mutate(rel_total = total/max(total)) %>%
+  dplyr::mutate(cluster = clusters[gene])
+
+png(gsub("\\.rds$", "_fracunspliced_clustering.png", outrds), 
+    width = 10, height = 10, unit = "in", res = 400)
 print(pheatmap::pheatmap(
   clstdata, cluster_rows = hcl, cutree_rows = 10, 
   scale = "none", fontsize_row = 4,
@@ -133,6 +134,27 @@ print(pheatmap::pheatmap(
   annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters)),
   color = colorRampPalette(colors = c("grey95", "steelblue"))(100),
   annotation_colors = list(clusters = structure(ggsci::pal_npg()(10), names = 1:10))))
+dev.off()
+
+pdf(gsub("\\.rds$", "_fracunspliced_clustering_with_reltotal.pdf", outrds),
+    width = 10, height = 15)
+print(
+  cowplot::plot_grid(
+    cowplot::ggdraw() +
+      cowplot::draw_image(gsub("\\.rds$", "_fracunspliced_clustering.png", outrds)),
+    cowplot::plot_grid(
+      ggplot(clstannot, aes(x = method_short, y = rel_total, fill = mtype)) + 
+        facet_wrap(~ cluster, nrow = 2) + 
+        geom_boxplot(outlier.size = 0.5, alpha = 0.75) + 
+        labs(x = "", y = "Total count/maximum total count across methods") + 
+        theme_bw() + 
+        scale_fill_manual(values = base_method_colors, name = "") + 
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+              legend.position = "none"),
+      NULL, rel_widths = c(1, 0.12), nrow = 1),
+    ncol = 1, rel_heights = c(1, 0.5)
+  )
+)
 dev.off()
 
 for (i in unique(clusters)) {

@@ -395,6 +395,8 @@ See spec(...) for full column specifications.
 +   labs(title = "Fit likelihood, per gene",
 +        subtitle = paste0(""))
 Warning: Ignoring unknown parameters: scale
+Warning message:
+Removed 23 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
@@ -404,7 +406,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Thu Jan 16 22:17:24 2020"
+[1] "Sat Jan 18 17:51:20 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -457,4 +459,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 12.343   0.925  13.683 
+ 13.069   1.004  14.921 

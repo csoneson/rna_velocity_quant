@@ -80,7 +80,7 @@ plot_gene_model <- function(gr, bwf, bwc, showgene, sumdfg, methodsdf, uniq) {
   dummy <- data.frame(method_short = plotdfg$method_short[1], 
                       ctype = c("spliced", "unspliced", "frac unspl"),
                       mtype = plotdfg$mtype[1],
-                      count = c(rep(max(plotdfg$count), 2), 0),
+                      count = c(rep(max(plotdfg$count), 2), 1),
                       stringsAsFactors = FALSE) %>%
     dplyr::mutate(ctype = factor(ctype, levels = c("spliced", "unspliced", "frac unspl")))
   

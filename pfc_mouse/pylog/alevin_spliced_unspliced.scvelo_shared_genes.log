@@ -2,8 +2,7 @@ input adfile:  output/anndata/anndata_alevin_spliced_unspliced.h5ad
 output directory:  plots/velocity
 output adfile:  output/anndata_with_velocity/anndata_alevin_spliced_unspliced_shared_genes_with_velocity.h5ad
 gene set file:  output/genesets/shared_genes.txt
-Abundance of ['spliced', 'unspliced']: [0.6 0.4]
-Normalized count data: X, spliced, unspliced.
+Abundance of ['spliced', 'unspliced']: [0.58 0.42]
 computing neighbors
     finished (0:00:03) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
@@ -12,7 +11,7 @@ computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 1%... 4%... 6%... 9%... 11%... 14%... 17%... 19%... 21%... 24%... 27%... 30%... 32%... 35%... 38%... 41%... 44%... 46%... 49%... 52%... 55%... 57%... 60%... 63%... 66%... 69%... 72%... 76%... 78%... 81%... 84%... 87%... 90%... 93%... 95%... 98%... 100%    finished (0:01:54) --> added 
+... 4%... 7%... 11%... 15%... 19%... 22%... 26%... 32%... 35%... 40%... 44%... 48%... 52%... 57%... 62%... 65%... 70%... 75%... 80%... 83%... 87%... 93%... 97%... 100%    finished (0:01:14) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
@@ -112,7 +111,7 @@ computing velocity embedding
     finished (0:00:00) --> added
     'velocity_UMAP_alevin_spliced', embedded velocity vectors (adata.obsm)
 computing terminal states
-    identified 1 region of root cells and 4 regions of end points 
+    identified 1 region of root cells and 5 regions of end points 
     finished (0:00:00) --> added
     'root_cells', root cells of Markov diffusion process (adata.obs)
     'end_points', end points of Markov diffusion process (adata.obs)
@@ -130,4 +129,4 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_alevin_spliced_unspliced_shared_genes/anndata_alevin_spliced_unspliced_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-10 16:44.
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-18 17:22.

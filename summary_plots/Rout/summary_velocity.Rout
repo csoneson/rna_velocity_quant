@@ -48,10 +48,9 @@ Type 'q()' to quit R.
 > 
 > cellinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$cell_vel))
 Warning messages:
-1: In bind_rows_(x, .id) : Unequal factor levels: coercing to character
-2: In bind_rows_(x, .id) :
+1: In bind_rows_(x, .id) :
   binding character and factor vector, coercing into character vector
-3: In bind_rows_(x, .id) :
+2: In bind_rows_(x, .id) :
   binding character and factor vector, coercing into character vector
 > geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel))
 > 
@@ -92,13 +91,13 @@ null device
 > 
 > cowplot::plot_grid(g1, g2, nrow = 1, labels = c("A", "B"))
 Warning message:
-Removed 46 rows containing non-finite values (stat_boxplot). 
+Removed 181 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
 > 
 > date()
-[1] "Fri Jan 17 08:59:17 2020"
+[1] "Sat Jan 18 18:43:11 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -152,4 +151,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 10.465   1.448  13.800 
+ 11.198   1.008  12.335 

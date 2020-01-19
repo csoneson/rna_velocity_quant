@@ -83,6 +83,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -90,6 +93,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -97,6 +103,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -104,6 +113,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -111,6 +123,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -118,6 +133,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -125,6 +143,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -132,6 +153,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -139,6 +163,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -146,6 +173,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -153,6 +183,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -160,6 +193,9 @@ Parsed with column specification:
 cols(
   .default = col_double(),
   index = col_character(),
+  cell_index = col_character(),
+  clusters = col_character(),
+  clusters_coarse = col_character(),
   velocity_clusters = col_character()
 )
 See spec(...) for full column specifications.
@@ -361,6 +397,10 @@ See spec(...) for full column specifications.
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity score, per gene",
 +        subtitle = paste0(""))
+Warning messages:
+1: In self$trans$transform(x) : NaNs produced
+2: Transformation introduced infinite values in continuous y-axis 
+3: Removed 2 rows containing non-finite values (stat_boxplot). 
 > 
 > ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) + 
 +   geom_boxplot(aes(fill = mtype), alpha = 0.25, scale = "width") + 
@@ -372,7 +412,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0(""))
 Warning: Ignoring unknown parameters: scale
 Warning message:
-Removed 27 rows containing non-finite values (stat_boxplot). 
+Removed 52 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
@@ -382,7 +422,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Thu Jan 16 22:28:57 2020"
+[1] "Sat Jan 18 17:09:13 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -435,4 +475,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 12.919   0.917  14.384 
+ 22.402   3.033  26.498 

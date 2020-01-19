@@ -12,7 +12,7 @@ computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 1%... 3%... 4%... 6%... 8%... 10%... 12%... 15%... 17%... 19%... 21%... 23%... 25%... 27%... 29%... 31%... 33%... 35%... 37%... 39%... 41%... 44%... 46%... 47%... 50%... 52%... 54%... 56%... 58%... 60%... 62%... 64%... 66%... 68%... 70%... 72%... 73%... 75%... 77%... 79%... 81%... 83%... 85%... 86%... 89%... 91%... 93%... 94%... 97%... 98%... 100%    finished (0:02:39) --> added 
+... 3%... 6%... 9%... 13%... 17%... 20%... 24%... 28%... 32%... 36%... 40%... 44%... 47%... 52%... 56%... 60%... 64%... 67%... 71%... 74%... 78%... 81%... 84%... 88%... 91%... 95%... 98%... 100%    finished (0:01:26) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
@@ -130,4 +130,4 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_kallisto_bustools_prepref_isocollapse_exclude_shared_genes/anndata_kallisto_bustools_prepref_isocollapse_exclude_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-10 16:44.
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-18 17:23.

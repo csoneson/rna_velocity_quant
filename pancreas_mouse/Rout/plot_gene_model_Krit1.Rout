@@ -136,7 +136,7 @@ Warning messages:
 +   dummy <- data.frame(method_short = plotdfg$method_short[1], 
 +                       ctype = c("spliced", "unspliced", "frac unspl"),
 +                       mtype = plotdfg$mtype[1],
-+                       count = c(rep(max(plotdfg$count), 2), 0),
++                       count = c(rep(max(plotdfg$count), 2), 1),
 +                       stringsAsFactors = FALSE) %>%
 +     dplyr::mutate(ctype = factor(ctype, levels = c("spliced", "unspliced", "frac unspl")))
 +   
@@ -192,7 +192,7 @@ null device
           1 
 > 
 > date()
-[1] "Sat Jan 18 10:31:32 2020"
+[1] "Sat Jan 18 18:44:32 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -260,4 +260,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-133.842   7.023 141.847 
+144.533  10.859 155.823 

@@ -30,6 +30,8 @@ Type 'q()' to quit R.
 +   library(cowplot)
 +   library(ggrepel)
 +   library(cdata)
++   library(pheatmap)
++   library(ggsci)
 + })
 > source(plothelperscript)
 > 
@@ -224,7 +226,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0("Only genes selected by scVelo for at least one quantification (n=", 
 +                          nrow(sumdf_bygene_acrossmethods_scvelosel), ")")) 
 Warning message:
-Removed 66 rows containing non-finite values (stat_bin). 
+Removed 54 rows containing non-finite values (stat_bin). 
 > dev.off()
 null device 
           1 
@@ -234,7 +236,7 @@ null device
 +   dplyr::filter(sd_frac_unspliced > qtl) %>%
 +   dplyr::pull(gene)
 > print(length(genes_to_keep))
-[1] 421
+[1] 486
 > 
 > ## Cluster the selected genes based on their unspliced fraction pattern across methods ---- 
 > clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
@@ -256,13 +258,34 @@ Joining, by = "method"
 > 
 > hcl <- hclust(d = as.dist(sqrt(2 - 2*cor(t(clstdata)))))
 > clusters <- cutree(hcl, k = 10)
+> nm <- names(clusters)
+> ## Relabel from top down
+> ordr <- data.frame(current = unique(clusters[hcl$order]),
++                    future = 1:10)
+> print(ordr)
+   current future
+1        2      1
+2        7      2
+3        6      3
+4        5      4
+5        3      5
+6        1      6
+7       10      7
+8        8      8
+9        4      9
+10       9     10
+> clusters <- ordr$future[match(clusters, ordr$current)]
+> names(clusters) <- nm
 > 
 > pdf(gsub("\\.rds$", "_fracunspliced_clustering.pdf", outrds), 
-+     width = 10, height = 25)
++     width = 10, height = 10)
 > print(pheatmap::pheatmap(
 +   clstdata, cluster_rows = hcl, cutree_rows = 10, 
 +   scale = "none", fontsize_row = 4,
-+   annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters))))
++   show_rownames = FALSE, show_colnames = TRUE, 
++   annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters)),
++   color = colorRampPalette(colors = c("grey95", "steelblue"))(100),
++   annotation_colors = list(clusters = structure(ggsci::pal_npg()(10), names = 1:10))))
 > dev.off()
 null device 
           1 
@@ -275,7 +298,8 @@ null device
 +     print(pheatmap::pheatmap(
 +       clstdata[gn, ], scale = "none",
 +       fontsize_row = 5,
-+       main = paste0("cluster ", i)))
++       main = paste0("cluster ", i),
++       color = colorRampPalette(colors = c("grey95", "steelblue"))(100)))
 +     dev.off()
 +   }
 + }
@@ -296,34 +320,34 @@ null device
 +               lapply(split(cl_rep, cl_rep$cluster), 
 +                      function(w) w %>% arrange(desc(cor)) %>% head(3))))
    cluster          gene       cor
-1        1 D430042O09Rik 0.9968787
-2        1        Zfp950 0.9963422
-3        1          Pmm2 0.9953520
-4        2        Zfp266 0.9862843
-5        2        Fam57a 0.9839491
-6        2 1700028E10Rik 0.9824332
-7        3          Sv2a 0.9958774
-8        3          Txn2 0.9929610
-9        3          Pck2 0.9901860
-10       4          Chn1 0.9989806
-11       4 4430402I18Rik 0.9988772
-12       4        Slc1a1 0.9988426
-13       5           Pnp 0.9761482
-14       5        Smim14 0.9707322
-15       5       Ube2d2a 0.9700129
-16       6       Hsd17b4 0.9402168
-17       6         Acadl 0.9284666
-18       6          Gclm 0.8905265
-19       7        Rpl13a 0.9821932
-20       7         Snhg3 0.9534169
-21       7       Bloc1s1 0.9508311
-22       8           Hk2 0.9902847
-23       8        Rnase4 0.9857091
-24       8        Ctnnd1 0.9814177
-25       9       Gm13306 1.0000000
-26      10   RPS10-NUDT3 0.9539371
-27      10       Gm45713 0.9539039
-28      10       Gm20503 0.9438786
+1        1        Dnajb4 0.9910517
+2        1       Khdrbs1 0.9899279
+3        1        Dcaf17 0.9882086
+4        2           Pnp 0.9761103
+5        2          Mpc1 0.9750300
+6        2        Ppp1cc 0.9615730
+7        3        Zfp934 0.9721162
+8        3 6820431F20Rik 0.9634591
+9        3       Gprasp1 0.9270329
+10       4        Slc1a1 0.9987062
+11       4         Becn1 0.9986615
+12       4          Tpm4 0.9984890
+13       5        Zfp266 0.9762637
+14       5        Fam57a 0.9750635
+15       5       Slc38a9 0.9740416
+16       6          Cd82 0.9930822
+17       6           Id3 0.9930821
+18       6           Mvk 0.9927086
+19       7       Gm13306 1.0000000
+20       8        Rnase4 0.9723294
+21       8      Adamts13 0.9584619
+22       8         Itgam 0.9580565
+23       9 2810039B14Rik 0.9844321
+24       9           Arx 0.9830305
+25       9       Tsc22d4 0.9791742
+26      10        Nudcd3 0.9817239
+27      10         Rrm2b 0.9809607
+28      10           Ide 0.9442198
 > write.table(cl_rep %>% dplyr::arrange(cluster, desc(cor)), 
 +             file = gsub("\\.rds$", "_fracunspliced_cluster_centroid_corrs.txt", outrds),
 +             row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
@@ -378,7 +402,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Thu Jan 16 22:17:53 2020"
+[1] "Sat Jan 18 17:51:51 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -400,14 +424,15 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] cdata_1.1.4                 ggrepel_0.8.1              
- [3] cowplot_1.0.0               SingleCellExperiment_1.8.0 
- [5] SummarizedExperiment_1.16.1 DelayedArray_0.12.2        
- [7] BiocParallel_1.20.1         matrixStats_0.55.0         
- [9] Biobase_2.46.0              GenomicRanges_1.38.0       
-[11] GenomeInfoDb_1.22.0         IRanges_2.20.1             
-[13] S4Vectors_0.24.1            BiocGenerics_0.32.0        
-[15] ggplot2_3.2.1               dplyr_0.8.3                
+ [1] ggsci_2.9                   pheatmap_1.0.12            
+ [3] cdata_1.1.4                 ggrepel_0.8.1              
+ [5] cowplot_1.0.0               SingleCellExperiment_1.8.0 
+ [7] SummarizedExperiment_1.16.1 DelayedArray_0.12.2        
+ [9] BiocParallel_1.20.1         matrixStats_0.55.0         
+[11] Biobase_2.46.0              GenomicRanges_1.38.0       
+[13] GenomeInfoDb_1.22.0         IRanges_2.20.1             
+[15] S4Vectors_0.24.1            BiocGenerics_0.32.0        
+[17] ggplot2_3.2.1               dplyr_0.8.3                
 
 loaded via a namespace (and not attached):
  [1] tidyr_1.0.0            splines_3.6.1          rquery_1.4.1          
@@ -416,24 +441,24 @@ loaded via a namespace (and not attached):
 [10] backports_1.1.5        lattice_0.20-38        glue_1.3.1            
 [13] digest_0.6.23          RColorBrewer_1.1-2     XVector_0.26.0        
 [16] checkmate_1.9.4        colorspace_1.4-1       htmltools_0.4.0       
-[19] Matrix_1.2-18          pkgconfig_2.0.3        pheatmap_1.0.12       
-[22] magick_2.2             zlibbioc_1.32.0        purrr_0.3.3           
-[25] scales_1.1.0           jpeg_0.1-8.1           htmlTable_1.13.3      
-[28] tibble_2.1.3           farver_2.0.1           ellipsis_0.3.0        
-[31] withr_2.1.2            nnet_7.3-12            lazyeval_0.2.2        
-[34] survival_3.1-8         magrittr_1.5           crayon_1.3.4          
-[37] foreign_0.8-72         tools_3.6.1            data.table_1.12.8     
-[40] hms_0.5.3              lifecycle_0.1.0        stringr_1.4.0         
-[43] munsell_0.5.0          cluster_2.1.0          compiler_3.6.1        
-[46] rqdatatable_1.2.5      rlang_0.4.2            grid_3.6.1            
-[49] RCurl_1.95-4.12        rstudioapi_0.10        htmlwidgets_1.5.1     
-[52] labeling_0.3           bitops_1.0-6           base64enc_0.1-3       
-[55] gtable_0.3.0           R6_2.4.1               gridExtra_2.3         
-[58] knitr_1.26             zeallot_0.1.0          Hmisc_4.3-0           
-[61] readr_1.3.1            stringi_1.4.5          Rcpp_1.0.3            
-[64] vctrs_0.2.1            rpart_4.1-15           acepack_1.4.1         
-[67] png_0.1-7              tidyselect_0.2.5       xfun_0.12             
+[19] Matrix_1.2-18          pkgconfig_2.0.3        magick_2.2            
+[22] zlibbioc_1.32.0        purrr_0.3.3            scales_1.1.0          
+[25] jpeg_0.1-8.1           tibble_2.1.3           htmlTable_1.13.3      
+[28] farver_2.0.1           ellipsis_0.3.0         withr_2.1.2           
+[31] nnet_7.3-12            lazyeval_0.2.2         survival_3.1-8        
+[34] magrittr_1.5           crayon_1.3.4           foreign_0.8-72        
+[37] tools_3.6.1            data.table_1.12.8      hms_0.5.3             
+[40] lifecycle_0.1.0        stringr_1.4.0          munsell_0.5.0         
+[43] cluster_2.1.0          compiler_3.6.1         rqdatatable_1.2.5     
+[46] rlang_0.4.2            grid_3.6.1             RCurl_1.95-4.12       
+[49] rstudioapi_0.10        htmlwidgets_1.5.1      labeling_0.3          
+[52] bitops_1.0-6           base64enc_0.1-3        gtable_0.3.0          
+[55] R6_2.4.1               gridExtra_2.3          knitr_1.26            
+[58] zeallot_0.1.0          Hmisc_4.3-0            readr_1.3.1           
+[61] stringi_1.4.5          Rcpp_1.0.3             vctrs_0.2.1           
+[64] rpart_4.1-15           acepack_1.4.1          png_0.1-7             
+[67] tidyselect_0.2.5       xfun_0.12             
 > 
 > proc.time()
    user  system elapsed 
- 39.806   2.167  42.774 
+ 41.519   2.721  46.264 

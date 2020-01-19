@@ -681,7 +681,7 @@ There were 24 warnings (use warnings() to see them)
 +   labs(title = "Correlation, abundances and velocities, by gene",
 +        subtitle = "For genes selected by all methods")
 Warning message:
-Removed 22 rows containing non-finite values (stat_boxplot). 
+Removed 43 rows containing non-finite values (stat_boxplot). 
 > 
 > ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
 +   geom_boxplot() + 
@@ -726,7 +726,7 @@ null device
 +        x = "", y = "Correlation") + 
 +   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
 Warning message:
-Removed 22 rows containing non-finite values (stat_boxplot). 
+Removed 43 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
@@ -745,7 +745,7 @@ null device
 +        x = "", y = "Correlation") + 
 +   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
 Warning message:
-Removed 2 rows containing non-finite values (stat_boxplot). 
+Removed 4 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
@@ -753,7 +753,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Thu Jan 16 22:38:31 2020"
+[1] "Sat Jan 18 17:20:45 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -836,4 +836,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-543.881  35.363 588.825 
+665.247  32.033 718.527 

@@ -28,42 +28,86 @@ sces <- lapply(methods, function(nm) {
 methods_short <- shorten_methods(methods)
 
 ## ------------------------------------------------------------------------- ##
-## Overall similarity (RMSE of count matrices) 
+## Overall similarity
 ## ------------------------------------------------------------------------- ##
-rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
+## RMSE of count matrices
+# rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
+#   do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
+#     stopifnot(all(rownames(sces[[s1]]) == rownames(sces[[s2]])))
+#     stopifnot(all(colnames(sces[[s1]]) == colnames(sces[[s2]])))
+#     data.frame(m1 = s1, m2 = s2, 
+#                RMSEspliced = sqrt(mean((assay(sces[[s1]], "spliced") - 
+#                                           assay(sces[[s2]], "spliced"))^2)),
+#                RMSEunspliced = sqrt(mean((assay(sces[[s1]], "unspliced") - 
+#                                             assay(sces[[s2]], "unspliced"))^2)),
+#                stringsAsFactors = FALSE)
+#   }))
+# }))
+
+## Spearman correlations of row/column sums
+corrs <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
   do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
+    print(c(s1, s2))
     stopifnot(all(rownames(sces[[s1]]) == rownames(sces[[s2]])))
     stopifnot(all(colnames(sces[[s1]]) == colnames(sces[[s2]])))
     data.frame(m1 = s1, m2 = s2, 
-               RMSEspliced = sqrt(mean((assay(sces[[s1]], "spliced") - 
-                                          assay(sces[[s2]], "spliced"))^2)),
-               RMSEunspliced = sqrt(mean((assay(sces[[s1]], "unspliced") - 
-                                            assay(sces[[s2]], "unspliced"))^2)),
+               corrCellSumsSpliced = cor(colSums(assay(sces[[s1]], "spliced")),
+                                         colSums(assay(sces[[s2]], "spliced")), 
+                                         method = "spearman"),
+               corrCellSumsUnspliced = cor(colSums(assay(sces[[s1]], "unspliced")),
+                                           colSums(assay(sces[[s2]], "unspliced")), 
+                                           method = "spearman"),
+               corrGeneSumsSpliced = cor(rowSums(assay(sces[[s1]], "spliced")),
+                                         rowSums(assay(sces[[s2]], "spliced")), 
+                                         method = "spearman"),
+               corrGeneSumsUnspliced = cor(rowSums(assay(sces[[s1]], "unspliced")),
+                                           rowSums(assay(sces[[s2]], "unspliced")), 
+                                           method = "spearman"),
                stringsAsFactors = FALSE)
   }))
 }))
 
-## Create separate distance matrices for spliced and unspliced counts
-rmses <- rmse %>% dplyr::select(m1, m2, RMSEspliced) %>% 
-  tidyr::spread(key = m2, value = RMSEspliced) %>%
+## Create separate correlation matrices for spliced and unspliced counts
+corrcells <- corrs %>% dplyr::select(m1, m2, corrCellSumsSpliced) %>% 
+  tidyr::spread(key = m2, value = corrCellSumsSpliced) %>%
   as.data.frame() %>%
   tibble::column_to_rownames("m1") %>%
   as.matrix()
-rmseu <- rmse %>% dplyr::select(m1, m2, RMSEunspliced) %>% 
-  tidyr::spread(key = m2, value = RMSEunspliced) %>%
+corrcellu <- corrs %>% dplyr::select(m1, m2, corrCellSumsUnspliced) %>% 
+  tidyr::spread(key = m2, value = corrCellSumsUnspliced) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("m1") %>%
+  as.matrix()
+corrgenes <- corrs %>% dplyr::select(m1, m2, corrGeneSumsSpliced) %>% 
+  tidyr::spread(key = m2, value = corrGeneSumsSpliced) %>%
+  as.data.frame() %>%
+  tibble::column_to_rownames("m1") %>%
+  as.matrix()
+corrgeneu <- corrs %>% dplyr::select(m1, m2, corrGeneSumsUnspliced) %>% 
+  tidyr::spread(key = m2, value = corrGeneSumsUnspliced) %>%
   as.data.frame() %>%
   tibble::column_to_rownames("m1") %>%
   as.matrix()
 
-stopifnot(all(rownames(rmses) == colnames(rmses)))
-stopifnot(all(rownames(rmseu) == colnames(rmseu)))
+stopifnot(all(rownames(corrcells) == colnames(corrcells)))
+stopifnot(all(rownames(corrcellu) == colnames(corrcellu)))
+stopifnot(all(rownames(corrgenes) == colnames(corrgenes)))
+stopifnot(all(rownames(corrgeneu) == colnames(corrgeneu)))
 
 ## MDS
-cmdspliced <- as.data.frame(cmdscale(d = rmses, k = 2)) %>%
+cmdcellspliced <- as.data.frame(cmdscale(d = sqrt(2 - 2 * corrcells), k = 2)) %>%
   tibble::rownames_to_column("method") %>%
   dplyr::left_join(methods_short, by = "method")
 
-cmdunspliced <- as.data.frame(cmdscale(d = rmseu, k = 2)) %>%
+cmdcellunspliced <- as.data.frame(cmdscale(d = sqrt(2 - 2 * corrcellu), k = 2)) %>%
+  tibble::rownames_to_column("method") %>%
+  dplyr::left_join(methods_short, by = "method")
+
+cmdgenespliced <- as.data.frame(cmdscale(d = sqrt(2 - 2 * corrgenes), k = 2)) %>%
+  tibble::rownames_to_column("method") %>%
+  dplyr::left_join(methods_short, by = "method")
+
+cmdgeneunspliced <- as.data.frame(cmdscale(d = sqrt(2 - 2 * corrgeneu), k = 2)) %>%
   tibble::rownames_to_column("method") %>%
   dplyr::left_join(methods_short, by = "method")
 
@@ -79,17 +123,26 @@ plset <- list(
 pdf(gsub("\\.rds$", "_mds_spliced_unspliced.pdf", outrds), width = 10, height = 6)
 cowplot::plot_grid(
   cowplot::plot_grid(
-    ggplot(cmdspliced) + 
-      plset + ggtitle("MDS, RMSE (spliced)") + 
+    ggplot(cmdcellspliced) + 
+      plset + ggtitle("MDS, Cells (spliced)") + 
       theme(legend.position = "none"),
-    ggplot(cmdunspliced) + 
-      plset + ggtitle("MDS, RMSE (unspliced)") + 
+    ggplot(cmdcellunspliced) + 
+      plset + ggtitle("MDS, Cells (unspliced)") + 
       theme(legend.position = "none"),
     nrow = 1, labels = c("A", "B"), rel_widths = c(1, 1)
   ),
-  cowplot::get_legend(ggplot(cmdspliced) + 
+  cowplot::plot_grid(
+    ggplot(cmdgenespliced) + 
+      plset + ggtitle("MDS, Genes (spliced)") + 
+      theme(legend.position = "none"),
+    ggplot(cmdgeneunspliced) + 
+      plset + ggtitle("MDS, Genes (unspliced)") + 
+      theme(legend.position = "none"),
+    nrow = 1, labels = c("C", "D"), rel_widths = c(1, 1)
+  ),
+  cowplot::get_legend(ggplot(cmdcellspliced) + 
                         plset + theme(legend.position = "bottom")),
-  ncol = 1, labels = "", rel_heights = c(1, 0.1)
+  ncol = 1, labels = "", rel_heights = c(1, 1, 0.1)
 )
 dev.off()
 

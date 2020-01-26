@@ -228,7 +228,8 @@ tmp3 <- do.call(dplyr::bind_rows, lapply(names(velocities_shared), function(m1) 
                 m2 = factor(methods_short$method_short[match(m2, methods_short$method)])) %>%
   dplyr::filter(as.numeric(m1) < as.numeric(m2))
 
-pdf(gsub("\\.rds", "_velocity_dists.pdf", outrds), height = 13, width = 13)
+png(gsub("\\.rds", "_velocity_dists.png", outrds), height = 13, width = 13,
+    unit = "in", res = 400)
 tmp <- dplyr::bind_rows(tmp1, tmp2, tmp3)
 ggplot(tmp, 
        aes(x = dtype, y = value, fill = vtype)) + 

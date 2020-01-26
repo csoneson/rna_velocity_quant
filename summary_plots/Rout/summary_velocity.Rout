@@ -52,6 +52,8 @@ Warning messages:
   binding character and factor vector, coercing into character vector
 2: In bind_rows_(x, .id) :
   binding character and factor vector, coercing into character vector
+3: In bind_rows_(x, .id) :
+  binding character and factor vector, coercing into character vector
 > geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel))
 > 
 > pdf("velocity_sd_latent_time.pdf")
@@ -97,7 +99,7 @@ null device
           1 
 > 
 > date()
-[1] "Sat Jan 18 18:43:11 2020"
+[1] "Sat Jan 25 20:03:48 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -151,4 +153,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 11.198   1.008  12.335 
+  9.904   0.969  11.356 

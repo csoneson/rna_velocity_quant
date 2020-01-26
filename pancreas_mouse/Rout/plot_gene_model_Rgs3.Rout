@@ -192,7 +192,7 @@ null device
           1 
 > 
 > date()
-[1] "Sat Jan 18 18:47:11 2020"
+[1] "Sat Jan 25 12:54:40 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -260,4 +260,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-143.852  10.854 155.092 
+143.445  10.963 154.839 

@@ -406,7 +406,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Sat Jan 18 10:29:27 2020"
+[1] "Sat Jan 25 12:47:14 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -459,4 +459,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 14.659   1.315  17.009 
+ 14.650   1.235  16.552 

@@ -84,5 +84,12 @@ cluster_levels <- list(
                     "OPC", "OL", "GABA", "Cajal Retzius"),
   Pancreas = c("Ductal", "Ngn3 low EP", "Ngn3 high EP", 
                "Pre-endocrine", "Epsilon", "Delta", "Alpha", "Beta"),
+  PFC = c("Astro", "Endo", "Excitatory", "Inhibitory", "Microglia",
+          "NF Oligo", "Oligo", "OPC"),
+  Spermatogenesis = c("A3-A4-In-B Differentiating spermatogonia", 
+                      "Leptotene/Zygotene spermatocytes", 
+                      "Pachytene spermatocytes", "DIplotene/Secondary spermatocytes",
+                      "Early Round spermatids", "Mid Round spermatids",
+                      "Late Round spermatids"),
   Neuron = NULL
 )

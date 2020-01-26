@@ -57,9 +57,17 @@ if genesetfile == "None":
 	adata2 = scv.pp.filter_and_normalize(adata, min_shared_counts = 20, n_top_genes = 2000, copy = True, log = True)
 else:
 	geneset = [f.rstrip('\n') for f in open(genesetfile, 'r').readlines()]
-	scv.pp.normalize_per_cell(adata)
-	adata2 = adata[:, geneset]
+	adata2 = scv.pp.filter_genes(adata, min_shared_counts = 20, copy = True)
+	scv.pp.normalize_per_cell(adata2)
+	adata2 = adata2[:, geneset]
 
+## Convert unspliced matrix to dense format. In the moment calculations, scVelo will 
+## check whether the layers are already normalized, and otherwise re-normalize. 
+## The checks are different depending on whether the layers are sparse or dense.
+## If dense, checks whether all the values for the first gene are close to integer.
+## If sparse, checks whether all the values for the first 10 cells are close to integer.
+## The latter seems more likely to be true by chance
+adata2.layers['unspliced'] = adata2.layers['unspliced'].todense()
 scv.pp.moments(adata2, n_pcs = 30, n_neighbors = 30)
 
 # compute velocity and velocity graph
@@ -128,6 +136,7 @@ except:
 
 scv.tl.velocity_confidence(adata2)
 adata2.obs.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_cell_info.csv")
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream_velocityconfidence.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='velocity_confidence', title='')
 
 # session info
 scv.logging.print_version()

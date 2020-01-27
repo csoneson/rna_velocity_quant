@@ -1,0 +1,448 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(cowplot)
++   library(Seurat)
++ })
+> source(plothelperscript)
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(plothelperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/spermatogenesis_mouse"
+> print(methods)
+                                       velocyto 
+                                     "velocyto" 
+  kallisto_bustools_prepref_isocollapse_exclude 
+"kallisto_bustools_prepref_isocollapse_exclude" 
+  kallisto_bustools_prepref_isoseparate_exclude 
+"kallisto_bustools_prepref_isoseparate_exclude" 
+  kallisto_bustools_prepref_isocollapse_include 
+"kallisto_bustools_prepref_isocollapse_include" 
+  kallisto_bustools_prepref_isoseparate_include 
+"kallisto_bustools_prepref_isoseparate_include" 
+        alevin_prepref_isocollapse_cdna_introns 
+      "alevin_prepref_isocollapse_cdna_introns" 
+        alevin_prepref_isoseparate_cdna_introns 
+      "alevin_prepref_isoseparate_cdna_introns" 
+  alevin_prepref_isocollapse_cdna_introns_decoy 
+"alevin_prepref_isocollapse_cdna_introns_decoy" 
+  alevin_prepref_isoseparate_cdna_introns_decoy 
+"alevin_prepref_isoseparate_cdna_introns_decoy" 
+                       alevin_spliced_unspliced 
+                     "alevin_spliced_unspliced" 
+                                       starsolo 
+                                     "starsolo" 
+                                 starsolo_subtr 
+                               "starsolo_subtr" 
+> print(showgene)
+[1] "Gm11978"
+> print(outvelopng)
+[1] "plots/fracunspliced_velocity_singlegene/spermatogenesis_Gm11978_velocity.png"
+> 
+> methods_short <- shorten_methods(methods)
+> 
+> ## ------------------------------------------------------------------------- ##
+> ## Read data
+> ## ------------------------------------------------------------------------- ##
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
++ })
+> fracunspliced <- lapply(sces, function(w) {
++   assay(w, "unspliced")/(assay(w, "spliced") + assay(w, "unspliced"))
++ })
+> cells <- colnames(sces[[1]])
+> stopifnot(all(sapply(fracunspliced, function(w) all(colnames(w) == cells))))
+> 
+> umap <- data.frame(reducedDim(sces[[1]], "UMAP_alevin_spliced"),
++                    stringsAsFactors = FALSE)
+> stopifnot(rownames(umap) == cells)
+> 
+> seurats <- lapply(methods, function(nm) {
++   ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
++                                     nm, "_with_velocity.h5ad")))
++ })
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+> velocities <- lapply(seurats, function(w) {
++   as.matrix(GetAssayData(GetAssay(w, "velocity")))
++ })
+> stopifnot(all(sapply(velocities, function(w) all(colnames(w) == cells))))
+> 
+> ## ------------------------------------------------------------------------- ##
+> ## Fraction unspliced
+> ## ------------------------------------------------------------------------- ##
+> plotlist <- lapply(methods, function(m) {
++   sm <- methods_short$method_short[match(m, methods_short$method)]
++   df <- umap
++   df$fracunspl <- fracunspliced[[m]][match(showgene, rownames(fracunspliced[[m]])), ]
++   ggplot(df, aes(x = X1, y = X2, fill = fracunspl)) + 
++     geom_point(color = "grey", shape = 21) + 
++     scale_fill_gradientn(colors = viridis::viridis(21), na.value = "white", limits = c(0, 1),
++                           name = paste0(showgene, " fraction unspliced")) + 
++     labs(x = "", y = "", title = sm) + 
++     theme_void() + theme(legend.position = "bottom")
++ })
+> 
+> png(gsub("_velocity.png", "_fracunspliced.png", outvelopng), width = 8, height = 12,
++     unit = "in", res = 200)
+> print(cowplot::plot_grid(
++   cowplot::plot_grid(plotlist = lapply(plotlist, function(w) w + theme(legend.position = "none")), ncol = 3),
++   cowplot::get_legend(plotlist[[1]] + theme(legend.position = "bottom")),
++   ncol = 1, rel_heights = c(1, 0.05)
++ ))
+> dev.off()
+null device 
+          1 
+> 
+> ## ------------------------------------------------------------------------- ##
+> ## Velocities
+> ## ------------------------------------------------------------------------- ##
+> ## Get range of values for color scale
+> rng <- range(unlist(lapply(methods, function(m) {
++   velocities[[m]][match(showgene, rownames(velocities[[m]])), ]
++ })), na.rm = TRUE)
+> 
+> plotlist <- lapply(methods, function(m) {
++   sm <- methods_short$method_short[match(m, methods_short$method)]
++   df <- umap
++   df$velocity <- velocities[[m]][match(showgene, rownames(velocities[[m]])), ]
++   ggplot(df, aes(x = X1, y = X2, fill = velocity)) + 
++     geom_point(color = "grey", shape = 21) + 
++     scale_fill_gradientn(colors = viridis::viridis(21), na.value = "white", limits = rng,
++                          name = paste0(showgene, " velocity")) + 
++     labs(x = "", y = "", title = sm) + 
++     theme_void() + theme(legend.position = "bottom")
++ })
+> 
+> png(outvelopng, width = 8, height = 12,
++     unit = "in", res = 200)
+> print(cowplot::plot_grid(
++   cowplot::plot_grid(plotlist = lapply(plotlist, function(w) w + theme(legend.position = "none")), ncol = 3),
++   cowplot::get_legend(plotlist[[1]] + theme(legend.position = "bottom")),
++   ncol = 1, rel_heights = c(1, 0.05)
++ ))
+> dev.off()
+null device 
+          1 
+> 
+> date()
+[1] "Sun Jan 26 19:05:33 2020"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] Seurat_3.1.2                cowplot_1.0.0              
+ [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.1
+ [5] DelayedArray_0.12.2         BiocParallel_1.20.1        
+ [7] matrixStats_0.55.0          Biobase_2.46.0             
+ [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[11] IRanges_2.20.1              S4Vectors_0.24.1           
+[13] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[15] dplyr_0.8.3                
+
+loaded via a namespace (and not attached):
+  [1] TH.data_1.0-10         Rtsne_0.15             colorspace_1.4-1      
+  [4] ggridges_0.5.2         XVector_0.26.0         farver_2.0.1          
+  [7] leiden_0.3.1           listenv_0.8.0          npsurv_0.4-0          
+ [10] bit64_0.9-7            ggrepel_0.8.1          mvtnorm_1.0-12        
+ [13] codetools_0.2-16       splines_3.6.1          R.methodsS3_1.7.1     
+ [16] mnormt_1.5-5           lsei_1.2-0             TFisher_0.2.0         
+ [19] zeallot_0.1.0          jsonlite_1.6           ica_1.0-2             
+ [22] cluster_2.1.0          png_0.1-7              R.oo_1.23.0           
+ [25] uwot_0.1.5             sctransform_0.2.1      compiler_3.6.1        
+ [28] httr_1.4.1             backports_1.1.5        assertthat_0.2.1      
+ [31] Matrix_1.2-18          lazyeval_0.2.2         htmltools_0.4.0       
+ [34] tools_3.6.1            rsvd_1.0.2             igraph_1.2.4.2        
+ [37] gtable_0.3.0           glue_1.3.1             GenomeInfoDbData_1.2.2
+ [40] reshape2_1.4.3         RANN_2.6.1             rappdirs_0.3.1        
+ [43] Rcpp_1.0.3             vctrs_0.2.1            multtest_2.42.0       
+ [46] gdata_2.18.0           ape_5.3                nlme_3.1-143          
+ [49] gbRd_0.4-11            lmtest_0.9-37          stringr_1.4.0         
+ [52] globals_0.12.5         lifecycle_0.1.0        irlba_2.3.3           
+ [55] gtools_3.8.1           future_1.15.1          zlibbioc_1.32.0       
+ [58] MASS_7.3-51.4          zoo_1.8-7              scales_1.1.0          
+ [61] sandwich_2.5-1         RColorBrewer_1.1-2     gridExtra_2.3         
+ [64] reticulate_1.14        pbapply_1.4-2          stringi_1.4.5         
+ [67] mutoss_0.1-12          plotrix_3.7-7          caTools_1.17.1.4      
+ [70] bibtex_0.4.2.2         Rdpack_0.11-1          SDMTools_1.1-221.2    
+ [73] rlang_0.4.2            pkgconfig_2.0.3        bitops_1.0-6          
+ [76] lattice_0.20-38        ROCR_1.0-7             purrr_0.3.3           
+ [79] labeling_0.3           htmlwidgets_1.5.1      bit_1.1-15            
+ [82] tidyselect_0.2.5       RcppAnnoy_0.0.14       plyr_1.8.5            
+ [85] magrittr_1.5           R6_2.4.1               gplots_3.0.1.2        
+ [88] multcomp_1.4-12        pillar_1.4.3           withr_2.1.2           
+ [91] sn_1.5-4               fitdistrplus_1.0-14    survival_3.1-8        
+ [94] RCurl_1.95-4.12        tsne_0.1-3             tibble_2.1.3          
+ [97] future.apply_1.4.0     hdf5r_1.3.0            crayon_1.3.4          
+[100] KernSmooth_2.23-16     plotly_4.9.1           viridis_0.5.1         
+[103] grid_3.6.1             data.table_1.12.8      metap_1.2             
+[106] digest_0.6.23          tidyr_1.0.0            numDeriv_2016.8-1.1   
+[109] R.utils_2.9.2          RcppParallel_4.4.4     munsell_0.5.0         
+[112] viridisLite_0.3.0     
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+113.479  50.920 164.893 

@@ -54,11 +54,14 @@ scv.utils.show_proportions(adata)
 # defaults: min_counts=None, min_counts_u=None, min_cells=None, min_cells_u=None,
 #           min_shared_cells=None, flavor='seurat'
 if genesetfile == "None":
-	adata2 = scv.pp.filter_and_normalize(adata, min_shared_counts = 20, n_top_genes = 2000, copy = True, log = True)
+	adata2 = scv.pp.filter_genes(adata, min_shared_counts = 20, copy = True)
+	scv.pp.normalize_per_cell(adata2, enforce = True)
+	scv.pp.filter_genes_dispersion(adata2, n_top_genes = 2000)
+	scv.pp.log1p(adata2)
 else:
 	geneset = [f.rstrip('\n') for f in open(genesetfile, 'r').readlines()]
 	adata2 = scv.pp.filter_genes(adata, min_shared_counts = 20, copy = True)
-	scv.pp.normalize_per_cell(adata2)
+	scv.pp.normalize_per_cell(adata2, enforce = True)
 	adata2 = adata2[:, geneset]
 
 ## Convert unspliced matrix to dense format. In the moment calculations, scVelo will 

@@ -19,6 +19,12 @@ subsetbam := /tungstenfs/groups/gbioinfo/sonechar/Software/subset-bam-1.0-x86_64
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/dentate_gyrus_mouse
 scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts
+## file with assigned cell types
+cellfile := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse/cells_kept_in_scvelo_exampledata.csv
+## prefix for plot output files. Should also be the suffix of the scVelo.py file
+outprefix := dentate_gyrus
+## dataset label for plots
+datalabel := Dentate_gyrus
 
 flanklength := 97
 
@@ -64,13 +70,15 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h
 output/genesets/shared_genes.txt \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
 
-plot: plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds \
-plots/count_correlation/dentate_gyrus_plot_count_correlation.rds \
-plots/total_count/dentate_gyrus_plot_total_count.rds \
-plots/spliced_unspliced_mds/dentate_gyrus_plot_spliced_unspliced_mds.rds \
-plots/merge_umaps/dentate_gyrus_plot_merge_umaps.rds \
-plots/compare_velocity_projections/dentate_gyrus_plot_compare_velocity_projections.rds \
-plots/shared_genes_scvelo/dentate_gyrus_plot_shared_genes_scvelo.rds
+plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
+plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
+plots/total_count/$(outprefix)_plot_total_count.rds \
+plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds \
+plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds \
+plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds \
+plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
+
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -413,7 +421,7 @@ $(foreach q,p12 p35,quants/$(q)/starsolo/Solo.out/Gene/Summary.csv)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Dentate_gyrus' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='/work/gbioinfo/sonechar/Data/GSE95315_dentate_gyrus_mouse/cells_kept_in_scvelo_exampledata.csv' samplenames='p12,p35' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced_dentategyrus.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='$(cellfile)' samplenames='p12,p35' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced_dentategyrus.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -421,7 +429,7 @@ output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
 endef
 $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 
-plots/total_count/dentate_gyrus_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
+plots/total_count/$(outprefix)_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
@@ -431,35 +439,45 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 ## Plot summaries of spliced/unspliced counts
-plots/spliced_unspliced_mds/dentate_gyrus_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
+plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
 
-plots/frac_unspliced/dentate_gyrus_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='Dentate_gyrus' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='$(datalabel)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
-plots/count_correlation/dentate_gyrus_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds: output/sce/sces_spliced_unspliced.rds \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
+
+plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/merge_umaps/dentate_gyrus_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
 $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
@@ -468,7 +486,7 @@ $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
-plots/compare_velocity_projections/dentate_gyrus_plot_compare_velocity_projections.rds: \
+plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
@@ -477,13 +495,13 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
 
-plots/shared_genes_scvelo/dentate_gyrus_plot_shared_genes_scvelo.rds: \
+plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Dentate_gyrus' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
 
 ## Convert SCE to anndata
 define anndatarule

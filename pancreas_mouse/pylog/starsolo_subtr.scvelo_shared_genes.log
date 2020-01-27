@@ -3,6 +3,7 @@ output directory:  plots/velocity
 output adfile:  output/anndata_with_velocity/anndata_starsolo_subtr_shared_genes_with_velocity.h5ad
 gene set file:  output/genesets/shared_genes.txt
 Abundance of ['spliced', 'unspliced']: [0.86 0.14]
+Filtered out 46074 genes that are detected in less than 20 counts (shared).
 Normalized count data: X, spliced, unspliced.
 computing neighbors
     finished (0:00:03) --> added to `.uns['neighbors']`
@@ -12,7 +13,7 @@ computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 1%... 3%... 4%... 5%... 6%... 8%... 10%... 11%... 12%... 14%... 16%... 17%... 19%... 20%... 22%... 23%... 24%... 26%... 27%... 29%... 30%... 32%... 34%... 35%... 36%... 38%... 39%... 40%... 41%... 43%... 44%... 46%... 47%... 49%... 51%... 52%... 54%... 55%... 57%... 58%... 60%... 61%... 63%... 64%... 65%... 66%... 68%... 70%... 72%... 73%... 75%... 76%... 77%... 79%... 81%... 82%... 83%... 85%... 86%... 87%... 89%... 90%... 91%... 93%... 94%... 96%... 97%... 99%... 100%    finished (0:03:57) --> added 
+... 1%... 2%... 3%... 4%... 6%... 7%... 8%... 10%... 11%... 13%... 14%... 15%... 17%... 18%... 20%... 21%... 23%... 24%... 25%... 26%... 28%... 29%... 31%... 32%... 33%... 34%... 36%... 37%... 38%... 40%... 41%... 42%... 43%... 45%... 46%... 47%... 49%... 50%... 52%... 53%... 54%... 56%... 57%... 59%... 60%... 61%... 63%... 64%... 65%... 66%... 68%... 69%... 70%... 71%... 72%... 73%... 75%... 76%... 77%... 78%... 79%... 80%... 82%... 83%... 84%... 85%... 86%... 87%... 88%... 89%... 90%... 91%... 92%... 93%... 95%... 96%... 98%... 99%... 100%    finished (0:04:30) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:01) --> added 
@@ -21,7 +22,7 @@ computing velocity graph
 ... 100%    finished (0:00:02) --> added 
     'velocity_graph', sparse matrix with cosine correlations (adata.uns)
 computing velocity embedding
-    finished (0:00:00) --> added
+    finished (0:00:01) --> added
     'velocity_pca', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_PCA_stream.png
 computing velocity embedding
@@ -182,4 +183,5 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-18 10:28.
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_stream_velocityconfidence.png
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-26 19:48.

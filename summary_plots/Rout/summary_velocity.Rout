@@ -93,13 +93,13 @@ null device
 > 
 > cowplot::plot_grid(g1, g2, nrow = 1, labels = c("A", "B"))
 Warning message:
-Removed 181 rows containing non-finite values (stat_boxplot). 
+Removed 42 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
 > 
 > date()
-[1] "Sat Jan 25 20:03:48 2020"
+[1] "Sun Jan 26 21:37:59 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -153,4 +153,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  9.904   0.969  11.356 
+ 10.403   1.346  11.983 

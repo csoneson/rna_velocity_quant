@@ -408,7 +408,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0(""))
 Warning: Ignoring unknown parameters: scale
 Warning message:
-Removed 8 rows containing non-finite values (stat_boxplot). 
+Removed 2 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
@@ -418,7 +418,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Sat Jan 25 12:38:21 2020"
+[1] "Sun Jan 26 18:59:53 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -471,4 +471,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 13.146   1.105  14.542 
+ 12.880   1.236  14.762 

@@ -19,6 +19,11 @@ subsetbam := /tungstenfs/groups/gbioinfo/sonechar/Software/subset-bam-1.0-x86_64
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/10xGenomics_neuron_10k_v3/neuron_10k_v3_fastqs
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/neuron_10k_v3_mouse
 scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts
+samplename := neuron_10k_v3
+## prefix for plot output files. Should also be the suffix of the scVelo.py file
+outprefix := neuron
+## dataset label for plots
+datalabel := Neuron
 
 flanklength := 90
 
@@ -57,10 +62,10 @@ $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdn
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
 quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
-quants/cellranger/neuron_10k_v3/outs/web_summary.html \
-quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
-quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam_retcells.bam \
-quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam_retcells.bw \
+quants/cellranger/$(samplename)/outs/web_summary.html \
+quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bw \
 quants/starsolo/Solo.out/Gene/Summary.csv \
 output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced,output/sce/sce_$(x).rds) \
@@ -71,66 +76,67 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h
 output/genesets/shared_genes.txt \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
 
-plot: plots/velocity_confidence/neuron_plot_velocity_confidence.rds \
-plots/count_correlation/neuron_plot_count_correlation.rds \
-plots/busparse_prepref/neuron_plot_busparse_prepref.rds \
-plots/total_count/neuron_plot_total_count.rds \
-plots/spliced_unspliced_mds/neuron_plot_spliced_unspliced_mds.rds \
-plots/frac_unspliced/neuron_plot_frac_unspliced.rds \
-plots/merge_umaps/neuron_plot_merge_umaps.rds \
-plots/compare_velocity_projections/neuron_plot_compare_velocity_projections.rds \
-plots/shared_genes_scvelo/neuron_plot_shared_genes_scvelo.rds
+plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
+plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
+plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds \
+plots/total_count/$(outprefix)_plot_total_count.rds \
+plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds \
+plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds \
+plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds \
+plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds \
+plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
 ## -----------------------------------------------------------------------------------------------------
 ## Run CellRanger
-quants/cellranger/neuron_10k_v3/outs/web_summary.html: $(ref10x)/reference.json \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+quants/cellranger/$(samplename)/outs/web_summary.html: $(ref10x)/reference.json \
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	mkdir -p quants/cellranger
 	cd quants/cellranger && module load CellRanger/3.0.2 && \
-	cellranger count --id=neuron_10k_v3 --fastqs=$(datadir) \
-	--sample=neuron_10k_v3 --nosecondary --transcriptome=$(ref10x) \
+	cellranger count --id=$(samplename) --fastqs=$(datadir) \
+	--sample=$(samplename) --nosecondary --transcriptome=$(ref10x) \
 	--localcores=24 --localmem=64 --lanes=1,2
 
 ## Run velocyto
-quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom: \
-quants/cellranger/neuron_10k_v3/outs/web_summary.html $(gtf)
+quants/cellranger/$(samplename)/velocyto/$(samplename).loom: \
+quants/cellranger/$(samplename)/outs/web_summary.html $(gtf)
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
-	velocyto run10x --samtools-threads 16 quants/cellranger/neuron_10k_v3 $(gtf) && \
+	velocyto run10x --samtools-threads 16 quants/cellranger/$(samplename) $(gtf) && \
 	source deactivate
 
 ## Subset bam file to only reads from retained cell barcodes
-quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam_retcells.bam: \
-quants/cellranger/neuron_10k_v3/outs/web_summary.html \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam: \
+quants/cellranger/$(samplename)/outs/web_summary.html \
 output/sce/retained_cell_barcodes.csv
-	$(subsetbam) --bam quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam.bam \
+	$(subsetbam) --bam quants/cellranger/$(samplename)/outs/possorted_genome_bam.bam \
 	--cell-barcodes output/sce/retained_cell_barcodes.csv \
 	--out-bam $@ --cores 24 --log-level info --bam-tag CB
 
 ## Generate bigwig file
-quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam_retcells.bw: \
-quants/cellranger/neuron_10k_v3/outs/possorted_genome_bam_retcells.bam $(chrlengths)
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bw: \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam $(chrlengths)
 	module load BEDTools/2.27.1-foss-2018b && \
 	bedtools genomecov -split -ibam $< -bg | \
-	LC_COLLATE=C sort -k1,1 -k2,2n > neuron_10k_v3.tmp.bedGraph
+	LC_COLLATE=C sort -k1,1 -k2,2n > $(samplename).tmp.bedGraph
 	module load Kent_tools/20190212-linux.x86_64 && \
-	bedGraphToBigWig neuron_10k_v3.tmp.bedGraph $(chrlengths) $@
-	rm -f neuron_10k_v3.tmp.bedGraph
+	bedGraphToBigWig $(samplename).tmp.bedGraph $(chrlengths) $@
+	rm -f $(samplename).tmp.bedGraph
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo
 ## -----------------------------------------------------------------------------------------------------
 quants/starsolo/Solo.out/Gene/Summary.csv: \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 reference/cellranger3.1.0-3M-february-2018.txt
 	mkdir -p quants/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
-	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-	$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz,$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz \
+	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz,$(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+	$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz,$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz \
 	--soloFeatures Gene GeneFull Velocyto --soloType CB_UMI_Simple --soloCBwhitelist reference/cellranger3.1.0-3M-february-2018.txt \
 	--soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen 12 --soloStrand Forward \
 	--outFileNamePrefix quants/starsolo/ --runThreadN 48 --readFilesCommand zcat \
@@ -187,7 +193,7 @@ reference/gencode.vM21.spliced.unspliced.tx2gene.txt: \
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa
 	touch $@
 
-plots/busparse_prepref/neuron_plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/plot_compare_busparse_prepref.R \
+plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/plot_compare_busparse_prepref.R \
 $(foreach v,collapse separate,$(foreach m,busparse prepref,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) 
 	mkdir -p Rout
 	mkdir -p $(@D)
@@ -274,13 +280,13 @@ reference/spliced.sidx/seq.bin: $(txome)
 define kallistobusrule
 quants/kallisto_bustools_$(2)_iso$(1)_cdna_introns/run_info.json: \
 reference/$(2)_iso$(1)_cdna_introns.kidx \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	mkdir -p $$(@D)
 	module load kallisto/0.46.0-foss-2019b && \
 	kallisto bus -i $$< -o $$(@D) -x 10xv3 -t 24 \
-	$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-	$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+	$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+	$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 endef
 $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call kallistobusrule,$(v),$(m)))))
 
@@ -347,12 +353,12 @@ define alevincdnaintronrule
 quants/alevin_$(2)_iso$(1)_cdna_introns/lib_format_counts.json: \
 reference/$(2)_iso$(1)_cdna_introns.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
 	salmon alevin -l ISR -i $$(<D) \
-	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
-	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+	-1 $(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
+	-2 $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
 	--chromiumV3 --dumpFeatures --dumpBfh
 endef
@@ -362,12 +368,12 @@ define alevincdnaintrondecoyrule
 quants/alevin_$(2)_iso$(1)_cdna_intronsasdecoy/lib_format_counts.json: \
 reference/$(2)_iso$(1)_cdna_intronsasdecoy.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
 	salmon alevin -l ISR -i $$(<D) \
-	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
-	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+	-1 $(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
+	-2 $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
 	--chromiumV3 --dumpFeatures --dumpBfh
 endef
@@ -377,12 +383,12 @@ define alevinintroncdnadecoyrule
 quants/alevin_$(2)_iso$(1)_introns_cdnaasdecoy/lib_format_counts.json: \
 reference/$(2)_iso$(1)_introns_cdnaasdecoy.sidx/seq.bin \
 reference/$(2)_iso$(1)/tr2g_modified.tsv \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
 	salmon alevin -l ISR -i $$(<D) \
-	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
-	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+	-1 $(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
+	-2 $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p 24 --tgMap $$(word 2,$$^) \
 	--chromiumV3 --dumpFeatures --dumpBfh
 endef
@@ -392,12 +398,12 @@ $(foreach m,busparse prepref,$(foreach v,collapse separate,$(eval $(call alevini
 quants/alevin_spliced_unspliced/lib_format_counts.json: \
 reference/spliced_unspliced.sidx/seq.bin \
 reference/gencode.vM21.spliced.unspliced.tx2gene.txt \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
 	salmon alevin -l ISR -i $(<D) \
-	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
-	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+	-1 $(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
+	-2 $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 24 --tgMap $(word 2,$^) \
 	--chromiumV3 --dumpFeatures --dumpBfh
 
@@ -405,12 +411,12 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 quants/alevin_spliced/lib_format_counts.json: \
 reference/spliced.sidx/seq.bin \
 $(tx2gene) \
-$(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz \
-$(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz \
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
 	salmon alevin -l ISR -i $(<D) \
-	-1 $(datadir)/neuron_10k_v3_S1_L002_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz \
-	-2 $(datadir)/neuron_10k_v3_S1_L002_R2_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L001_R2_001.fastq.gz \
+	-1 $(datadir)/$(samplename)_S1_L002_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
+	-2 $(datadir)/$(samplename)_S1_L002_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $(@D) -p 16 --tgMap $(word 2,$^) \
 	--chromiumV3 --dumpFeatures --dumpBfh
 
@@ -418,12 +424,12 @@ $(datadir)/neuron_10k_v3_S1_L001_R1_001.fastq.gz $(datadir)/neuron_10k_v3_S1_L00
 ## Analysis
 ## -----------------------------------------------------------------------------------------------------
 ## Assign cell types based on alevin_spliced
-output/neuron_singler_celltypes.csv: quants/alevin_spliced/lib_format_counts.json \
-$(scriptdir)/neuron_assign_celltypes.R $(scriptdir)/sce_helpers.R $(tx2genefull)
+output/$(outprefix)_singler_celltypes.csv: quants/alevin_spliced/lib_format_counts.json \
+$(scriptdir)/$(outprefix)_assign_celltypes.R $(scriptdir)/sce_helpers.R $(tx2genefull)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' outcsv='$@'" $(scriptdir)/neuron_assign_celltypes.R Rout/neuron_assign_celltypes.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' outcsv='$@'" $(scriptdir)/$(outprefix)_assign_celltypes.R Rout/$(outprefix)_assign_celltypes.Rout
 
 ## Create SCEs with shared genes/cells
 output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/summarize_spliced_unspliced.R \
@@ -433,13 +439,13 @@ $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdn
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
 quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
-quants/cellranger/neuron_10k_v3/velocyto/neuron_10k_v3.loom \
+quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
 quants/starsolo/Solo.out/Gene/Summary.csv \
-$(tx2genefull) output/neuron_singler_celltypes.csv
+$(tx2genefull) output/$(outprefix)_singler_celltypes.csv
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='output/neuron_singler_celltypes.csv' samplename='neuron_10k_v3' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='output/$(outprefix)_singler_celltypes.csv' samplename='$(samplename)' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -450,7 +456,7 @@ $(foreach x,$(methods) alevin_spliced,$(eval $(call scerule,$(x))))
 output/sce/retained_cell_barcodes.csv: output/sce/sces_spliced_unspliced.rds
 	touch $@
 
-plots/total_count/neuron_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
+plots/total_count/$(outprefix)_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
@@ -460,14 +466,14 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
 ## Plot summaries of spliced/unspliced counts
-plots/spliced_unspliced_mds/neuron_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
+plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_spliced_unspliced_mds.R Rout/plot_spliced_unspliced_mds.Rout
 
-plots/frac_unspliced/neuron_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
+plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R $(tx2genefull) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
@@ -476,21 +482,31 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/velocity_confidence/neuron_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='Neuron' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='$(datalabel)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
-plots/count_correlation/neuron_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds: output/sce/sces_spliced_unspliced.rds \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
+
+plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/merge_umaps/neuron_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
 $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
@@ -499,7 +515,7 @@ $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
-plots/compare_velocity_projections/neuron_plot_compare_velocity_projections.rds: \
+plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
@@ -508,13 +524,13 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
 
-plots/shared_genes_scvelo/neuron_plot_shared_genes_scvelo.rds: \
+plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds: \
 $(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='Neuron' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodsc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
 
 ## Convert SCE to anndata
 define anndatarule
@@ -532,13 +548,13 @@ $(foreach x,$(methods),$(eval $(call anndatarule,$(x))))
 ## Calculate velocity with scVelo
 define scvelorule
 output/anndata_with_velocity/anndata_$(1)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
-$(scriptdir)/run_scVelo_neuron.py
+$(scriptdir)/run_scVelo_$(outprefix).py
 	mkdir -p plots/velocity/anndata_$(1)
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
-	python $(scriptdir)/run_scVelo_neuron.py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
+	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call scvelorule,$(x))))
@@ -554,13 +570,13 @@ $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h
 ## Velocity, based on genes selected by all methods
 define scveloruleshared
 output/anndata_with_velocity/anndata_$(1)_shared_genes_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
-$(scriptdir)/run_scVelo_neuron.py output/genesets/shared_genes.txt
+$(scriptdir)/run_scVelo_$(outprefix).py output/genesets/shared_genes.txt
 	mkdir -p plots/velocity/anndata_$(1)_shared_genes
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
-	python $(scriptdir)/run_scVelo_neuron.py $$< plots/velocity $$@ output/genesets/shared_genes.txt >pylog/$(1).scvelo_shared_genes.log 2>&1 && \
+	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ output/genesets/shared_genes.txt >pylog/$(1).scvelo_shared_genes.log 2>&1 && \
 	set +u && source deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call scveloruleshared,$(x))))

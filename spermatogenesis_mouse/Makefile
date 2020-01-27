@@ -87,7 +87,8 @@ plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projection
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
 $(foreach g,$(genestoplot),plots/genes/$(outprefix)_$(g).pdf) \
-
+$(foreach g,$(genestoplot),plots/fracunspliced_velocity_singlegene/$(outprefix)_$(g)_velocity.png) \
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## Standard CellRanger + velocyto workflow
@@ -485,7 +486,17 @@ $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='$(datalabel)' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds: output/sce/sces_spliced_unspliced.rds \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+$(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
+
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -547,6 +558,18 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsc)' gtf='$(gtf)' bigwigfileplus='$$(word 1,$$^)' bigwigfileminus='$$(word 2,$$^)' samplename='$(datalabel)' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
 endef
 $(foreach g,$(genestoplot),$(eval $(call plotgenerule,$(g))))
+
+define plotfuvgenerule
+plots/fracunspliced_velocity_singlegene/$(outprefix)_$(1)_velocity.png: \
+output/sce/sces_spliced_unspliced.rds \
+$(foreach m,$(methods),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_fracunspliced_velocity_singlegene.R $(scriptdir)/plot_helpers.R
+	mkdir -p $$(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsc)' showgene='$(1)' outvelopng='$$@'" $(scriptdir)/plot_fracunspliced_velocity_singlegene.R Rout/plot_fracunspliced_velocity_singlegene_$(1).Rout
+endef
+$(foreach g,$(genestoplot),$(eval $(call plotfuvgenerule,$(g))))
 
 ## Convert SCE to anndata
 define anndatarule

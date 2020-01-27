@@ -311,20 +311,29 @@ Reading velocity_u into new assay, putting data into data
 +       lapply((j + 1):(length(methods)), function(k) {
 +         kk <- methods[k]
 +         message(jj, " - ", kk)
-+         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))), center = TRUE, scale = TRUE)
-+         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))), center = TRUE, scale = TRUE)
-+         corrs_spliced <- colSums(a * b)/(nrow(a) - 1)
-+         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
-+         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))), center = TRUE, scale = TRUE)
-+         corrs_unspliced <- colSums(a * b)/(nrow(a) - 1)
-+         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))), center = TRUE, scale = TRUE)
-+         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity")))), center = TRUE, scale = TRUE)
-+         corrs_velocity <- colSums(a * b)/(nrow(a) - 1)
-+         a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
-+                      t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
-+         b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))) + 
-+                      t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))), center = TRUE, scale = TRUE)
-+         corrs_total <- colSums(a * b)/(nrow(a) - 1)
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))))
++         corrs_spliced <- mapply(a, b, FUN = cor, 
++                                 MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))))
++         corrs_unspliced <- mapply(a, b, FUN = cor, 
++                                   MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity")))))
++         corrs_velocity <- mapply(a, b, FUN = cor, 
++                                  MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                              t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))) + 
++                              t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))))
++         corrs_total <- mapply(a, b, FUN = cor, 
++                               MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
 +         dplyr::bind_rows(
 +           data.frame(method1 = jj,
 +                      method2 = kk, 
@@ -433,30 +442,48 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   dplyr::bind_rows, 
 +   lapply(seq_len(length(methods)), function(j) {
 +     jj <- methods[j]
-+     a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))), center = TRUE, scale = TRUE)
-+     b <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
-+     corrs_spliced_unspliced <- colSums(a * b)/(nrow(a) - 1)
-+     a <- scale(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
-+                  t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))), center = TRUE, scale = TRUE)
-+     b <- scale(t(abs(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))), center = TRUE, scale = TRUE)
-+     corrs_total_abs_velocity <- colSums(a * b)/(nrow(a) - 1)
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))))
++     b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     corrs_spliced_unspliced <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                          t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     b <- as.data.frame(t(abs(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))))
++     corrs_total_absvelocity <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))/
++                          (t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                             t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))))
++     b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_fracunspl_velocity <- mapply(a, b, FUN = cor, 
++                                        MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
 +     dplyr::bind_rows(
 +       data.frame(method = jj,
 +                  gene = names(corrs_spliced_unspliced), 
-+                  ctype = "spliced_unspliced",
++                  ctype = "spliced-unspliced",
 +                  dtype = "gene",
 +                  corrs = corrs_spliced_unspliced, 
 +                  stringsAsFactors = FALSE),
 +       data.frame(method = jj,
-+                  gene = names(corrs_total_abs_velocity), 
-+                  ctype = "total_abs_velocity",
++                  gene = names(corrs_total_absvelocity), 
++                  ctype = "total-absvelocity",
 +                  dtype = "gene",
-+                  corrs = corrs_total_abs_velocity, 
++                  corrs = corrs_total_absvelocity, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  gene = names(corrs_fracunspl_velocity), 
++                  ctype = "fracunspliced-velocity",
++                  dtype = "gene",
++                  corrs = corrs_fracunspl_velocity, 
 +                  stringsAsFactors = FALSE)
 +     )
 +   })) %>%
 +   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
-There were 24 warnings (use warnings() to see them)
+There were 36 warnings (use warnings() to see them)
 > gene_corrs_within$method <- factor(gene_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 > 
 > ## Same but for cells
@@ -469,24 +496,29 @@ There were 24 warnings (use warnings() to see them)
 +       lapply((j + 1):(length(methods)), function(k) {
 +         kk <- methods[k]
 +         message(jj, " - ", kk)
-+         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))), center = TRUE, scale = TRUE)
-+         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))), center = TRUE, scale = TRUE)
-+         tmp <- a * b
-+         corrs_spliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-+         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-+         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
-+         tmp <- a * b
-+         corrs_unspliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-+         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))), center = TRUE, scale = TRUE)
-+         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity"))), center = TRUE, scale = TRUE)
-+         tmp <- a * b
-+         corrs_velocity <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-+         a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
-+                      as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-+         b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))) + 
-+                      as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))), center = TRUE, scale = TRUE)
-+         tmp <- a * b
-+         corrs_total <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))))
++         corrs_spliced <- mapply(a, b, FUN = cor, 
++                                 MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))))
++         corrs_unspliced <- mapply(a, b, FUN = cor, 
++                                   MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity"))))
++         corrs_velocity <- mapply(a, b, FUN = cor, 
++                                  MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                              as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))) + 
++                              as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))))
++         corrs_total <- mapply(a, b, FUN = cor, 
++                               MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
 +         if ("clusters" %in% colnames(colData(sces[[jj]]))) {
 +           clsce <- sces[[jj]]$clusters
 +           clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
@@ -606,15 +638,25 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   dplyr::bind_rows, 
 +   lapply(seq_len(length(methods)), function(j) {
 +     jj <- methods[j]
-+     a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))), center = TRUE, scale = TRUE)
-+     b <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-+     tmp <- a * b
-+     corrs_spliced_unspliced <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
-+     a <- scale(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
-+                  as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))), center = TRUE, scale = TRUE)
-+     b <- scale(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))), center = TRUE, scale = TRUE)
-+     tmp <- a * b
-+     corrs_total_abs_velocity <- colSums(tmp, na.rm = TRUE)/(colSums(!is.na(tmp)) - 1)
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))))
++     b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++     corrs_spliced_unspliced <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                          as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++     b <- as.data.frame(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_total_absvelocity <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))/
++                          (as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                             as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     b <- as.data.frame(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_fracunspl_velocity <- mapply(a, b, FUN = cor, 
++                                        MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
 +     if ("clusters" %in% colnames(colData(sces[[jj]]))) {
 +       clsce <- sces[[jj]]$clusters
 +       clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
@@ -626,21 +668,28 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +       data.frame(method = jj,
 +                  cell = names(corrs_spliced_unspliced), 
 +                  cluster = clseu,
-+                  ctype = "spliced_unspliced",
++                  ctype = "spliced-unspliced",
 +                  dtype = "cell",
 +                  corrs = corrs_spliced_unspliced, 
 +                  stringsAsFactors = FALSE),
 +       data.frame(method = jj,
-+                  cell = names(corrs_total_abs_velocity), 
++                  cell = names(corrs_total_absvelocity), 
 +                  cluster = clseu,
-+                  ctype = "total_abs_velocity",
++                  ctype = "total-absvelocity",
 +                  dtype = "cell",
-+                  corrs = corrs_total_abs_velocity, 
++                  corrs = corrs_total_absvelocity, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  cell = names(corrs_fracunspl_velocity), 
++                  cluster = clseu,
++                  ctype = "fracunspliced-velocity",
++                  dtype = "cell",
++                  corrs = corrs_fracunspl_velocity, 
 +                  stringsAsFactors = FALSE)
 +     )
 +   })) %>%
 +   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
-There were 24 warnings (use warnings() to see them)
+There were 36 warnings (use warnings() to see them)
 > cell_corrs_within$method <- factor(cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 > 
 > ## Combine gene and cell correlations
@@ -648,10 +697,10 @@ There were 24 warnings (use warnings() to see them)
 +   gene_corrs %>% dplyr::rename(m1 = method1) %>%
 +     dplyr::rename(method1 = method2,
 +                   method2 = m1) %>%
-+     tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
 +     dplyr::select(method1, method2, ctype, dtype, cdtype, corrs),
 +   cell_corrs %>% 
-+     tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
 +     dplyr::select(method1, method2, ctype, dtype, cdtype, corrs)
 + )
 > gene_cell_corrs$method1 <- factor(gene_cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
@@ -659,10 +708,10 @@ There were 24 warnings (use warnings() to see them)
 > 
 > gene_cell_corrs_within <- dplyr::bind_rows(
 +   gene_corrs_within %>% 
-+     tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
 +     dplyr::select(method, ctype, dtype, cdtype, corrs),
 +   cell_corrs_within %>% 
-+     tidyr::unite(dtype, ctype, col = "cdtype", sep = ",", remove = FALSE) %>%
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
 +     dplyr::select(method, ctype, dtype, cdtype, corrs)
 + )
 > gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
@@ -710,7 +759,8 @@ There were 24 warnings (use warnings() to see them)
 null device 
           1 
 > 
-> pdf(gsub("\\.rds$", "_genes_plus_cells.pdf", outrds), width = 15, height = 13)
+> png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 15, height = 13,
++     unit = "in", res = 300)
 > ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
 +   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
 +   geom_boxplot() + 
@@ -727,7 +777,8 @@ null device
 null device 
           1 
 > 
-> pdf(gsub("\\.rds$", "_genes_plus_cells_within.pdf", outrds), width = 9, height = 9)
+> png(gsub("\\.rds$", "_genes_plus_cells_within.png", outrds), width = 9, height = 9,
++     unit = "in", res = 300)
 > ggplot(gene_cell_corrs_within, aes(x = cdtype, y = corrs, fill = dtype)) + 
 +   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
 +   geom_boxplot() + 
@@ -747,7 +798,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sat Jan 25 13:54:54 2020"
+[1] "Sun Jan 26 20:30:55 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -830,4 +881,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-123.180   6.579 132.435 
+224.480   9.188 241.484 

@@ -397,10 +397,6 @@ See spec(...) for full column specifications.
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
 +   labs(title = "Velocity score, per gene",
 +        subtitle = paste0(""))
-Warning messages:
-1: In self$trans$transform(x) : NaNs produced
-2: Transformation introduced infinite values in continuous y-axis 
-3: Removed 2 rows containing non-finite values (stat_boxplot). 
 > 
 > ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) + 
 +   geom_boxplot(aes(fill = mtype), alpha = 0.25, scale = "width") + 
@@ -412,7 +408,7 @@ Warning messages:
 +        subtitle = paste0(""))
 Warning: Ignoring unknown parameters: scale
 Warning message:
-Removed 52 rows containing non-finite values (stat_boxplot). 
+Removed 25 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
@@ -422,7 +418,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Sat Jan 25 14:01:29 2020"
+[1] "Sun Jan 26 21:05:03 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -475,4 +471,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 21.215   1.649  31.402 
+ 21.539   1.396  24.164 

@@ -4,8 +4,7 @@ output adfile:  output/anndata_with_velocity/anndata_alevin_prepref_isocollapse_
 gene set file:  None
 Abundance of ['spliced', 'unspliced']: [0.95 0.05]
 Filtered out 45748 genes that are detected in less than 20 counts (shared).
-Normalized count data: X, spliced.
-Logarithmized X.
+Normalized count data: X, spliced, unspliced.
 computing neighbors
     finished (0:00:03) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
@@ -14,10 +13,10 @@ computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 1%... 2%... 4%... 5%... 6%... 8%... 9%... 11%... 12%... 13%... 15%... 16%... 18%... 19%... 21%... 22%... 24%... 26%... 27%... 29%... 30%... 32%... 33%... 34%... 36%... 38%... 39%... 40%... 42%... 44%... 45%... 46%... 47%... 49%... 51%... 53%... 54%... 56%... 57%... 58%... 60%... 61%... 63%... 64%... 66%... 67%... 68%... 69%... 71%... 72%... 73%... 75%... 76%... 78%... 79%... 81%... 82%... 83%... 84%... 86%... 88%... 89%... 90%... 92%... 93%... 95%... 97%... 98%... 100%    finished (0:03:35) --> added 
+... 1%... 3%... 4%... 5%... 6%... 8%... 9%... 10%... 11%... 12%... 14%... 15%... 16%... 17%... 19%... 20%... 21%... 23%... 24%... 25%... 27%... 28%... 29%... 30%... 32%... 33%... 34%... 36%... 37%... 38%... 39%... 40%... 42%... 43%... 44%... 46%... 47%... 48%... 50%... 51%... 52%... 54%... 55%... 56%... 58%... 59%... 60%... 61%... 63%... 64%... 66%... 67%... 68%... 69%... 70%... 72%... 73%... 74%... 75%... 76%... 78%... 79%... 80%... 81%... 82%... 83%... 84%... 85%... 87%... 88%... 90%... 91%... 92%... 93%... 95%... 96%... 98%... 99%... 100%    finished (0:04:04) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
-    finished (0:00:01) --> added 
+    finished (0:00:02) --> added 
     'velocity', velocity vectors for each individual cell (adata.layers)
 computing velocity graph
 ... 100%    finished (0:00:01) --> added 
@@ -135,4 +134,5 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-25 10:37.
+saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns/anndata_alevin_prepref_isocollapse_cdna_introns_scvelo_UMAP_alevin_spliced_stream_velocityconfidence.png
+Running scvelo 0.1.24 (python 3.7.3) on 2020-01-26 18:53.

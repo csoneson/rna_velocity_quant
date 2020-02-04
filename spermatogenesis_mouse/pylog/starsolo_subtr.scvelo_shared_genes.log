@@ -6,20 +6,20 @@ Abundance of ['spliced', 'unspliced']: [0.95 0.05]
 Filtered out 45270 genes that are detected in less than 20 counts (shared).
 Normalized count data: X, spliced, unspliced.
 computing neighbors
-    finished (0:00:02) --> added to `.uns['neighbors']`
+    finished (0:00:08) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
     'connectivities', weighted adjacency matrix
 computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 3%... 7%... 10%... 15%... 21%... 26%... 30%... 35%... 41%... 47%... 52%... 57%... 63%... 68%... 75%... 82%... 89%... 95%... 100%    finished (0:00:59) --> added 
+... 2%... 3%... 5%... 7%... 9%... 11%... 13%... 15%... 17%... 20%... 23%... 26%... 28%... 30%... 32%... 35%... 37%... 39%... 41%... 44%... 47%... 48%... 51%... 53%... 56%... 59%... 62%... 66%... 70%... 73%... 75%... 79%... 84%... 87%... 91%... 93%... 95%... 98%... 100%    finished (0:02:13) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
     'velocity', velocity vectors for each individual cell (adata.layers)
 computing velocity graph
-... 100%    finished (0:00:00) --> added 
+... 100%    finished (0:00:01) --> added 
     'velocity_graph', sparse matrix with cosine correlations (adata.uns)
 computing velocity embedding
     finished (0:00:00) --> added
@@ -50,7 +50,7 @@ computing velocity embedding
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_starsolo_concatenated_stream.png
 Renamed 'PCA_starsolo_summed' to convention 'X_PCA_starsolo_summed' (adata.obsm).
 computing velocity embedding
-    finished (0:00:00) --> added
+    finished (0:00:01) --> added
     'velocity_PCA_starsolo_summed', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_PCA_starsolo_summed_stream.png
 Renamed 'TSNE_starsolo_summed' to convention 'X_TSNE_starsolo_summed' (adata.obsm).
@@ -85,7 +85,7 @@ computing velocity embedding
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_PCA_starsolo_stream.png
 Renamed 'TSNE_starsolo' to convention 'X_TSNE_starsolo' (adata.obsm).
 computing velocity embedding
-    finished (0:00:00) --> added
+    finished (0:00:01) --> added
     'velocity_TSNE_starsolo', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_TSNE_starsolo_stream.png
 Renamed 'UMAP_starsolo' to convention 'X_UMAP_starsolo' (adata.obsm).
@@ -93,27 +93,27 @@ computing velocity embedding
     finished (0:00:00) --> added
     'velocity_UMAP_starsolo', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_starsolo_stream.png
-Renamed 'PCA_alevin_spliced' to convention 'X_PCA_alevin_spliced' (adata.obsm).
+Renamed 'PCA_alevin_spliced_gentrome' to convention 'X_PCA_alevin_spliced_gentrome' (adata.obsm).
+computing velocity embedding
+    finished (0:00:01) --> added
+    'velocity_PCA_alevin_spliced_gentrome', embedded velocity vectors (adata.obsm)
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_PCA_alevin_spliced_gentrome_stream.png
+Renamed 'TSNE_alevin_spliced_gentrome' to convention 'X_TSNE_alevin_spliced_gentrome' (adata.obsm).
+computing velocity embedding
+    finished (0:00:01) --> added
+    'velocity_TSNE_alevin_spliced_gentrome', embedded velocity vectors (adata.obsm)
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_TSNE_alevin_spliced_gentrome_stream.png
+Renamed 'UMAP_alevin_spliced_gentrome' to convention 'X_UMAP_alevin_spliced_gentrome' (adata.obsm).
 computing velocity embedding
     finished (0:00:00) --> added
-    'velocity_PCA_alevin_spliced', embedded velocity vectors (adata.obsm)
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_PCA_alevin_spliced_stream.png
-Renamed 'TSNE_alevin_spliced' to convention 'X_TSNE_alevin_spliced' (adata.obsm).
+    'velocity_UMAP_alevin_spliced_gentrome', embedded velocity vectors (adata.obsm)
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_stream.png
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_velocitygraph.png
 computing velocity embedding
     finished (0:00:00) --> added
-    'velocity_TSNE_alevin_spliced', embedded velocity vectors (adata.obsm)
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_TSNE_alevin_spliced_stream.png
-Renamed 'UMAP_alevin_spliced' to convention 'X_UMAP_alevin_spliced' (adata.obsm).
-computing velocity embedding
-    finished (0:00:00) --> added
-    'velocity_UMAP_alevin_spliced', embedded velocity vectors (adata.obsm)
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_stream.png
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_velocitygraph.png
-computing velocity embedding
-    finished (0:00:00) --> added
-    'velocity_UMAP_alevin_spliced', embedded velocity vectors (adata.obsm)
+    'velocity_UMAP_alevin_spliced_gentrome', embedded velocity vectors (adata.obsm)
 computing terminal states
-    identified 0 region of root cells and 2 regions of end points 
+    identified 0 region of root cells and 3 regions of end points 
     finished (0:00:00) --> added
     'root_cells', root cells of Markov diffusion process (adata.obs)
     'end_points', end points of Markov diffusion process (adata.obs)
@@ -123,10 +123,10 @@ computing latent time
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_heatmap_top_genes_heatmap.png
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_top_genes_scatter.png
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_stream_latent_time.png
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_stream_latent_time.png
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_latent_time.png
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_stream_latent_time.png
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_latent_time.png
 computing velocity clusters
-    finished (0:00:01) --> added 
+    finished (0:00:04) --> added 
     'velocity_clusters', clusters based on modularity on velocity field (adata.obs)
 ranking velocity genes
     finished (0:00:00) --> added 
@@ -134,5 +134,5 @@ ranking velocity genes
 saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_velocity_genes.png
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
-saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_stream_velocityconfidence.png
-Running scvelo 0.1.24 (python 3.7.3) on 2020-01-26 19:08.
+saving figure to file plots/velocity/anndata_starsolo_subtr_shared_genes/anndata_starsolo_subtr_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_stream_velocityconfidence.png
+Running scvelo 0.1.24 (python 3.7.3) on 2020-02-04 17:44.

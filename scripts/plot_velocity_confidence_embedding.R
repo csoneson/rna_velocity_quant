@@ -27,7 +27,7 @@ methods_short <- shorten_methods(methods)
 ## Read data
 ## ------------------------------------------------------------------------- ##
 sce <- readRDS(file.path(topdir, paste0("output/sce/sce_starsolo.rds")))
-umap <- reducedDim(sce, "UMAP_alevin_spliced")
+umap <- reducedDim(sce, "UMAP_alevin_spliced_gentrome")
 
 cellinfo_all <- lapply(methods, function(nm) {
   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", 

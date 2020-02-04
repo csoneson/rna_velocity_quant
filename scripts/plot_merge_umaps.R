@@ -26,7 +26,7 @@ umaps <- lapply(methods, function(m) {
   file.path(topdir, "plots/velocity",
             paste0("anndata_", m), 
             paste0("anndata_", m, "_scvelo_", dimred,
-                   "_alevin_spliced_stream.png"))
+                   "_alevin_spliced_gentrome_stream.png"))
 })
 
 pdf(gsub("\\.rds$", paste0("_", dimred, ".pdf"), outrds), width = 8, height = 9)
@@ -44,7 +44,7 @@ umapss <- lapply(methods, function(m) {
   file.path(topdir, "plots/velocity",
             paste0("anndata_", m, "_shared_genes"), 
             paste0("anndata_", m, "_shared_genes_scvelo_", dimred,
-                   "_alevin_spliced_stream.png"))
+                   "_alevin_spliced_gentrome_stream.png"))
 })
 
 pdf(gsub("\\.rds$", paste0("_", dimred, "_shared_genes.pdf"), outrds), width = 8, height = 9)

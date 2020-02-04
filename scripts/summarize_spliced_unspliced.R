@@ -56,6 +56,13 @@ for (m in c("prepref")) {
         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
         sampleid = samplename, tx2gene = tx2gene
       )
+    
+    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy_gentrome")]] <- 
+      read_alevin_with_decoys(
+        spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy_gentrome/alevin")),
+        unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy_gentrome/alevin")),
+        sampleid = samplename, tx2gene = tx2gene
+      )
   }
 }
 
@@ -66,22 +73,39 @@ for (m in c("prepref")) {
       read_alevin_cdna_introns(
         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
         sampleid = samplename, tx2gene = tx2gene)
+    
+    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome")]] <- 
+      read_alevin_cdna_introns(
+        alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome/alevin")),
+        sampleid = samplename, tx2gene = tx2gene)
   }
 }
 
+## alevin spliced/unspliced
 sces$alevin_spliced_unspliced <- 
   read_alevin_spliced_unspliced(
     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
     sampleid = samplename, tx2gene = tx2gene
   )
+sces$alevin_spliced_unspliced_gentrome <- 
+  read_alevin_spliced_unspliced(
+    alevindir = file.path(topdir, "quants/alevin_spliced_unspliced_gentrome/alevin"),
+    sampleid = samplename, tx2gene = tx2gene
+  )
 
+## alevin spliced
 sces$alevin_spliced <- 
   read_alevin_spliced(
     alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
     sampleid = samplename, tx2gene = tx2gene
   )
+sces$alevin_spliced_gentrome <- 
+  read_alevin_spliced(
+    alevindir = file.path(topdir, "quants/alevin_spliced_gentrome/alevin"),
+    sampleid = samplename, tx2gene = tx2gene
+  )
 
-
+## kallisto/bustools
 for (m in c("prepref")) {
   for (v in c("separate", "collapse")) {
     for (k in c("exclude", "include")) {
@@ -95,6 +119,14 @@ for (m in c("prepref")) {
     }
   }
 }
+
+## kb-python
+sces[["kb_python_lamanno"]] <- 
+  read_kallisto_bustools(
+    kallistodir = file.path(topdir, "quants/kb_python_lamanno/counts_unfiltered"),
+    splicedname = "spliced",
+    unsplicedname = "unspliced"
+  )
 
 ## ========================================================================= ##
 ## subset to shared cells/genes
@@ -148,12 +180,12 @@ for (nm in names(sces)) {
 }
 
 ## Add common representations to all data sets
-## From alevin_spliced
+## From alevin_spliced_gentrome
 sces <- lapply(sces, function(w) {
-  reducedDim(w, "PCA_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "PCA")
-  reducedDim(w, "TSNE_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "TSNE")
-  reducedDim(w, "UMAP_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "UMAP")
-  w$cluster_alevin_spliced <- sces[["alevin_spliced"]]$cluster
+  reducedDim(w, "PCA_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "PCA")
+  reducedDim(w, "TSNE_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "TSNE")
+  reducedDim(w, "UMAP_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "UMAP")
+  w$cluster_alevin_spliced_gentrome <- sces[["alevin_spliced_gentrome"]]$cluster
   w
 })
 

@@ -70,6 +70,17 @@ for (m in c("prepref")) {
         colnames(tmp) <- paste0(s, "__", colnames(tmp))
         tmp
       }))
+    
+    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy_gentrome")]] <- 
+      do.call(cbind, lapply(samplenames, function(s) {
+        tmp <- read_alevin_with_decoys(
+          spliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_intronsasdecoy_gentrome/alevin")),
+          unspliceddir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_introns_cdnaasdecoy_gentrome/alevin")),
+          sampleid = s, tx2gene = tx2gene
+        )
+        colnames(tmp) <- paste0(s, "__", colnames(tmp))
+        tmp
+      }))
   }
 }
 
@@ -80,6 +91,16 @@ for (m in c("prepref")) {
       do.call(cbind, lapply(samplenames, function(s) {
         tmp <- read_alevin_cdna_introns(
           alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
+          sampleid = s, tx2gene = tx2gene
+        )
+        colnames(tmp) <- paste0(s, "__", colnames(tmp))
+        tmp
+      }))
+    
+    sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome")]] <- 
+      do.call(cbind, lapply(samplenames, function(s) {
+        tmp <- read_alevin_cdna_introns(
+          alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_introns_gentrome/alevin")),
           sampleid = s, tx2gene = tx2gene
         )
         colnames(tmp) <- paste0(s, "__", colnames(tmp))
@@ -97,11 +118,29 @@ sces$alevin_spliced_unspliced <-
     colnames(tmp) <- paste0(s, "__", colnames(tmp))
     tmp
   }))
+sces$alevin_spliced_unspliced_gentrome <- 
+  do.call(cbind, lapply(samplenames, function(s) {
+    tmp <- read_alevin_spliced_unspliced(
+      alevindir = file.path(topdir, "quants/", s, "/alevin_spliced_unspliced_gentrome/alevin"),
+      sampleid = s, tx2gene = tx2gene
+    )
+    colnames(tmp) <- paste0(s, "__", colnames(tmp))
+    tmp
+  }))
 
 sces$alevin_spliced <- 
   do.call(cbind, lapply(samplenames, function(s) {
     tmp <- read_alevin_spliced(
       alevindir = file.path(topdir, "quants/", s, "/alevin_spliced/alevin"),
+      sampleid = s, tx2gene = tx2gene
+    )
+    colnames(tmp) <- paste0(s, "__", colnames(tmp))
+    tmp
+  }))
+sces$alevin_spliced_gentrome <- 
+  do.call(cbind, lapply(samplenames, function(s) {
+    tmp <- read_alevin_spliced(
+      alevindir = file.path(topdir, "quants/", s, "/alevin_spliced_gentrome/alevin"),
       sampleid = s, tx2gene = tx2gene
     )
     colnames(tmp) <- paste0(s, "__", colnames(tmp))
@@ -195,10 +234,10 @@ for (nm in names(sces)) {
 ## Add common representations to all data sets
 ## From alevin_spliced
 sces <- lapply(sces, function(w) {
-  reducedDim(w, "PCA_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "PCA")
-  reducedDim(w, "TSNE_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "TSNE")
-  reducedDim(w, "UMAP_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "UMAP")
-  w$cluster_alevin_spliced <- sces[["alevin_spliced"]]$cluster
+  reducedDim(w, "PCA_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "PCA")
+  reducedDim(w, "TSNE_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "TSNE")
+  reducedDim(w, "UMAP_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "UMAP")
+  w$cluster_alevin_spliced_gentrome <- sces[["alevin_spliced_gentrome"]]$cluster
   w
 })
 

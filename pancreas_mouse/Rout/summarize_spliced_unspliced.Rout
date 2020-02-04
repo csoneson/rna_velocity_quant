@@ -36,7 +36,7 @@ Type 'q()' to quit R.
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(cellfile)
-[1] "/work/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/cells_kept_in_scvelo_exampledata.csv"
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Data/GSE132188_pancreas_mouse/cells_kept_in_scvelo_exampledata.csv"
 > print(samplename)
 [1] "SRR9201794"
 > print(outrds)
@@ -131,8 +131,27 @@ Joining, by = c("X1", "X2")
 +         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy/alevin")),
 +         sampleid = samplename, tx2gene = tx2gene
 +       )
++     
++     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_decoy_gentrome")]] <- 
++       read_alevin_with_decoys(
++         spliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_intronsasdecoy_gentrome/alevin")),
++         unspliceddir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_introns_cdnaasdecoy_gentrome/alevin")),
++         sampleid = samplename, tx2gene = tx2gene
++       )
 +   }
 + }
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
@@ -153,6 +172,11 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 +       read_alevin_cdna_introns(
 +         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns/alevin")),
 +         sampleid = samplename, tx2gene = tx2gene)
++     
++     sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome")]] <- 
++       read_alevin_cdna_introns(
++         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome/alevin")),
++         sampleid = samplename, tx2gene = tx2gene)
 +   }
 + }
 importing quantifications
@@ -161,7 +185,14 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 > 
+> ## alevin spliced/unspliced
 > sces$alevin_spliced_unspliced <- 
 +   read_alevin_spliced_unspliced(
 +     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced/alevin"),
@@ -170,7 +201,16 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+> sces$alevin_spliced_unspliced_gentrome <- 
++   read_alevin_spliced_unspliced(
++     alevindir = file.path(topdir, "quants/alevin_spliced_unspliced_gentrome/alevin"),
++     sampleid = samplename, tx2gene = tx2gene
++   )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 > 
+> ## alevin spliced
 > sces$alevin_spliced <- 
 +   read_alevin_spliced(
 +     alevindir = file.path(topdir, "quants/alevin_spliced/alevin"),
@@ -193,8 +233,21 @@ The following object is masked from 'package:dplyr':
 generating gene ranges
 loading existing gene ranges created: 2020-01-18 07:10:10
 fetching genome info for GENCODE
+> sces$alevin_spliced_gentrome <- 
++   read_alevin_spliced(
++     alevindir = file.path(topdir, "quants/alevin_spliced_gentrome/alevin"),
++     sampleid = samplename, tx2gene = tx2gene
++   )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+found matching transcriptome:
+[ GENCODE - Mus musculus - release M21 ]
+loading existing TxDb created: 2020-01-18 07:09:27
+generating gene ranges
+loading existing gene ranges created: 2020-01-18 07:10:10
+fetching genome info for GENCODE
 > 
-> 
+> ## kallisto/bustools
 > for (m in c("prepref")) {
 +   for (v in c("separate", "collapse")) {
 +     for (k in c("exclude", "include")) {
@@ -208,6 +261,14 @@ fetching genome info for GENCODE
 +     }
 +   }
 + }
+> 
+> ## kb-python
+> sces[["kb_python_lamanno"]] <- 
++   read_kallisto_bustools(
++     kallistodir = file.path(topdir, "quants/kb_python_lamanno/counts_unfiltered"),
++     splicedname = "spliced",
++     unsplicedname = "unspliced"
++   )
 > 
 > ## ========================================================================= ##
 > ## subset to shared cells/genes
@@ -263,23 +324,30 @@ velocyto
 starsolo
 starsolo_subtr
 alevin_prepref_isoseparate_cdna_introns_decoy
+alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_decoy
+alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns
+alevin_prepref_isoseparate_cdna_introns_gentrome
 alevin_prepref_isocollapse_cdna_introns
+alevin_prepref_isocollapse_cdna_introns_gentrome
 alevin_spliced_unspliced
+alevin_spliced_unspliced_gentrome
 alevin_spliced
+alevin_spliced_gentrome
 kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isocollapse_exclude
 kallisto_bustools_prepref_isocollapse_include
+kb_python_lamanno
 > 
 > ## Add common representations to all data sets
-> ## From alevin_spliced
+> ## From alevin_spliced_gentrome
 > sces <- lapply(sces, function(w) {
-+   reducedDim(w, "PCA_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "PCA")
-+   reducedDim(w, "TSNE_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "TSNE")
-+   reducedDim(w, "UMAP_alevin_spliced") <- reducedDim(sces[["alevin_spliced"]], "UMAP")
-+   w$cluster_alevin_spliced <- sces[["alevin_spliced"]]$cluster
++   reducedDim(w, "PCA_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "PCA")
++   reducedDim(w, "TSNE_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "TSNE")
++   reducedDim(w, "UMAP_alevin_spliced_gentrome") <- reducedDim(sces[["alevin_spliced_gentrome"]], "UMAP")
++   w$cluster_alevin_spliced_gentrome <- sces[["alevin_spliced_gentrome"]]$cluster
 +   w
 + })
 > 
@@ -349,7 +417,7 @@ starsolo
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sat Jan 18 08:35:37 2020"
+[1] "Mon Feb  3 11:57:08 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -371,17 +439,17 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] GenomicFeatures_1.38.0      AnnotationDbi_1.48.0       
+ [1] GenomicFeatures_1.38.1      AnnotationDbi_1.48.0       
  [3] readr_1.3.1                 scater_1.14.6              
  [5] velocyto.R_0.6              Matrix_1.2-18              
  [7] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.1
  [9] DelayedArray_0.12.2         matrixStats_0.55.0         
 [11] Biobase_2.46.0              GenomicRanges_1.38.0       
-[13] GenomeInfoDb_1.22.0         IRanges_2.20.1             
-[15] S4Vectors_0.24.1            BiocGenerics_0.32.0        
+[13] GenomeInfoDb_1.22.0         IRanges_2.20.2             
+[15] S4Vectors_0.24.3            BiocGenerics_0.32.0        
 [17] BUSpaRse_1.0.0              zeallot_0.1.0              
-[19] ggplot2_3.2.1               dplyr_0.8.3                
-[21] tximeta_1.4.2               BiocSingular_1.2.1         
+[19] ggplot2_3.2.1               dplyr_0.8.4                
+[21] tximeta_1.4.3               BiocSingular_1.2.1         
 [23] BiocParallel_1.20.1        
 
 loaded via a namespace (and not attached):
@@ -390,34 +458,34 @@ loaded via a namespace (and not attached):
  [7] RSpectra_0.16-0          splines_3.6.1            tximport_1.14.0         
 [10] jsonlite_1.6             Rsamtools_2.2.1          cluster_2.1.0           
 [13] dbplyr_1.4.2             uwot_0.1.5               compiler_3.6.1          
-[16] httr_1.4.1               dqrng_0.2.1              backports_1.1.5         
-[19] assertthat_0.2.1         lazyeval_0.2.2           limma_3.42.0            
-[22] prettyunits_1.1.0        tools_3.6.1              rsvd_1.0.2              
-[25] igraph_1.2.4.2           gtable_0.3.0             glue_1.3.1              
-[28] GenomeInfoDbData_1.2.2   rappdirs_0.3.1           Rcpp_1.0.3              
-[31] vctrs_0.2.1              Biostrings_2.54.0        nlme_3.1-143            
-[34] rtracklayer_1.46.0       DelayedMatrixStats_1.8.0 stringr_1.4.0           
-[37] plyranges_1.6.5          lifecycle_0.1.0          irlba_2.3.3             
-[40] ensembldb_2.10.2         gtools_3.8.1             statmod_1.4.33          
-[43] XML_3.98-1.20            edgeR_3.28.0             zlibbioc_1.32.0         
-[46] MASS_7.3-51.4            scales_1.1.0             BSgenome_1.54.0         
-[49] pcaMethods_1.78.0        hms_0.5.3                ProtGenerics_1.18.0     
-[52] AnnotationFilter_1.10.0  curl_4.3                 memoise_1.1.0           
-[55] gridExtra_2.3            biomaRt_2.42.0           stringi_1.4.5           
-[58] RSQLite_2.2.0            scran_1.14.5             rlang_0.4.2             
-[61] pkgconfig_2.0.3          bitops_1.0-6             lattice_0.20-38         
-[64] purrr_0.3.3              GenomicAlignments_1.22.1 bit_1.1-15              
-[67] tidyselect_0.2.5         magrittr_1.5             R6_2.4.1                
-[70] fishpond_1.2.0           DBI_1.1.0                pillar_1.4.3            
-[73] withr_2.1.2              mgcv_1.8-31              RCurl_1.95-4.12         
-[76] tibble_2.1.3             crayon_1.3.4             hdf5r_1.3.0             
-[79] BiocFileCache_1.10.2     viridis_0.5.1            progress_1.2.2          
-[82] locfit_1.5-9.1           grid_3.6.1               data.table_1.12.8       
-[85] blob_1.2.0               FNN_1.1.3                digest_0.6.23           
-[88] tidyr_1.0.0              openssl_1.4.1            RcppParallel_4.4.4      
-[91] munsell_0.5.0            beeswarm_0.2.3           viridisLite_0.3.0       
-[94] vipor_0.4.5              askpass_1.1             
+[16] httr_1.4.1               dqrng_0.2.1              assertthat_0.2.1        
+[19] lazyeval_0.2.2           limma_3.42.1             prettyunits_1.1.1       
+[22] tools_3.6.1              rsvd_1.0.2               igraph_1.2.4.2          
+[25] gtable_0.3.0             glue_1.3.1               GenomeInfoDbData_1.2.2  
+[28] rappdirs_0.3.1           Rcpp_1.0.3               vctrs_0.2.2             
+[31] Biostrings_2.54.0        nlme_3.1-143             rtracklayer_1.46.0      
+[34] DelayedMatrixStats_1.8.0 stringr_1.4.0            plyranges_1.6.7         
+[37] lifecycle_0.1.0          irlba_2.3.3              ensembldb_2.10.2        
+[40] gtools_3.8.1             statmod_1.4.33           XML_3.99-0.3            
+[43] edgeR_3.28.0             zlibbioc_1.32.0          MASS_7.3-51.4           
+[46] scales_1.1.0             BSgenome_1.54.0          pcaMethods_1.78.0       
+[49] hms_0.5.3                ProtGenerics_1.18.0      AnnotationFilter_1.10.0 
+[52] curl_4.3                 memoise_1.1.0            gridExtra_2.3           
+[55] biomaRt_2.42.0           stringi_1.4.5            RSQLite_2.2.0           
+[58] scran_1.14.5             rlang_0.4.4              pkgconfig_2.0.3         
+[61] bitops_1.0-6             lattice_0.20-38          purrr_0.3.3             
+[64] GenomicAlignments_1.22.1 bit_1.1-15.1             tidyselect_1.0.0        
+[67] magrittr_1.5             R6_2.4.1                 fishpond_1.2.0          
+[70] DBI_1.1.0                pillar_1.4.3             withr_2.1.2             
+[73] mgcv_1.8-31              RCurl_1.98-1.1           tibble_2.1.3            
+[76] crayon_1.3.4             hdf5r_1.3.1              BiocFileCache_1.10.2    
+[79] viridis_0.5.1            progress_1.2.2           locfit_1.5-9.1          
+[82] grid_3.6.1               data.table_1.12.8        blob_1.2.1              
+[85] FNN_1.1.3                digest_0.6.23            tidyr_1.0.2             
+[88] openssl_1.4.1            RcppParallel_4.4.4       munsell_0.5.0           
+[91] beeswarm_0.2.3           viridisLite_0.3.0        vipor_0.4.5             
+[94] askpass_1.1             
 > 
 > proc.time()
     user   system  elapsed 
-1526.355  203.488 1742.349 
+2545.026  408.646 2969.298 

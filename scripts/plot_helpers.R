@@ -11,6 +11,9 @@ shorten_methods <- function(methods) {
                                                   gsub("_cdna_introns", "", method)))))))) %>%
     dplyr::mutate(method_short = replace(method_short, method_short == "starsolo_subtr", 
                                          "starsolo_diff")) %>%
+    dplyr::mutate(method_short = replace(method_short, method_short == "kb_python_lamanno", 
+                                         "kb_python")) %>%
+    dplyr::mutate(method_short = gsub("gentrome", "gtr", method_short)) %>%
     dplyr::mutate(
       mtype = stringr::str_extract(
         method_short, "alevin|kallisto\\|bus|starsolo|velocyto"
@@ -19,6 +22,7 @@ shorten_methods <- function(methods) {
         method, "separate|collapse"
       )
     ) %>%
+    dplyr::mutate(mtype = replace(mtype, method_short == "kb_python", "kallisto|bus")) %>%
     dplyr::mutate(rtype = replace(rtype, is.na(rtype), "N/A")) %>%
     dplyr::mutate(rtype = factor(rtype, levels = c("collapse", "separate", "N/A")))
 }

@@ -143,7 +143,7 @@ lowerfun <- function(data, mapping) {
 
 for (i in c("spliced", "unspliced")) {
   png(gsub("\\.rds$", paste0("_total_count_scatter_", i, ".png"), outrds), 
-      width = 11, height = 11, unit = "in", res = 400)
+      width = 13, height = 13, unit = "in", res = 400)
   print(GGally::ggpairs(
     sumdf_bygene %>% dplyr::left_join(methods_short, by = "method") %>%
       dplyr::select(c("gene", "method_short", i)) %>%

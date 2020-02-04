@@ -33,11 +33,11 @@ plotlist <- lapply(methods, function(m) {
   sm <- methods_short$method_short[match(m, methods_short$method)]
   v_all <- read.delim(
     file.path(topdir, paste0("plots/velocity/anndata_", m, "/anndata_", 
-                             m, "_velocity_UMAP_alevin_spliced.csv")), 
+                             m, "_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",")
   v_shared <- read.delim(
     file.path(topdir, paste0("plots/velocity/anndata_", m, "_shared_genes/anndata_", 
-                             m, "_shared_genes_velocity_UMAP_alevin_spliced.csv")), 
+                             m, "_shared_genes_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",")
   
   tmp <- v_all %>% dplyr::rename(X0_all = X0, X1_all = X1) %>%
@@ -50,7 +50,7 @@ plotlist <- lapply(methods, function(m) {
     dplyr::mutate(los_over_sol = lengthOfSum/sumOfLength)
   
   stopifnot(all(tmp$index == colnames(sce)))
-  df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), los_over_sol = tmp$los_over_sol,
+  df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced_gentrome"), los_over_sol = tmp$los_over_sol,
                    stringsAsFactors = FALSE)
   ggplot(df, aes(x = X1, y = X2, color = los_over_sol)) + 
     geom_point(size = 0.8, alpha = 0.5) +
@@ -103,7 +103,7 @@ summarize_res <- function(res) {
 res <- do.call(dplyr::bind_rows, lapply(methods, function(m) {
   read.delim(
     file.path(topdir, paste0("plots/velocity/anndata_", m, "/anndata_", 
-                             m, "_velocity_UMAP_alevin_spliced.csv")), 
+                             m, "_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",") %>%
     tidyr::gather(key = "coord", value = "value", X0, X1) %>%
     dplyr::mutate(method = m)
@@ -114,7 +114,7 @@ stopifnot(length(intersect(speeds$index, colnames(sce))) == ncol(sce))
 speeds <- speeds[match(colnames(sce), speeds$index), ]
 stopifnot(all(speeds$index == colnames(sce)))
   
-df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), speed_ratio = speeds$speed_ratio,
+df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced_gentrome"), speed_ratio = speeds$speed_ratio,
                  stringsAsFactors = FALSE)
 g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
   geom_point(alpha = 0.5) +
@@ -130,7 +130,7 @@ g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) +
 res <- do.call(dplyr::bind_rows, lapply(methods, function(m) {
   read.delim(
     file.path(topdir, paste0("plots/velocity/anndata_", m, "_shared_genes/anndata_", 
-                             m, "_shared_genes_velocity_UMAP_alevin_spliced.csv")), 
+                             m, "_shared_genes_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",") %>%
     tidyr::gather(key = "coord", value = "value", X0, X1) %>%
     dplyr::mutate(method = m)
@@ -141,7 +141,7 @@ stopifnot(length(intersect(speeds$index, colnames(sce))) == ncol(sce))
 speeds <- speeds[match(colnames(sce), speeds$index), ]
 stopifnot(all(speeds$index == colnames(sce)))
 
-df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced"), speed_ratio = speeds$speed_ratio,
+df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced_gentrome"), speed_ratio = speeds$speed_ratio,
                  stringsAsFactors = FALSE)
 g2 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
   geom_point(alpha = 0.5) +

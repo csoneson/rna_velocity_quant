@@ -17,7 +17,7 @@ suppressPackageStartupMessages({
 
 topdir <- ".."
 plothelperscript <- paste0(topdir, "/scripts/plot_helpers.R")
-datasets <- c("neuron_10k_v3_mouse", "dentate_gyrus_mouse", "pancreas_mouse", "pfc_mouse")
+datasets <- c("spermatogenesis_mouse", "dentate_gyrus_mouse", "pancreas_mouse", "pfc_mouse")
 
 source(plothelperscript)
 
@@ -42,7 +42,7 @@ ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>%
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
-  labs(x = "Data set", 
+  labs(x = "", 
        y = "Within-cell type standard deviation of latent time estimate")
 dev.off()  
 

@@ -36,7 +36,7 @@ fracunspliced <- lapply(sces, function(w) {
 cells <- colnames(sces[[1]])
 stopifnot(all(sapply(fracunspliced, function(w) all(colnames(w) == cells))))
 
-umap <- data.frame(reducedDim(sces[[1]], "UMAP_alevin_spliced"),
+umap <- data.frame(reducedDim(sces[[1]], "UMAP_alevin_spliced_gentrome"),
                    stringsAsFactors = FALSE)
 stopifnot(rownames(umap) == cells)
 

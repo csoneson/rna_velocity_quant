@@ -104,14 +104,14 @@ scv.pl.velocity_embedding_stream(adata2, basis='PCA_starsolo', save="PCA_starsol
 scv.pl.velocity_embedding_stream(adata2, basis='TSNE_starsolo', save="TSNE_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 scv.pl.velocity_embedding_stream(adata2, basis='UMAP_starsolo', save="UMAP_starsolo_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced', save="PCA_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced', save="TSNE_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='PCA_alevin_spliced_gentrome', save="PCA_alevin_spliced_gentrome_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='TSNE_alevin_spliced_gentrome', save="TSNE_alevin_spliced_gentrome_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_stream.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='clusters', title='')
 
-scv.pl.velocity_graph(adata2, basis='UMAP_alevin_spliced', save='UMAP_alevin_spliced_velocitygraph.png', figsize=(12,9), show=False, color='clusters', title=mname)
+scv.pl.velocity_graph(adata2, basis='UMAP_alevin_spliced_gentrome', save='UMAP_alevin_spliced_gentrome_velocitygraph.png', figsize=(12,9), show=False, color='clusters', title=mname)
 
-scv.tl.velocity_embedding(adata2, basis = 'UMAP_alevin_spliced', all_comps = False, autoscale = False)
-pd.DataFrame(adata2.obsm['velocity_UMAP_alevin_spliced'], index = adata2.obs.index).to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_velocity_UMAP_alevin_spliced.csv")
+scv.tl.velocity_embedding(adata2, basis = 'UMAP_alevin_spliced_gentrome', all_comps = False, autoscale = False)
+pd.DataFrame(adata2.obsm['velocity_UMAP_alevin_spliced_gentrome'], index = adata2.obs.index).to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_velocity_UMAP_alevin_spliced_gentrome.csv")
 
 try:
 	scv.tl.recover_latent_time(adata2)
@@ -119,8 +119,8 @@ try:
 	scv.pl.heatmap(adata2, var_names=top_genes, tkey='latent_time', n_convolve=100, save="top_genes_heatmap.png", show=False)
 	scv.pl.scatter(adata2, basis=top_genes[:10], legend_loc='none', size=80, frameon=False, ncols=5, fontsize=20, save="top_genes_scatter.png", show=False)
 	scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
-	scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
-	scv.pl.scatter(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_latent_time.png", figsize=(12,9), size=100, show=False, color='latent_time', color_map='gnuplot', perc=[2,98], rescale_color=[0,1], title=mname)
+	scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
+	scv.pl.scatter(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_latent_time.png", figsize=(12,9), size=100, show=False, color='latent_time', color_map='gnuplot', perc=[2,98], rescale_color=[0,1], title=mname)
 except:
 	print('Latent time/top genes could not be extracted')
 
@@ -133,13 +133,13 @@ try:
 	genescore.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_rank_velocity_score.csv")
 	
 	genes = generank.iloc[0]
-	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='clusters', basis='UMAP_alevin_spliced', show=False)
+	scv.pl.velocity(adata2, var_names = genes, save="velocity_genes.png", color='clusters', basis='UMAP_alevin_spliced_gentrome', show=False)
 except:
 	print('Velocity genes could not be extracted')
 
 scv.tl.velocity_confidence(adata2)
 adata2.obs.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_cell_info.csv")
-scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced', save="UMAP_alevin_spliced_stream_velocityconfidence.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='velocity_confidence', title='')
+scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_stream_velocityconfidence.png", figsize=(7,5), size = 50, legend_fontsize = 12, show=False, color='velocity_confidence', title='')
 
 # session info
 scv.logging.print_version()

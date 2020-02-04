@@ -51,7 +51,7 @@ velocities_shared_scaled <- lapply(velocities_shared, function(w) {
 ## Read velocity projections from scVelo run on all genes
 projs_all <- lapply(methods, function(nm) {
   w <- read.csv(file.path(topdir, paste0("plots/velocity/anndata_", nm, "/anndata_", 
-                                         nm, "_velocity_UMAP_alevin_spliced.csv")), 
+                                         nm, "_velocity_UMAP_alevin_spliced_gentrome.csv")), 
                 header = TRUE, as.is = TRUE) %>%
     tibble::column_to_rownames("index")
 })
@@ -61,7 +61,7 @@ stopifnot(all(sapply(projs_all, function(w) all(rownames(w) == cells))))
 ## Read velocity projections from scVelo run on shared genes
 projs_shared <- lapply(methods, function(nm) {
   w <- read.csv(file.path(topdir, paste0("plots/velocity/anndata_", nm, "_shared_genes/anndata_", 
-                                         nm, "_shared_genes_velocity_UMAP_alevin_spliced.csv")), 
+                                         nm, "_shared_genes_velocity_UMAP_alevin_spliced_gentrome.csv")), 
                 header = TRUE, as.is = TRUE) %>%
     tibble::column_to_rownames("index")
 })

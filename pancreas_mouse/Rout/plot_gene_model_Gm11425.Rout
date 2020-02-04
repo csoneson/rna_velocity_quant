@@ -46,30 +46,32 @@ Type 'q()' to quit R.
 > print(tx2gene)
 [1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
 > print(methods)
-                                       velocyto 
-                                     "velocyto" 
-  kallisto_bustools_prepref_isocollapse_exclude 
-"kallisto_bustools_prepref_isocollapse_exclude" 
-  kallisto_bustools_prepref_isoseparate_exclude 
-"kallisto_bustools_prepref_isoseparate_exclude" 
-  kallisto_bustools_prepref_isocollapse_include 
-"kallisto_bustools_prepref_isocollapse_include" 
-  kallisto_bustools_prepref_isoseparate_include 
-"kallisto_bustools_prepref_isoseparate_include" 
-        alevin_prepref_isocollapse_cdna_introns 
-      "alevin_prepref_isocollapse_cdna_introns" 
-        alevin_prepref_isoseparate_cdna_introns 
-      "alevin_prepref_isoseparate_cdna_introns" 
-  alevin_prepref_isocollapse_cdna_introns_decoy 
-"alevin_prepref_isocollapse_cdna_introns_decoy" 
-  alevin_prepref_isoseparate_cdna_introns_decoy 
-"alevin_prepref_isoseparate_cdna_introns_decoy" 
-                       alevin_spliced_unspliced 
-                     "alevin_spliced_unspliced" 
-                                       starsolo 
-                                     "starsolo" 
-                                 starsolo_subtr 
-                               "starsolo_subtr" 
+                                                velocyto 
+                                              "velocyto" 
+           kallisto_bustools_prepref_isocollapse_exclude 
+         "kallisto_bustools_prepref_isocollapse_exclude" 
+           kallisto_bustools_prepref_isoseparate_exclude 
+         "kallisto_bustools_prepref_isoseparate_exclude" 
+           kallisto_bustools_prepref_isocollapse_include 
+         "kallisto_bustools_prepref_isocollapse_include" 
+           kallisto_bustools_prepref_isoseparate_include 
+         "kallisto_bustools_prepref_isoseparate_include" 
+                                                starsolo 
+                                              "starsolo" 
+                                          starsolo_subtr 
+                                        "starsolo_subtr" 
+        alevin_prepref_isocollapse_cdna_introns_gentrome 
+      "alevin_prepref_isocollapse_cdna_introns_gentrome" 
+        alevin_prepref_isoseparate_cdna_introns_gentrome 
+      "alevin_prepref_isoseparate_cdna_introns_gentrome" 
+  alevin_prepref_isocollapse_cdna_introns_decoy_gentrome 
+"alevin_prepref_isocollapse_cdna_introns_decoy_gentrome" 
+  alevin_prepref_isoseparate_cdna_introns_decoy_gentrome 
+"alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
+                       alevin_spliced_unspliced_gentrome 
+                     "alevin_spliced_unspliced_gentrome" 
+                                       kb_python_lamanno 
+                                     "kb_python_lamanno" 
 > print(bigwigfileplus)
 [1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw"
 > print(bigwigfileminus)
@@ -192,7 +194,7 @@ null device
           1 
 > 
 > date()
-[1] "Sat Jan 25 12:49:16 2020"
+[1] "Mon Feb  3 19:45:13 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -218,9 +220,9 @@ other attached packages:
  [3] DelayedArray_0.12.2         BiocParallel_1.20.1        
  [5] matrixStats_0.55.0          Biobase_2.46.0             
  [7] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
- [9] IRanges_2.20.1              S4Vectors_0.24.1           
-[11] BiocGenerics_0.32.0         magick_2.2                 
-[13] dplyr_0.8.3                 cowplot_1.0.0              
+ [9] IRanges_2.20.2              S4Vectors_0.24.3           
+[11] BiocGenerics_0.32.0         magick_2.3                 
+[13] dplyr_0.8.4                 cowplot_1.0.0              
 [15] ggplot2_3.2.1               swissknife_0.17            
 
 loaded via a namespace (and not attached):
@@ -228,10 +230,10 @@ loaded via a namespace (and not attached):
  [4] RColorBrewer_1.1-2       progress_1.2.2           httr_1.4.1              
  [7] tools_3.6.1              backports_1.1.5          R6_2.4.1                
 [10] KernSmooth_2.23-16       rpart_4.1-15             Hmisc_4.3-0             
-[13] DBI_1.1.0                Gviz_1.30.0              lazyeval_0.2.2          
+[13] DBI_1.1.0                lazyeval_0.2.2           Gviz_1.30.1             
 [16] colorspace_1.4-1         nnet_7.3-12              withr_2.1.2             
-[19] tidyselect_0.2.5         gridExtra_2.3            prettyunits_1.1.0       
-[22] bit_1.1-15               curl_4.3                 compiler_3.6.1          
+[19] tidyselect_1.0.0         gridExtra_2.3            prettyunits_1.1.1       
+[22] bit_1.1-15.1             curl_4.3                 compiler_3.6.1          
 [25] iotools_0.2-5            htmlTable_1.13.3         labeling_0.3            
 [28] rtracklayer_1.46.0       scales_1.1.0             checkmate_1.9.4         
 [31] askpass_1.1              rappdirs_0.3.1           stringr_1.4.0           
@@ -240,24 +242,24 @@ loaded via a namespace (and not attached):
 [40] base64enc_0.1-3          jpeg_0.1-8.1             pkgconfig_2.0.3         
 [43] htmltools_0.4.0          ensembldb_2.10.2         BSgenome_1.54.0         
 [46] dbplyr_1.4.2             wordspace_0.2-6          htmlwidgets_1.5.1       
-[49] rlang_0.4.2              rstudioapi_0.10          RSQLite_2.2.0           
-[52] farver_2.0.1             acepack_1.4.1            VariantAnnotation_1.32.0
-[55] RCurl_1.95-4.12          magrittr_1.5             GenomeInfoDbData_1.2.2  
+[49] rlang_0.4.4              rstudioapi_0.10          RSQLite_2.2.0           
+[52] farver_2.0.3             acepack_1.4.1            VariantAnnotation_1.32.0
+[55] RCurl_1.98-1.1           magrittr_1.5             GenomeInfoDbData_1.2.2  
 [58] Formula_1.2-3            Matrix_1.2-18            Rcpp_1.0.3              
 [61] munsell_0.5.0            lifecycle_0.1.0          stringi_1.4.5           
 [64] MASS_7.3-51.4            zlibbioc_1.32.0          BiocFileCache_1.10.2    
-[67] grid_3.6.1               blob_1.2.0               crayon_1.3.4            
+[67] grid_3.6.1               blob_1.2.1               crayon_1.3.4            
 [70] lattice_0.20-38          Biostrings_2.54.0        splines_3.6.1           
-[73] GenomicFeatures_1.38.0   hms_0.5.3                zeallot_0.1.0           
-[76] knitr_1.26               pillar_1.4.3             biomaRt_2.42.0          
-[79] XML_3.98-1.20            glue_1.3.1               biovizBase_1.34.1       
-[82] latticeExtra_0.6-29      data.table_1.12.8        png_0.1-7               
-[85] vctrs_0.2.1              tidyr_1.0.0              gtable_0.3.0            
-[88] openssl_1.4.1            purrr_0.3.3              assertthat_0.2.1        
-[91] xfun_0.12                AnnotationFilter_1.10.0  survival_3.1-8          
-[94] tibble_2.1.3             GenomicAlignments_1.22.1 AnnotationDbi_1.48.0    
-[97] memoise_1.1.0            cluster_2.1.0            ellipsis_0.3.0          
+[73] GenomicFeatures_1.38.1   hms_0.5.3                knitr_1.27              
+[76] pillar_1.4.3             biomaRt_2.42.0           XML_3.99-0.3            
+[79] glue_1.3.1               biovizBase_1.34.1        latticeExtra_0.6-29     
+[82] data.table_1.12.8        png_0.1-7                vctrs_0.2.2             
+[85] tidyr_1.0.2              gtable_0.3.0             openssl_1.4.1           
+[88] purrr_0.3.3              assertthat_0.2.1         xfun_0.12               
+[91] AnnotationFilter_1.10.0  survival_3.1-8           tibble_2.1.3            
+[94] GenomicAlignments_1.22.1 AnnotationDbi_1.48.0     memoise_1.1.0           
+[97] cluster_2.1.0            ellipsis_0.3.0          
 > 
 > proc.time()
    user  system elapsed 
-130.880   7.305 138.536 
+214.202  20.153 233.949 

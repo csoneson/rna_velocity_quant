@@ -43,28 +43,28 @@ Type 'q()' to quit R.
 > print(dataset)
 [1] "Dentate_gyrus"
 > print(methods)
-  kallisto_bustools_prepref_isocollapse_exclude 
-"kallisto_bustools_prepref_isocollapse_exclude" 
-  kallisto_bustools_prepref_isoseparate_exclude 
-"kallisto_bustools_prepref_isoseparate_exclude" 
-  kallisto_bustools_prepref_isocollapse_include 
-"kallisto_bustools_prepref_isocollapse_include" 
-  kallisto_bustools_prepref_isoseparate_include 
-"kallisto_bustools_prepref_isoseparate_include" 
-        alevin_prepref_isocollapse_cdna_introns 
-      "alevin_prepref_isocollapse_cdna_introns" 
-        alevin_prepref_isoseparate_cdna_introns 
-      "alevin_prepref_isoseparate_cdna_introns" 
-  alevin_prepref_isocollapse_cdna_introns_decoy 
-"alevin_prepref_isocollapse_cdna_introns_decoy" 
-  alevin_prepref_isoseparate_cdna_introns_decoy 
-"alevin_prepref_isoseparate_cdna_introns_decoy" 
-                       alevin_spliced_unspliced 
-                     "alevin_spliced_unspliced" 
-                                       starsolo 
-                                     "starsolo" 
-                                 starsolo_subtr 
-                               "starsolo_subtr" 
+           kallisto_bustools_prepref_isocollapse_exclude 
+         "kallisto_bustools_prepref_isocollapse_exclude" 
+           kallisto_bustools_prepref_isoseparate_exclude 
+         "kallisto_bustools_prepref_isoseparate_exclude" 
+           kallisto_bustools_prepref_isocollapse_include 
+         "kallisto_bustools_prepref_isocollapse_include" 
+           kallisto_bustools_prepref_isoseparate_include 
+         "kallisto_bustools_prepref_isoseparate_include" 
+                                                starsolo 
+                                              "starsolo" 
+                                          starsolo_subtr 
+                                        "starsolo_subtr" 
+        alevin_prepref_isocollapse_cdna_introns_gentrome 
+      "alevin_prepref_isocollapse_cdna_introns_gentrome" 
+        alevin_prepref_isoseparate_cdna_introns_gentrome 
+      "alevin_prepref_isoseparate_cdna_introns_gentrome" 
+  alevin_prepref_isocollapse_cdna_introns_decoy_gentrome 
+"alevin_prepref_isocollapse_cdna_introns_decoy_gentrome" 
+  alevin_prepref_isoseparate_cdna_introns_decoy_gentrome 
+"alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
+                       alevin_spliced_unspliced_gentrome 
+                     "alevin_spliced_unspliced_gentrome" 
 > print(outrds)
 [1] "plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds"
 > 
@@ -378,7 +378,7 @@ See spec(...) for full column specifications.
 +        subtitle = paste0(""))
 Warning: Ignoring unknown parameters: scale
 Warning message:
-Removed 12 rows containing non-finite values (stat_boxplot). 
+Removed 11 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
@@ -388,7 +388,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Sun Jan 26 20:00:49 2020"
+[1] "Wed Feb  5 09:25:51 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -416,29 +416,28 @@ other attached packages:
  [7] DelayedArray_0.12.2         BiocParallel_1.20.1        
  [9] matrixStats_0.55.0          Biobase_2.46.0             
 [11] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
-[13] IRanges_2.20.1              S4Vectors_0.24.1           
+[13] IRanges_2.20.2              S4Vectors_0.24.3           
 [15] BiocGenerics_0.32.0         ggplot2_3.2.1              
-[17] dplyr_0.8.3                
+[17] dplyr_0.8.4                
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3               rsvd_1.0.2               lattice_0.20-38         
- [4] assertthat_0.2.1         zeallot_0.1.0            R6_2.4.1                
- [7] plyr_1.8.5               backports_1.1.5          pillar_1.4.3            
-[10] zlibbioc_1.32.0          rlang_0.4.2              lazyeval_0.2.2          
-[13] irlba_2.3.3              Matrix_1.2-18            BiocNeighbors_1.4.1     
-[16] labeling_0.3             stringr_1.4.0            RCurl_1.95-4.12         
-[19] munsell_0.5.0            compiler_3.6.1           vipor_0.4.5             
-[22] BiocSingular_1.2.1       pkgconfig_2.0.3          ggbeeswarm_0.6.0        
-[25] tidyselect_0.2.5         tibble_2.1.3             gridExtra_2.3           
-[28] GenomeInfoDbData_1.2.2   viridisLite_0.3.0        crayon_1.3.4            
-[31] withr_2.1.2              bitops_1.0-6             grid_3.6.1              
-[34] gtable_0.3.0             lifecycle_0.1.0          magrittr_1.5            
-[37] scales_1.1.0             stringi_1.4.5            farver_2.0.1            
-[40] XVector_0.26.0           viridis_0.5.1            DelayedMatrixStats_1.8.0
-[43] vctrs_0.2.1              RColorBrewer_1.1-2       tools_3.6.1             
-[46] glue_1.3.1               beeswarm_0.2.3           purrr_0.3.3             
-[49] hms_0.5.3                colorspace_1.4-1        
+ [1] beeswarm_0.2.3           tidyselect_1.0.0         purrr_0.3.3             
+ [4] BiocSingular_1.2.1       lattice_0.20-38          colorspace_1.4-1        
+ [7] vctrs_0.2.2              viridisLite_0.3.0        rlang_0.4.4             
+[10] pillar_1.4.3             glue_1.3.1               withr_2.1.2             
+[13] RColorBrewer_1.1-2       GenomeInfoDbData_1.2.2   lifecycle_0.1.0         
+[16] plyr_1.8.5               stringr_1.4.0            zlibbioc_1.32.0         
+[19] munsell_0.5.0            gtable_0.3.0             rsvd_1.0.2              
+[22] labeling_0.3             vipor_0.4.5              irlba_2.3.3             
+[25] BiocNeighbors_1.4.1      Rcpp_1.0.3               scales_1.1.0            
+[28] XVector_0.26.0           farver_2.0.3             gridExtra_2.3           
+[31] hms_0.5.3                stringi_1.4.5            grid_3.6.1              
+[34] bitops_1.0-6             tools_3.6.1              magrittr_1.5            
+[37] lazyeval_0.2.2           RCurl_1.98-1.1           tibble_2.1.3            
+[40] crayon_1.3.4             pkgconfig_2.0.3          Matrix_1.2-18           
+[43] DelayedMatrixStats_1.8.0 ggbeeswarm_0.6.0         assertthat_0.2.1        
+[46] viridis_0.5.1            R6_2.4.1                 compiler_3.6.1          
 > 
 > proc.time()
    user  system elapsed 
- 15.934   1.638  19.217 
+ 21.011   1.308  24.628 

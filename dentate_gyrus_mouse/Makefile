@@ -39,7 +39,7 @@ $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_intro
 alevin_spliced_unspliced starsolo starsolo_subtr \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
-alevin_spliced_unspliced_gentrome kb_python_lamanno
+alevin_spliced_unspliced_gentrome
 methodsc := $(subst $(space),$(comma),$(methods))
 
 methodssel := $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \

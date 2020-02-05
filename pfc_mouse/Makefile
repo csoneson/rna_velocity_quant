@@ -32,7 +32,7 @@ datalabel := PFC
 
 flanklength := 97
 
-ncores := 24
+ncores := 36
 
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \

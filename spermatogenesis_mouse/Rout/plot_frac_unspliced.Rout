@@ -71,8 +71,6 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
                        alevin_spliced_unspliced_gentrome 
                      "alevin_spliced_unspliced_gentrome" 
-                                       kb_python_lamanno 
-                                     "kb_python_lamanno" 
 > print(outrds)
 [1] "plots/frac_unspliced/spermatogenesis_plot_frac_unspliced.rds"
 > 
@@ -113,13 +111,6 @@ Warning messages:
 +                          "_gene_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  velocity_genes = col_logical()
-)
-See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -245,7 +236,7 @@ null device
 +   dplyr::filter(sd_frac_unspliced > qtl) %>%
 +   dplyr::pull(gene)
 > print(length(genes_to_keep))
-[1] 438
+[1] 434
 > 
 > ## Cluster the selected genes based on their unspliced fraction pattern across methods ---- 
 > clstdata <- sumdf_bygene %>% dplyr::filter(gene %in% genes_to_keep) %>%
@@ -265,16 +256,16 @@ Joining, by = "method"
 +                    future = 1:10)
 > print(ordr)
    current future
-1        2      1
-2        5      2
-3        8      3
-4       10      4
-5        1      5
-6        6      6
-7        7      7
-8        9      8
-9        4      9
-10       3     10
+1        7      1
+2        3      2
+3        4      3
+4        5      4
+5        9      5
+6        1      6
+7        2      7
+8        8      8
+9       10      9
+10       6     10
 > clusters <- ordr$future[match(clusters, ordr$current)]
 > names(clusters) <- nm
 > 
@@ -352,37 +343,36 @@ null device
 > print(do.call(dplyr::bind_rows, 
 +               lapply(split(cl_rep, cl_rep$cluster), 
 +                      function(w) w %>% arrange(desc(cor)) %>% head(3))))
-   cluster          gene       cor
-1        1       Gm20416 0.9977367
-2        1       Gm20642 0.9976753
-3        1      Slc25a21 0.9970872
-4        2 1700113H08Rik 0.9217468
-5        2      Slc25a37 0.9072605
-6        2       Gm28372 0.8547230
-7        3          Grb2 0.9893210
-8        3       Gm13538 0.9775669
-9        3        Nudcd3 0.9641368
-10       4       Gm15271 0.6681752
-11       4        Gm1821 0.6597033
-12       4        Gm9059 0.6514152
-13       5        Zwilch 0.9982912
-14       5         Zmiz1 0.9982760
-15       5       Ppp4r3a 0.9978851
-16       6       Gm29866 0.9789053
-17       6       Gm49384 0.9709845
-18       6        Gm6455 0.9638801
-19       7        Ube2v2 0.9695364
-20       7          Asph 0.9690646
-21       7       Gm47469 0.9573092
-22       8        Gm8926 0.9611203
-23       8       Gm20820 0.9487846
-24       8       Gm28961 0.8845408
-25       9        Fignl1 0.9959638
-26       9        Tvp23b 0.9913823
-27       9       Xpnpep1 0.9894249
-28      10        Tmem56 0.9930475
-29      10         Fkbp6 0.9902550
-30      10         Stx17 0.9892429
+   cluster     gene       cor
+1        1     Grb2 0.9919907
+2        1  Gm13538 0.9710572
+3        1   Nudcd3 0.9658401
+4        2    Seh1l 0.9989517
+5        2   Gm5149 0.9980560
+6        2 Lncbate1 0.9966970
+7        3   Zfp207 0.9936738
+8        3   Tmem56 0.9844133
+9        3    Stx17 0.9829118
+10       4  Spindoc 0.9812348
+11       4   Tvp23b 0.9760681
+12       4    Rad51 0.9747531
+13       5  Gm29554 0.9803201
+14       5  Gm40271 0.9484527
+15       5   Magea2 0.9458201
+16       6     Fen1 0.9933445
+17       6     Pask 0.9931360
+18       6  Mfsd13a 0.9929597
+19       7   Dicer1 0.9988119
+20       7  B4galt2 0.9980505
+21       7  Gm15506 0.9979485
+22       8   Gm8926 0.9641799
+23       8  Gm28961 0.9639749
+24       8  Gm10377 0.9155299
+25       9   Mamdc4 0.9372456
+26       9   Gm3448 0.9367730
+27      10  Gm10046 0.9594215
+28      10     Ddb2 0.9481943
+29      10  Gm49384 0.9451903
 > write.table(cl_rep %>% dplyr::arrange(cluster, desc(cor)), 
 +             file = gsub("\\.rds$", "_fracunspliced_cluster_centroid_corrs.txt", outrds),
 +             row.names = FALSE, col.names = TRUE, quote = FALSE, sep = "\t")
@@ -437,7 +427,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Feb  4 17:56:17 2020"
+[1] "Sun Feb 16 21:59:08 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -460,40 +450,40 @@ attached base packages:
 
 other attached packages:
  [1] ggsci_2.9                   pheatmap_1.0.12            
- [3] cdata_1.1.5                 ggrepel_0.8.1              
- [5] cowplot_1.0.0               SingleCellExperiment_1.8.0 
- [7] SummarizedExperiment_1.16.1 DelayedArray_0.12.2        
- [9] BiocParallel_1.20.1         matrixStats_0.55.0         
-[11] Biobase_2.46.0              GenomicRanges_1.38.0       
-[13] GenomeInfoDb_1.22.0         IRanges_2.20.2             
-[15] S4Vectors_0.24.3            BiocGenerics_0.32.0        
-[17] ggplot2_3.2.1               dplyr_0.8.4                
+ [3] cdata_1.1.6                 wrapr_1.9.6                
+ [5] ggrepel_0.8.1               cowplot_1.0.0              
+ [7] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.1
+ [9] DelayedArray_0.12.2         BiocParallel_1.20.1        
+[11] matrixStats_0.55.0          Biobase_2.46.0             
+[13] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[15] IRanges_2.20.2              S4Vectors_0.24.3           
+[17] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[19] dplyr_0.8.4                
 
 loaded via a namespace (and not attached):
- [1] tidyr_1.0.2            splines_3.6.1          rquery_1.4.2          
+ [1] tidyr_1.0.2            splines_3.6.1          rquery_1.4.3          
  [4] Formula_1.2-3          assertthat_0.2.1       latticeExtra_0.6-29   
- [7] wrapr_1.9.6            GenomeInfoDbData_1.2.2 pillar_1.4.3          
-[10] backports_1.1.5        lattice_0.20-38        glue_1.3.1            
-[13] digest_0.6.23          RColorBrewer_1.1-2     XVector_0.26.0        
-[16] checkmate_1.9.4        colorspace_1.4-1       htmltools_0.4.0       
-[19] Matrix_1.2-18          pkgconfig_2.0.3        magick_2.3            
-[22] zlibbioc_1.32.0        purrr_0.3.3            scales_1.1.0          
-[25] jpeg_0.1-8.1           tibble_2.1.3           htmlTable_1.13.3      
-[28] farver_2.0.3           ellipsis_0.3.0         withr_2.1.2           
-[31] nnet_7.3-12            lazyeval_0.2.2         survival_3.1-8        
-[34] magrittr_1.5           crayon_1.3.4           foreign_0.8-72        
-[37] tools_3.6.1            data.table_1.12.8      hms_0.5.3             
-[40] lifecycle_0.1.0        stringr_1.4.0          munsell_0.5.0         
-[43] cluster_2.1.0          compiler_3.6.1         rqdatatable_1.2.6     
-[46] rlang_0.4.4            grid_3.6.1             RCurl_1.98-1.1        
-[49] rstudioapi_0.10        htmlwidgets_1.5.1      labeling_0.3          
-[52] bitops_1.0-6           base64enc_0.1-3        gtable_0.3.0          
-[55] R6_2.4.1               gridExtra_2.3          knitr_1.27            
-[58] Hmisc_4.3-0            readr_1.3.1            stringi_1.4.5         
-[61] Rcpp_1.0.3             vctrs_0.2.2            rpart_4.1-15          
-[64] acepack_1.4.1          png_0.1-7              tidyselect_1.0.0      
-[67] xfun_0.12             
+ [7] GenomeInfoDbData_1.2.2 pillar_1.4.3           backports_1.1.5       
+[10] lattice_0.20-38        glue_1.3.1             digest_0.6.23         
+[13] RColorBrewer_1.1-2     XVector_0.26.0         checkmate_2.0.0       
+[16] colorspace_1.4-1       htmltools_0.4.0        Matrix_1.2-18         
+[19] pkgconfig_2.0.3        magick_2.3             zlibbioc_1.32.0       
+[22] purrr_0.3.3            scales_1.1.0           jpeg_0.1-8.1          
+[25] tibble_2.1.3           htmlTable_1.13.3       farver_2.0.3          
+[28] ellipsis_0.3.0         withr_2.1.2            nnet_7.3-12           
+[31] lazyeval_0.2.2         survival_3.1-8         magrittr_1.5          
+[34] crayon_1.3.4           foreign_0.8-72         tools_3.6.1           
+[37] data.table_1.12.8      hms_0.5.3              lifecycle_0.1.0       
+[40] stringr_1.4.0          munsell_0.5.0          cluster_2.1.0         
+[43] compiler_3.6.1         rqdatatable_1.2.6      rlang_0.4.4           
+[46] grid_3.6.1             RCurl_1.98-1.1         rstudioapi_0.11       
+[49] htmlwidgets_1.5.1      labeling_0.3           bitops_1.0-6          
+[52] base64enc_0.1-3        gtable_0.3.0           R6_2.4.1              
+[55] gridExtra_2.3          knitr_1.28             Hmisc_4.3-1           
+[58] readr_1.3.1            stringi_1.4.5          Rcpp_1.0.3            
+[61] vctrs_0.2.2            rpart_4.1-15           acepack_1.4.1         
+[64] png_0.1-7              tidyselect_1.0.0       xfun_0.12             
 > 
 > proc.time()
    user  system elapsed 
-155.275   6.725 212.071 
+ 75.914   3.686  77.950 

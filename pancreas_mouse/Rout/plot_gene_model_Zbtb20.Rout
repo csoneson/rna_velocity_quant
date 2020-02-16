@@ -1,0 +1,106 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(swissknife)
++   library(ggplot2)
++   library(cowplot)
++   library(dplyr)
++   library(magick)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++ })
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
+> print(refdir)  ## directory where uniqueness files are
+[1] "reference"
+> print(plothelperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(gtf)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/gencode.vM21.annotation.gtf"
+> print(tx2gene)
+[1] "/tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/tx2gene/gencode.vM21.annotation.tx2gene_full.rds"
+> print(methods)
+                                                velocyto 
+                                              "velocyto" 
+           kallisto_bustools_prepref_isocollapse_exclude 
+         "kallisto_bustools_prepref_isocollapse_exclude" 
+           kallisto_bustools_prepref_isoseparate_exclude 
+         "kallisto_bustools_prepref_isoseparate_exclude" 
+           kallisto_bustools_prepref_isocollapse_include 
+         "kallisto_bustools_prepref_isocollapse_include" 
+           kallisto_bustools_prepref_isoseparate_include 
+         "kallisto_bustools_prepref_isoseparate_include" 
+                                                starsolo 
+                                              "starsolo" 
+                                          starsolo_subtr 
+                                        "starsolo_subtr" 
+        alevin_prepref_isocollapse_cdna_introns_gentrome 
+      "alevin_prepref_isocollapse_cdna_introns_gentrome" 
+        alevin_prepref_isoseparate_cdna_introns_gentrome 
+      "alevin_prepref_isoseparate_cdna_introns_gentrome" 
+  alevin_prepref_isocollapse_cdna_introns_decoy_gentrome 
+"alevin_prepref_isocollapse_cdna_introns_decoy_gentrome" 
+  alevin_prepref_isoseparate_cdna_introns_decoy_gentrome 
+"alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
+                       alevin_spliced_unspliced_gentrome 
+                     "alevin_spliced_unspliced_gentrome" 
+> print(bigwigfileplus)
+[1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_plusstrand.bw"
+> print(bigwigfileminus)
+[1] "quants/cellranger/SRR9201794/outs/possorted_genome_bam_retcells_minusstrand.bw"
+> print(samplename)
+[1] "Pancreas"
+> print(showgene)
+[1] "Zbtb20"
+> print(outpdf)
+[1] "plots/genes/pancreas_Zbtb20.pdf"
+> 
+> source(plothelperscript)
+> 
+> gr <- prepareGTF(gtf)
+> bwf <- c(bigwigfileplus, bigwigfileminus)
+> names(bwf) <- c("pos", "neg")
+> bwc <- c("pos", "neg")
+> names(bwc) <- c("pos", "neg")
+> tx2gene <- readRDS(tx2gene)
+> 
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
++ })
+> 
+> sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
++   data.frame(gene = rownames(w),
++              method = metadata(w)$method, 
++              spliced = rowSums(assay(w, "spliced")),
++              unspliced = rowSums(assay(w, "unspliced")),
++              total = rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced")),
++              frac_unspliced = rowSums(assay(w, "unspliced"))/(rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
++              stringsAsFactors = FALSE
++   )
++ }))

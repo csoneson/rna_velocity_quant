@@ -177,8 +177,31 @@ couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 +       read_alevin_cdna_introns(
 +         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome/alevin")),
 +         sampleid = samplename, tx2gene = tx2gene)
++     
++     if (v == "separate") {
++       sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded")]] <- 
++         read_alevin_cdna_introns(
++           alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded/alevin")),
++           sampleid = samplename, tx2gene = tx2gene)
++       
++       for (u in c("_flankL20", "_flankL40")) {
++         sces[[paste0("alevin_", m, "_iso", v, u, "_cdna_introns_gentrome")]] <- 
++           read_alevin_cdna_introns(
++             alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, u, "_cdna_introns_gentrome/alevin")),
++             sampleid = samplename, tx2gene = tx2gene)
++       }
++     }
 +   }
 + }
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
 importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 couldn't find matching transcriptome, returning non-ranged SummarizedExperiment
@@ -220,7 +243,30 @@ importing quantifications
 reading in alevin gene-level counts across cells with fishpond
 found matching transcriptome:
 [ GENCODE - Mus musculus - release M21 ]
-loading existing TxDb created: 2020-01-18 07:09:27
+building TxDb with 'GenomicFeatures' package
+Import genomic features from the file as a GRanges object ... trying URL 'ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M21/gencode.vM21.annotation.gtf.gz'
+Content type 'unknown' length 26992642 bytes (25.7 MB)
+==================================================
+OK
+Prepare the 'metadata' data frame ... OK
+Make the TxDb object ... OK
+generating gene ranges
+generating gene ranges
+fetching genome info for GENCODE
+Warning message:
+In .get_cds_IDX(mcols0$type, mcols0$phase) :
+  The "phase" metadata column contains non-NA values for features of type
+  stop_codon. This information was ignored.
+> sces$alevin_spliced_gentrome <- 
++   read_alevin_spliced(
++     alevindir = file.path(topdir, "quants/alevin_spliced_gentrome/alevin"),
++     sampleid = samplename, tx2gene = tx2gene
++   )
+importing quantifications
+reading in alevin gene-level counts across cells with fishpond
+found matching transcriptome:
+[ GENCODE - Mus musculus - release M21 ]
+loading existing TxDb created: 2020-02-16 19:41:30
 Loading required package: GenomicFeatures
 Loading required package: AnnotationDbi
 
@@ -231,20 +277,7 @@ The following object is masked from 'package:dplyr':
     select
 
 generating gene ranges
-loading existing gene ranges created: 2020-01-18 07:10:10
-fetching genome info for GENCODE
-> sces$alevin_spliced_gentrome <- 
-+   read_alevin_spliced(
-+     alevindir = file.path(topdir, "quants/alevin_spliced_gentrome/alevin"),
-+     sampleid = samplename, tx2gene = tx2gene
-+   )
-importing quantifications
-reading in alevin gene-level counts across cells with fishpond
-found matching transcriptome:
-[ GENCODE - Mus musculus - release M21 ]
-loading existing TxDb created: 2020-01-18 07:09:27
-generating gene ranges
-loading existing gene ranges created: 2020-01-18 07:10:10
+loading existing gene ranges created: 2020-02-16 19:42:14
 fetching genome info for GENCODE
 > 
 > ## kallisto/bustools
@@ -329,6 +362,9 @@ alevin_prepref_isocollapse_cdna_introns_decoy
 alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns
 alevin_prepref_isoseparate_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
 alevin_prepref_isocollapse_cdna_introns
 alevin_prepref_isocollapse_cdna_introns_gentrome
 alevin_spliced_unspliced
@@ -417,7 +453,7 @@ starsolo
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Mon Feb  3 11:57:08 2020"
+[1] "Sun Feb 16 21:09:44 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -456,15 +492,15 @@ loaded via a namespace (and not attached):
  [1] Rtsne_0.15               ggbeeswarm_0.6.0         colorspace_1.4-1        
  [4] XVector_0.26.0           BiocNeighbors_1.4.1      bit64_0.9-7             
  [7] RSpectra_0.16-0          splines_3.6.1            tximport_1.14.0         
-[10] jsonlite_1.6             Rsamtools_2.2.1          cluster_2.1.0           
+[10] jsonlite_1.6.1           Rsamtools_2.2.1          cluster_2.1.0           
 [13] dbplyr_1.4.2             uwot_0.1.5               compiler_3.6.1          
 [16] httr_1.4.1               dqrng_0.2.1              assertthat_0.2.1        
-[19] lazyeval_0.2.2           limma_3.42.1             prettyunits_1.1.1       
+[19] lazyeval_0.2.2           limma_3.42.2             prettyunits_1.1.1       
 [22] tools_3.6.1              rsvd_1.0.2               igraph_1.2.4.2          
 [25] gtable_0.3.0             glue_1.3.1               GenomeInfoDbData_1.2.2  
 [28] rappdirs_0.3.1           Rcpp_1.0.3               vctrs_0.2.2             
 [31] Biostrings_2.54.0        nlme_3.1-143             rtracklayer_1.46.0      
-[34] DelayedMatrixStats_1.8.0 stringr_1.4.0            plyranges_1.6.7         
+[34] DelayedMatrixStats_1.8.0 stringr_1.4.0            plyranges_1.6.8         
 [37] lifecycle_0.1.0          irlba_2.3.3              ensembldb_2.10.2        
 [40] gtools_3.8.1             statmod_1.4.33           XML_3.99-0.3            
 [43] edgeR_3.28.0             zlibbioc_1.32.0          MASS_7.3-51.4           
@@ -472,9 +508,9 @@ loaded via a namespace (and not attached):
 [49] hms_0.5.3                ProtGenerics_1.18.0      AnnotationFilter_1.10.0 
 [52] curl_4.3                 memoise_1.1.0            gridExtra_2.3           
 [55] biomaRt_2.42.0           stringi_1.4.5            RSQLite_2.2.0           
-[58] scran_1.14.5             rlang_0.4.4              pkgconfig_2.0.3         
+[58] scran_1.14.6             rlang_0.4.4              pkgconfig_2.0.3         
 [61] bitops_1.0-6             lattice_0.20-38          purrr_0.3.3             
-[64] GenomicAlignments_1.22.1 bit_1.1-15.1             tidyselect_1.0.0        
+[64] GenomicAlignments_1.22.1 bit_1.1-15.2             tidyselect_1.0.0        
 [67] magrittr_1.5             R6_2.4.1                 fishpond_1.2.0          
 [70] DBI_1.1.0                pillar_1.4.3             withr_2.1.2             
 [73] mgcv_1.8-31              RCurl_1.98-1.1           tibble_2.1.3            
@@ -488,4 +524,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
     user   system  elapsed 
-2545.026  408.646 2969.298 
+2322.084  188.188 2578.392 

@@ -163,7 +163,7 @@ See spec(...) for full column specifications.
 +             quote = FALSE, sep = "\t")
 > 
 > date()
-[1] "Wed Feb  5 09:10:32 2020"
+[1] "Sun Feb 16 21:05:52 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -213,4 +213,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  6.920   0.856  10.366 
+  5.154   0.621   7.436 

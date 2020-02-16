@@ -261,7 +261,7 @@ See spec(...) for full column specifications.
 > 
 > velocity_confidence <- do.call(dplyr::bind_rows, lapply(cellinfo, function(w) {
 +   w %>% dplyr::select(index, method, contains("clusters"), velocity_confidence, 
-+                       velocity_confidence_transition, velocity_self_transition, 
++                       velocity_confidence_transition, max_cosine_corr, 
 +                       velocity_length, velocity_pseudotime, latent_time)
 + })) %>%
 +   dplyr::left_join(methods_short, by = "method")
@@ -323,39 +323,39 @@ See spec(...) for full column specifications.
 +                          "probabilities truly reflect the velocities ", 
 +                          "in high dimensional space."))
 > 
-> ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
+> ggplot(velocity_confidence, aes(x = method_short, y = max_cosine_corr)) + 
 +   geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +   theme_bw() + 
 +   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-+   labs(title = "Velocity self-transition, per cell",
++   labs(title = "Max cosine correlation, per cell",
 +        subtitle = paste0(""))
 > 
 > if ("clusters" %in% colnames(velocity_confidence)) {
 +   print(
-+     ggplot(velocity_confidence, aes(x = method_short, y = velocity_self_transition)) + 
++     ggplot(velocity_confidence, aes(x = method_short, y = max_cosine_corr)) + 
 +       geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +       theme_bw() + 
 +       facet_wrap(~ clusters) + 
 +       scale_fill_manual(values = base_method_colors, name = "") + 
 +       theme(legend.position = "none",
 +             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-+       labs(title = "Velocity self-transition, per cell",
++       labs(title = "Max cosine correlation, per cell",
 +            x = "",
-+            y = "Self-transition probability"))
++            y = "Max cosine correlation"))
 +   
 +   print(
-+     ggplot(velocity_confidence, aes(x = clusters, y = velocity_self_transition)) + 
++     ggplot(velocity_confidence, aes(x = clusters, y = max_cosine_corr)) + 
 +       geom_boxplot(aes(fill = mtype), alpha = 0.25) + 
 +       theme_bw() + 
 +       facet_wrap(~ method_short) + 
 +       scale_fill_manual(values = base_method_colors, name = "") + 
 +       theme(legend.position = "none",
 +             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-+       labs(title = "Velocity self-transition, per cell",
++       labs(title = "Max cosine correlation, per cell",
 +            x = "",
-+            y = "Self-transition probability"))
++            y = "Max cosine correlation"))
 + }
 > 
 > ggplot(velocity_genes, aes(x = method_short, y = velocity_score)) + 
@@ -388,7 +388,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Wed Feb  5 09:25:51 2020"
+[1] "Sun Feb 16 22:14:17 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -440,4 +440,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 21.011   1.308  24.628 
+ 16.181   1.380  17.854 

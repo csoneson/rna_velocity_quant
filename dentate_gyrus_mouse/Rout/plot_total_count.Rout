@@ -208,7 +208,8 @@ null device
 > 
 > for (i in c("spliced", "unspliced")) {
 +   png(gsub("\\.rds$", paste0("_total_count_scatter_", i, ".png"), outrds), 
-+       width = 13, height = 13, unit = "in", res = 400)
++       width = 0.85*(0.75 * length(methods) + 6.5), 
++       height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 400)
 +   print(GGally::ggpairs(
 +     sumdf_bygene %>% dplyr::left_join(methods_short, by = "method") %>%
 +       dplyr::select(c("gene", "method_short", i)) %>%
@@ -218,7 +219,7 @@ null device
 +     lower = list(continuous = wrap(lowerfun)),
 +     title = i, xlab = "log(total gene count + 1)", 
 +     ylab = "log(total gene count + 1)") + 
-+       theme(strip.text = element_text(size = 5))
++       theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)))
 +   )
 +   dev.off()
 + }
@@ -264,7 +265,8 @@ Note: Using an external vector in selections is ambiguous.
 ℹ See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
 This message is displayed once per session.
 > 
-> pdf(gsub("\\.rds$", "_frac_diff_btw_methods.pdf", outrds), width = 13, height = 13)
+> pdf(gsub("\\.rds$", "_frac_diff_btw_methods.pdf", outrds), 
++     width = 0.85*(0.75 * length(methods) + 6.5), height = 0.85*(0.75 * length(methods) + 6.5))
 > print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
 +         tidyr::gather(key = "ftype", value = "fraction", -m1, -m2, -ctype) %>%
 +         dplyr::mutate(ftype = replace(ftype, ftype == "frac_equal", "Equal"),
@@ -281,7 +283,7 @@ This message is displayed once per session.
 +         facet_grid(m1 ~ m2) + 
 +         theme_bw() + 
 +         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-+               strip.text = element_text(size = 5)) + 
++               strip.text = element_text(size = 8.75 - 0.25 * length(methods))) + 
 +         scale_fill_manual(values = c(spliced = "red", unspliced = "blue"),
 +                           name = "") + 
 +         labs(title = "Differences in total gene count across cells",
@@ -293,7 +295,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Wed Feb  5 09:30:03 2020"
+[1] "Sun Feb 16 22:17:52 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -329,10 +331,10 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] ggbeeswarm_0.6.0         colorspace_1.4-1         ellipsis_0.3.0          
   [4] htmlTable_1.13.3         XVector_0.26.0           base64enc_0.1-3         
-  [7] BiocNeighbors_1.4.1      rstudioapi_0.10          farver_2.0.3            
+  [7] BiocNeighbors_1.4.1      rstudioapi_0.11          farver_2.0.3            
  [10] bit64_0.9-7              fansi_0.4.1              AnnotationDbi_1.48.0    
- [13] splines_3.6.1            tximport_1.14.0          knitr_1.27              
- [16] Formula_1.2-3            jsonlite_1.6             Rsamtools_2.2.1         
+ [13] splines_3.6.1            tximport_1.14.0          knitr_1.28              
+ [16] Formula_1.2-3            jsonlite_1.6.1           Rsamtools_2.2.1         
  [19] cluster_2.1.0            dbplyr_1.4.2             png_0.1-7               
  [22] compiler_3.6.1           httr_1.4.1               backports_1.1.5         
  [25] assertthat_0.2.1         Matrix_1.2-18            lazyeval_0.2.2          
@@ -348,12 +350,12 @@ loaded via a namespace (and not attached):
  [55] AnnotationFilter_1.10.0  RColorBrewer_1.1-2       curl_4.3                
  [58] memoise_1.1.0            gridExtra_2.3            biomaRt_2.42.0          
  [61] rpart_4.1-15             reshape_0.8.8            latticeExtra_0.6-29     
- [64] stringi_1.4.5            RSQLite_2.2.0            checkmate_1.9.4         
+ [64] stringi_1.4.5            RSQLite_2.2.0            checkmate_2.0.0         
  [67] GenomicFeatures_1.38.1   rlang_0.4.4              pkgconfig_2.0.3         
  [70] bitops_1.0-6             lattice_0.20-38          purrr_0.3.3             
  [73] labeling_0.3             GenomicAlignments_1.22.1 htmlwidgets_1.5.1       
- [76] bit_1.1-15.1             tidyselect_1.0.0         plyr_1.8.5              
- [79] magrittr_1.5             R6_2.4.1                 Hmisc_4.3-0             
+ [76] bit_1.1-15.2             tidyselect_1.0.0         plyr_1.8.5              
+ [79] magrittr_1.5             R6_2.4.1                 Hmisc_4.3-1             
  [82] DBI_1.1.0                pillar_1.4.3             foreign_0.8-72          
  [85] withr_2.1.2              survival_3.1-8           RCurl_1.98-1.1          
  [88] nnet_7.3-12              tibble_2.1.3             crayon_1.3.4            
@@ -365,4 +367,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-267.499   6.997 277.126 
+229.338   3.447 233.405 

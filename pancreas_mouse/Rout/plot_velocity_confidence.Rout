@@ -67,8 +67,6 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
                        alevin_spliced_unspliced_gentrome 
                      "alevin_spliced_unspliced_gentrome" 
-                                       kb_python_lamanno 
-                                     "kb_python_lamanno" 
 > print(outrds)
 [1] "plots/velocity_confidence/pancreas_plot_velocity_confidence.rds"
 > 
@@ -189,27 +187,11 @@ cols(
   clusters = col_character()
 )
 See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  cell_index = col_character(),
-  clusters_coarse = col_character(),
-  clusters = col_character()
-)
-See spec(...) for full column specifications.
 > geneinfo <- lapply(methods, function(nm) {
 +   readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
 +                          "_gene_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  velocity_genes = col_logical()
-)
-See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -424,7 +406,7 @@ null device
 +              gene_vel = velocity_genes %>% dplyr::mutate(dataset = dataset)), 
 +         file = outrds)
 > date()
-[1] "Mon Feb  3 19:41:40 2020"
+[1] "Sun Feb  9 21:47:42 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -476,4 +458,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 17.343   1.310  20.088 
+ 15.262   0.897  16.774 

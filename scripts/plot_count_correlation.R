@@ -20,7 +20,6 @@ names(methods) <- methods
 print(topdir)
 print(plothelperscript)
 print(methods)
-print(genetxt)
 print(outrds)
 
 methods_short <- shorten_methods(methods)
@@ -29,15 +28,22 @@ sces <- lapply(methods, function(nm) {
   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
 })
 
-genes <- read.delim(genetxt, header = FALSE, as.is = TRUE)[, 1]
-sces <- lapply(sces, function(w) w[match(genes, rownames(w)), ])
-
 seurats <- lapply(methods, function(nm) {
   w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
-                                         nm, "_shared_genes_with_velocity.h5ad")))
-  stopifnot(all(rownames(w) == genes))
+                                         nm, "_with_velocity.h5ad")))
   w
 })
+velocities_shared <- lapply(seurats, function(w) as.matrix(GetAssayData(GetAssay(w, "velocity"))))
+genes <- Reduce(intersect, lapply(velocities_shared, function(w) rownames(w)[!is.na(rowSums(w))]))
+print(length(genes))
+seurats <- lapply(seurats, function(s) s[genes, ])
+
+stopifnot(all(sapply(methods, function(m) {
+  all(colnames(sces[[m]]) == colnames(seurats[[m]]))
+})))
+stopifnot(all(sapply(seurats, function(s) {
+  all(colnames(s) == colnames(seurats[[1]]))
+})))
 
 gene_corrs <- do.call(
   dplyr::bind_rows, 
@@ -318,7 +324,8 @@ gene_cell_corrs_within <- dplyr::bind_rows(
 gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 
 
-pdf(gsub("rds$", "pdf", outrds), width = 15, height = 13)
+pdf(gsub("rds$", "pdf", outrds), width = 0.75 * length(methods) + 6.5, 
+    height = 0.85 * (0.75 * length(methods) + 6.5))
 
 ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
   geom_boxplot() + 
@@ -358,14 +365,14 @@ if (!any(is.na(cell_corrs$cluster))) {
 
 dev.off()
 
-png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 15, height = 13,
-    unit = "in", res = 300)
+png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 0.75 * length(methods) + 6.5, 
+    height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 300)
 ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
   geom_boxplot() + 
   facet_grid(method1 ~ method2) + 
   theme_bw() + 
-  theme(strip.text = element_text(size = 5),
+  theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
         title = element_text(size = 18)) + 
   labs(title = "Correlation, abundances and velocities, by gene and cell",

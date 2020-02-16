@@ -65,10 +65,6 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
                        alevin_spliced_unspliced_gentrome 
                      "alevin_spliced_unspliced_gentrome" 
-                                       kb_python_lamanno 
-                                     "kb_python_lamanno" 
-> print(genetxt)
-[1] "output/genesets/shared_genes.txt"
 > print(outrds)
 [1] "plots/count_correlation/spermatogenesis_plot_count_correlation.rds"
 > 
@@ -78,13 +74,9 @@ Type 'q()' to quit R.
 +   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
 + })
 > 
-> genes <- read.delim(genetxt, header = FALSE, as.is = TRUE)[, 1]
-> sces <- lapply(sces, function(w) w[match(genes, rownames(w)), ])
-> 
 > seurats <- lapply(methods, function(nm) {
 +   w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
-+                                          nm, "_shared_genes_with_velocity.h5ad")))
-+   stopifnot(all(rownames(w) == genes))
++                                          nm, "_with_velocity.h5ad")))
 +   w
 + })
 Pulling expression matrices and metadata
@@ -303,24 +295,18 @@ Reading spliced into new assay, putting data into data
 Reading unspliced into new assay, putting data into data
 Reading velocity into new assay, putting data into data
 Reading velocity_u into new assay, putting data into data
-Pulling expression matrices and metadata
-Data is unscaled
-Creating assay object
-Storing X as raw and raw as counts
-No variable feature expression found in h5ad file
-No dimensional reduction information found
-Assembling Seurat object
-No nearest-neighbor graph
-Reading Ms into new assay, putting data into data
-Reading Mu into new assay, putting data into data
-Reading fit_t into new assay, putting data into data
-Reading fit_tau into new assay, putting data into data
-Reading fit_tau_ into new assay, putting data into data
-Reading logcounts into new assay, putting data into data
-Reading spliced into new assay, putting data into data
-Reading unspliced into new assay, putting data into data
-Reading velocity into new assay, putting data into data
-Reading velocity_u into new assay, putting data into data
+> velocities_shared <- lapply(seurats, function(w) as.matrix(GetAssayData(GetAssay(w, "velocity"))))
+> genes <- Reduce(intersect, lapply(velocities_shared, function(w) rownames(w)[!is.na(rowSums(w))]))
+> print(length(genes))
+[1] 222
+> seurats <- lapply(seurats, function(s) s[genes, ])
+> 
+> stopifnot(all(sapply(methods, function(m) {
++   all(colnames(sces[[m]]) == colnames(seurats[[m]]))
++ })))
+> stopifnot(all(sapply(seurats, function(s) {
++   all(colnames(s) == colnames(seurats[[1]]))
++ })))
 > 
 > gene_corrs <- do.call(
 +   dplyr::bind_rows, 
@@ -399,7 +385,6 @@ velocyto - alevin_prepref_isoseparate_cdna_introns_gentrome
 velocyto - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 velocyto - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 velocyto - alevin_spliced_unspliced_gentrome
-velocyto - kb_python_lamanno
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -410,7 +395,6 @@ kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isocollapse_exclude - kb_python_lamanno
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isoseparate_exclude - starsolo
@@ -420,7 +404,6 @@ kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isoseparate_exclude - kb_python_lamanno
 kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isocollapse_include - starsolo
 kallisto_bustools_prepref_isocollapse_include - starsolo_subtr
@@ -429,7 +412,6 @@ kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isocollapse_include - kb_python_lamanno
 kallisto_bustools_prepref_isoseparate_include - starsolo
 kallisto_bustools_prepref_isoseparate_include - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_gentrome
@@ -437,35 +419,27 @@ kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isoseparate_include - kb_python_lamanno
 starsolo - starsolo_subtr
 starsolo - alevin_prepref_isocollapse_cdna_introns_gentrome
 starsolo - alevin_prepref_isoseparate_cdna_introns_gentrome
 starsolo - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 starsolo - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 starsolo - alevin_spliced_unspliced_gentrome
-starsolo - kb_python_lamanno
 starsolo_subtr - alevin_prepref_isocollapse_cdna_introns_gentrome
 starsolo_subtr - alevin_prepref_isoseparate_cdna_introns_gentrome
 starsolo_subtr - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 starsolo_subtr - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 starsolo_subtr - alevin_spliced_unspliced_gentrome
-starsolo_subtr - kb_python_lamanno
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isocollapse_cdna_introns_gentrome - kb_python_lamanno
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isoseparate_cdna_introns_gentrome - kb_python_lamanno
 alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - kb_python_lamanno
 alevin_prepref_isoseparate_cdna_introns_decoy_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isoseparate_cdna_introns_decoy_gentrome - kb_python_lamanno
-alevin_spliced_unspliced_gentrome - kb_python_lamanno
 There were 50 or more warnings (use warnings() to see the first 50)
 > gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
 > gene_corrs$method2 <- factor(gene_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
@@ -515,7 +489,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +     )
 +   })) %>%
 +   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
-There were 39 warnings (use warnings() to see them)
+There were 36 warnings (use warnings() to see them)
 > gene_corrs_within$method <- factor(gene_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 > 
 > ## Same but for cells
@@ -607,7 +581,6 @@ velocyto - alevin_prepref_isoseparate_cdna_introns_gentrome
 velocyto - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 velocyto - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 velocyto - alevin_spliced_unspliced_gentrome
-velocyto - kb_python_lamanno
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_exclude
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isocollapse_exclude - kallisto_bustools_prepref_isoseparate_include
@@ -618,7 +591,6 @@ kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_exclude - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_exclude - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isocollapse_exclude - kb_python_lamanno
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isocollapse_include
 kallisto_bustools_prepref_isoseparate_exclude - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isoseparate_exclude - starsolo
@@ -628,7 +600,6 @@ kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_exclude - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isoseparate_exclude - kb_python_lamanno
 kallisto_bustools_prepref_isocollapse_include - kallisto_bustools_prepref_isoseparate_include
 kallisto_bustools_prepref_isocollapse_include - starsolo
 kallisto_bustools_prepref_isocollapse_include - starsolo_subtr
@@ -637,7 +608,6 @@ kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_include - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isocollapse_include - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isocollapse_include - kb_python_lamanno
 kallisto_bustools_prepref_isoseparate_include - starsolo
 kallisto_bustools_prepref_isoseparate_include - starsolo_subtr
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_gentrome
@@ -645,35 +615,27 @@ kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_include - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 kallisto_bustools_prepref_isoseparate_include - alevin_spliced_unspliced_gentrome
-kallisto_bustools_prepref_isoseparate_include - kb_python_lamanno
 starsolo - starsolo_subtr
 starsolo - alevin_prepref_isocollapse_cdna_introns_gentrome
 starsolo - alevin_prepref_isoseparate_cdna_introns_gentrome
 starsolo - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 starsolo - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 starsolo - alevin_spliced_unspliced_gentrome
-starsolo - kb_python_lamanno
 starsolo_subtr - alevin_prepref_isocollapse_cdna_introns_gentrome
 starsolo_subtr - alevin_prepref_isoseparate_cdna_introns_gentrome
 starsolo_subtr - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 starsolo_subtr - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 starsolo_subtr - alevin_spliced_unspliced_gentrome
-starsolo_subtr - kb_python_lamanno
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isocollapse_cdna_introns_gentrome - kb_python_lamanno
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isocollapse_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isoseparate_cdna_introns_gentrome - kb_python_lamanno
 alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - alevin_prepref_isoseparate_cdna_introns_decoy_gentrome
 alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isocollapse_cdna_introns_decoy_gentrome - kb_python_lamanno
 alevin_prepref_isoseparate_cdna_introns_decoy_gentrome - alevin_spliced_unspliced_gentrome
-alevin_prepref_isoseparate_cdna_introns_decoy_gentrome - kb_python_lamanno
-alevin_spliced_unspliced_gentrome - kb_python_lamanno
 There were 50 or more warnings (use warnings() to see the first 50)
 > cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
 > cell_corrs$method2 <- factor(cell_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
@@ -761,7 +723,8 @@ There were 50 or more warnings (use warnings() to see the first 50)
 > gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 > 
 > 
-> pdf(gsub("rds$", "pdf", outrds), width = 15, height = 13)
+> pdf(gsub("rds$", "pdf", outrds), width = 0.75 * length(methods) + 6.5, 
++     height = 0.85 * (0.75 * length(methods) + 6.5))
 > 
 > ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
 +   geom_boxplot() + 
@@ -784,7 +747,7 @@ There were 50 or more warnings (use warnings() to see the first 50)
 +   labs(title = "Correlation, abundances and velocities, by cell",
 +        subtitle = "Over genes selected by all methods")
 Warning message:
-Removed 1641 rows containing non-finite values (stat_boxplot). 
+Removed 1324 rows containing non-finite values (stat_boxplot). 
 > 
 > if (!any(is.na(cell_corrs$cluster))) {
 +   for (ct in unique(cell_corrs$ctype)) {
@@ -801,20 +764,20 @@ Removed 1641 rows containing non-finite values (stat_boxplot).
 +   }
 + }
 Warning message:
-Removed 1641 rows containing non-finite values (stat_boxplot). 
+Removed 1324 rows containing non-finite values (stat_boxplot). 
 > 
 > dev.off()
 null device 
           1 
 > 
-> png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 15, height = 13,
-+     unit = "in", res = 300)
+> png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 0.75 * length(methods) + 6.5, 
++     height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 300)
 > ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
 +   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
 +   geom_boxplot() + 
 +   facet_grid(method1 ~ method2) + 
 +   theme_bw() + 
-+   theme(strip.text = element_text(size = 5),
++   theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)),
 +         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
 +         title = element_text(size = 18)) + 
 +   labs(title = "Correlation, abundances and velocities, by gene and cell",
@@ -822,7 +785,7 @@ null device
 +        x = "", y = "Correlation") + 
 +   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
 Warning message:
-Removed 1641 rows containing non-finite values (stat_boxplot). 
+Removed 1324 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
@@ -842,7 +805,7 @@ null device
 +        x = "", y = "Correlation") + 
 +   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
 Warning message:
-Removed 314 rows containing non-finite values (stat_boxplot). 
+Removed 278 rows containing non-finite values (stat_boxplot). 
 > dev.off()
 null device 
           1 
@@ -850,7 +813,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Tue Feb  4 18:00:51 2020"
+[1] "Sun Feb 16 22:01:59 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -892,14 +855,14 @@ loaded via a namespace (and not attached):
  [22] sandwich_2.5-1           askpass_1.1              prettyunits_1.1.1       
  [25] colorspace_1.4-1         blob_1.2.1               rappdirs_0.3.1          
  [28] ggrepel_0.8.1            crayon_1.3.4             RCurl_1.98-1.1          
- [31] jsonlite_1.6             tximport_1.14.0          survival_3.1-8          
+ [31] jsonlite_1.6.1           tximport_1.14.0          survival_3.1-8          
  [34] zoo_1.8-7                ape_5.3                  glue_1.3.1              
  [37] gtable_0.3.0             zlibbioc_1.32.0          XVector_0.26.0          
- [40] leiden_0.3.2             BiocSingular_1.2.1       future.apply_1.4.0      
+ [40] leiden_0.3.3             BiocSingular_1.2.1       future.apply_1.4.0      
  [43] scales_1.1.0             mvtnorm_1.0-12           DBI_1.1.0               
  [46] bibtex_0.4.2.2           Rcpp_1.0.3               plotrix_3.7-7           
  [49] metap_1.3                viridisLite_0.3.0        progress_1.2.2          
- [52] reticulate_1.14          bit_1.1-15.1             rsvd_1.0.2              
+ [52] reticulate_1.14          bit_1.1-15.2             rsvd_1.0.2              
  [55] SDMTools_1.1-221.2       tsne_0.1-3               htmlwidgets_1.5.1       
  [58] httr_1.4.1               gplots_3.0.1.2           RColorBrewer_1.1-2      
  [61] ellipsis_0.3.0           TFisher_0.2.0            ica_1.0-2               
@@ -926,11 +889,11 @@ loaded via a namespace (and not attached):
 [124] codetools_0.2-16         MASS_7.3-51.4            gtools_3.8.1            
 [127] assertthat_0.2.1         openssl_1.4.1            withr_2.1.2             
 [130] sctransform_0.2.1        GenomicAlignments_1.22.1 Rsamtools_2.2.1         
-[133] mnormt_1.5-5             multcomp_1.4-12          GenomeInfoDbData_1.2.2  
+[133] mnormt_1.5-6             multcomp_1.4-12          GenomeInfoDbData_1.2.2  
 [136] hms_0.5.3                grid_3.6.1               tidyr_1.0.2             
 [139] DelayedMatrixStats_1.8.0 Rtsne_0.15               numDeriv_2016.8-1.1     
 [142] ggbeeswarm_0.6.0        
 > 
 > proc.time()
    user  system elapsed 
-396.764  12.963 483.610 
+226.852   7.579 248.716 

@@ -6,27 +6,27 @@ Abundance of ['spliced', 'unspliced']: [0.89 0.11]
 Filtered out 44836 genes that are detected in less than 20 counts (shared).
 Normalized count data: X, spliced, unspliced.
 computing neighbors
-    finished (0:00:08) --> added to `.uns['neighbors']`
+    finished (0:00:02) --> added to `.uns['neighbors']`
     'distances', weighted adjacency matrix
     'connectivities', weighted adjacency matrix
 computing moments based on connectivities
     finished (0:00:00) --> added 
     'Ms' and 'Mu', moments of spliced/unspliced abundances (adata.layers)
 recovering dynamics
-... 0%... 2%... 4%... 6%... 8%... 9%... 11%... 13%... 16%... 18%... 20%... 22%... 26%... 28%... 31%... 33%... 36%... 38%... 41%... 43%... 45%... 48%... 51%... 52%... 55%... 58%... 59%... 61%... 62%... 64%... 66%... 67%... 70%... 72%... 76%... 77%... 80%... 83%... 86%... 87%... 89%... 93%... 95%... 98%... 100%    finished (0:02:36) --> added 
+... 3%... 7%... 13%... 18%... 23%... 28%... 32%... 37%... 42%... 47%... 52%... 58%... 61%... 66%... 70%... 76%... 80%... 86%... 90%... 96%... 100%    finished (0:01:06) --> added 
     'fit_pars', fitted parameters for splicing dynamics (adata.var)
 computing velocities
     finished (0:00:00) --> added 
     'velocity', velocity vectors for each individual cell (adata.layers)
 computing velocity graph
-... 100%    finished (0:00:01) --> added 
+... 100%    finished (0:00:00) --> added 
     'velocity_graph', sparse matrix with cosine correlations (adata.uns)
 computing velocity embedding
     finished (0:00:00) --> added
     'velocity_pca', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_PCA_stream.png
 computing velocity embedding
-    finished (0:00:01) --> added
+    finished (0:00:00) --> added
     'velocity_tsne', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_TSNE_stream.png
 computing velocity embedding
@@ -35,7 +35,7 @@ computing velocity embedding
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_UMAP_stream.png
 Renamed 'PCA_starsolo_concatenated' to convention 'X_PCA_starsolo_concatenated' (adata.obsm).
 computing velocity embedding
-    finished (0:00:01) --> added
+    finished (0:00:00) --> added
     'velocity_PCA_starsolo_concatenated', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_PCA_starsolo_concatenated_stream.png
 Renamed 'TSNE_starsolo_concatenated' to convention 'X_TSNE_starsolo_concatenated' (adata.obsm).
@@ -50,7 +50,7 @@ computing velocity embedding
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_UMAP_starsolo_concatenated_stream.png
 Renamed 'PCA_starsolo_summed' to convention 'X_PCA_starsolo_summed' (adata.obsm).
 computing velocity embedding
-    finished (0:00:01) --> added
+    finished (0:00:00) --> added
     'velocity_PCA_starsolo_summed', embedded velocity vectors (adata.obsm)
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_PCA_starsolo_summed_stream.png
 Renamed 'TSNE_starsolo_summed' to convention 'X_TSNE_starsolo_summed' (adata.obsm).
@@ -126,7 +126,7 @@ saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_int
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_stream_latent_time.png
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_latent_time.png
 computing velocity clusters
-    finished (0:00:05) --> added 
+    finished (0:00:01) --> added 
     'velocity_clusters', clusters based on modularity on velocity field (adata.obs)
 ranking velocity genes
     finished (0:00:00) --> added 
@@ -135,4 +135,4 @@ saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_int
 --> added 'velocity_confidence' (adata.obs)
 --> added 'velocity_confidence_transition' (adata.obs)
 saving figure to file plots/velocity/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes/anndata_alevin_prepref_isocollapse_cdna_introns_decoy_gentrome_shared_genes_scvelo_UMAP_alevin_spliced_gentrome_stream_velocityconfidence.png
-Running scvelo 0.1.24 (python 3.7.3) on 2020-02-04 17:44.
+Running scvelo 0.1.24 (python 3.7.3) on 2020-02-16 21:51.

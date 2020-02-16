@@ -79,6 +79,8 @@ scv.pp.moments(adata2, n_pcs = 30, n_neighbors = 30)
 scv.tl.recover_dynamics(adata2)
 scv.tl.velocity(adata2, mode = 'dynamical')
 scv.tl.velocity_graph(adata2)
+## Maximal cosine correlation for each cell (used by scVelo to calculate self-transition probabilities)
+adata2.obs['max_cosine_corr'] = adata2.uns['velocity_graph'].max(1).A.flatten()
 
 scv.settings.figdir = plotdir + '/' + base + basegs + '/'
 scv.settings.plot_prefix = base + basegs + '_scvelo_'

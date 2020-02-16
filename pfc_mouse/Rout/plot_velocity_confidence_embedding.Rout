@@ -64,8 +64,6 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
                        alevin_spliced_unspliced_gentrome 
                      "alevin_spliced_unspliced_gentrome" 
-                                       kb_python_lamanno 
-                                     "kb_python_lamanno" 
 > print(outrds)
 [1] "plots/velocity_confidence_embedding/pfc_plot_velocity_confidence_embedding.rds"
 > 
@@ -82,15 +80,6 @@ Type 'q()' to quit R.
 +                          nm, "_cell_info.csv")) %>%
 +     dplyr::mutate(method = nm)
 + })
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  cell_index = col_character(),
-  clusters_coarse = col_character(),
-  clusters = col_character()
-)
-See spec(...) for full column specifications.
 Parsed with column specification:
 cols(
   .default = col_double(),
@@ -313,15 +302,6 @@ cols(
   clusters = col_character()
 )
 See spec(...) for full column specifications.
-Parsed with column specification:
-cols(
-  .default = col_double(),
-  index = col_character(),
-  cell_index = col_character(),
-  clusters_coarse = col_character(),
-  clusters = col_character()
-)
-See spec(...) for full column specifications.
 > 
 > ## Shared genes
 > plotlist_shared <- lapply(methods, function(m) {
@@ -375,7 +355,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Wed Feb  5 09:49:26 2020"
+[1] "Sun Feb 16 22:09:35 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -409,10 +389,10 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] TH.data_1.0-10         Rtsne_0.15             colorspace_1.4-1      
   [4] ggridges_0.5.2         XVector_0.26.0         farver_2.0.3          
-  [7] leiden_0.3.2           listenv_0.8.0          npsurv_0.4-0          
+  [7] leiden_0.3.3           listenv_0.8.0          npsurv_0.4-0          
  [10] ggrepel_0.8.1          mvtnorm_1.0-12         codetools_0.2-16      
- [13] splines_3.6.1          R.methodsS3_1.7.1      mnormt_1.5-5          
- [16] lsei_1.2-0             TFisher_0.2.0          jsonlite_1.6          
+ [13] splines_3.6.1          R.methodsS3_1.7.1      mnormt_1.5-6          
+ [16] lsei_1.2-0             TFisher_0.2.0          jsonlite_1.6.1        
  [19] ica_1.0-2              cluster_2.1.0          png_0.1-7             
  [22] R.oo_1.23.0            uwot_0.1.5             sctransform_0.2.1     
  [25] readr_1.3.1            compiler_3.6.1         httr_1.4.1            
@@ -447,4 +427,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 16.457   2.967  30.112 
+ 13.693   1.282  15.408 

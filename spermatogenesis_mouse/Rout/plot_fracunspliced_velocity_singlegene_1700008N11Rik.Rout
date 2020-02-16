@@ -64,8 +64,6 @@ Type 'q()' to quit R.
 "alevin_prepref_isoseparate_cdna_introns_decoy_gentrome" 
                        alevin_spliced_unspliced_gentrome 
                      "alevin_spliced_unspliced_gentrome" 
-                                       kb_python_lamanno 
-                                     "kb_python_lamanno" 
 > print(showgene)
 [1] "1700008N11Rik"
 > print(outvelopng)
@@ -93,24 +91,6 @@ Type 'q()' to quit R.
 +   ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
 +                                     nm, "_with_velocity.h5ad")))
 + })
-Pulling expression matrices and metadata
-Data is unscaled
-Creating assay object
-Storing X as raw and raw as counts
-No variable feature expression found in h5ad file
-No dimensional reduction information found
-Assembling Seurat object
-No nearest-neighbor graph
-Reading Ms into new assay, putting data into data
-Reading Mu into new assay, putting data into data
-Reading fit_t into new assay, putting data into data
-Reading fit_tau into new assay, putting data into data
-Reading fit_tau_ into new assay, putting data into data
-Reading logcounts into new assay, putting data into data
-Reading spliced into new assay, putting data into data
-Reading unspliced into new assay, putting data into data
-Reading velocity into new assay, putting data into data
-Reading velocity_u into new assay, putting data into data
 Pulling expression matrices and metadata
 Data is unscaled
 Creating assay object
@@ -390,7 +370,7 @@ null device
           1 
 > 
 > date()
-[1] "Tue Feb  4 18:15:12 2020"
+[1] "Sun Feb 16 22:04:46 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -424,11 +404,11 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] TH.data_1.0-10         Rtsne_0.15             colorspace_1.4-1      
   [4] ggridges_0.5.2         XVector_0.26.0         farver_2.0.3          
-  [7] leiden_0.3.2           listenv_0.8.0          npsurv_0.4-0          
+  [7] leiden_0.3.3           listenv_0.8.0          npsurv_0.4-0          
  [10] bit64_0.9-7            ggrepel_0.8.1          mvtnorm_1.0-12        
  [13] codetools_0.2-16       splines_3.6.1          R.methodsS3_1.7.1     
- [16] mnormt_1.5-5           lsei_1.2-0             TFisher_0.2.0         
- [19] jsonlite_1.6           ica_1.0-2              cluster_2.1.0         
+ [16] mnormt_1.5-6           lsei_1.2-0             TFisher_0.2.0         
+ [19] jsonlite_1.6.1         ica_1.0-2              cluster_2.1.0         
  [22] png_0.1-7              R.oo_1.23.0            uwot_0.1.5            
  [25] sctransform_0.2.1      compiler_3.6.1         httr_1.4.1            
  [28] assertthat_0.2.1       Matrix_1.2-18          lazyeval_0.2.2        
@@ -448,7 +428,7 @@ loaded via a namespace (and not attached):
  [70] SDMTools_1.1-221.2     rlang_0.4.4            pkgconfig_2.0.3       
  [73] bitops_1.0-6           lattice_0.20-38        ROCR_1.0-7            
  [76] purrr_0.3.3            labeling_0.3           htmlwidgets_1.5.1     
- [79] bit_1.1-15.1           tidyselect_1.0.0       RcppAnnoy_0.0.14      
+ [79] bit_1.1-15.2           tidyselect_1.0.0       RcppAnnoy_0.0.14      
  [82] plyr_1.8.5             magrittr_1.5           R6_2.4.1              
  [85] gplots_3.0.1.2         multcomp_1.4-12        pillar_1.4.3          
  [88] withr_2.1.2            sn_1.5-5               fitdistrplus_1.0-14   
@@ -464,4 +444,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-205.376  82.949 351.214 
+110.454  23.428 142.583 

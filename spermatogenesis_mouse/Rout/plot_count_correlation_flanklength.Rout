@@ -1,0 +1,677 @@
+
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> args <- (commandArgs(trailingOnly = TRUE))
+> for (i in seq_len(length(args))) {
++   eval(parse(text = args[[i]]))
++ }
+> 
+> suppressPackageStartupMessages({
++   library(tximeta)
++   library(dplyr)
++   library(ggplot2)
++   library(SummarizedExperiment)
++   library(SingleCellExperiment)
++   library(scater)
++   library(Seurat)
++ })
+> source(plothelperscript)
+> 
+> methods <- strsplit(methods, ",")[[1]]
+> names(methods) <- methods
+> 
+> print(topdir)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/spermatogenesis_mouse"
+> print(plothelperscript)
+[1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(methods)
+                kallisto_bustools_prepref_isoseparate_exclude 
+              "kallisto_bustools_prepref_isoseparate_exclude" 
+                                            kb_python_lamanno 
+                                          "kb_python_lamanno" 
+             alevin_prepref_isoseparate_cdna_introns_gentrome 
+           "alevin_prepref_isoseparate_cdna_introns_gentrome" 
+  alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded 
+"alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded" 
+    alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome 
+  "alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome" 
+    alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome 
+  "alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome" 
+> print(outrds)
+[1] "plots/count_correlation/spermatogenesis_plot_count_correlation_flanklength.rds"
+> 
+> methods_short <- shorten_methods(methods)
+> 
+> sces <- lapply(methods, function(nm) {
++   readRDS(file.path(topdir, paste0("output/sce/sce_", nm, ".rds")))
++ })
+> 
+> seurats <- lapply(methods, function(nm) {
++   w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
++                                          nm, "_with_velocity.h5ad")))
++   w
++ })
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+Pulling expression matrices and metadata
+Data is unscaled
+Creating assay object
+Storing X as raw and raw as counts
+No variable feature expression found in h5ad file
+No dimensional reduction information found
+Assembling Seurat object
+No nearest-neighbor graph
+Reading Ms into new assay, putting data into data
+Reading Mu into new assay, putting data into data
+Reading fit_t into new assay, putting data into data
+Reading fit_tau into new assay, putting data into data
+Reading fit_tau_ into new assay, putting data into data
+Reading logcounts into new assay, putting data into data
+Reading spliced into new assay, putting data into data
+Reading unspliced into new assay, putting data into data
+Reading velocity into new assay, putting data into data
+Reading velocity_u into new assay, putting data into data
+> velocities_shared <- lapply(seurats, function(w) as.matrix(GetAssayData(GetAssay(w, "velocity"))))
+> genes <- Reduce(intersect, lapply(velocities_shared, function(w) rownames(w)[!is.na(rowSums(w))]))
+> print(length(genes))
+[1] 397
+> seurats <- lapply(seurats, function(s) s[genes, ])
+> 
+> stopifnot(all(sapply(methods, function(m) {
++   all(colnames(sces[[m]]) == colnames(seurats[[m]]))
++ })))
+> stopifnot(all(sapply(seurats, function(s) {
++   all(colnames(s) == colnames(seurats[[1]]))
++ })))
+> 
+> gene_corrs <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods) - 1), function(j) {
++     jj <- methods[j]
++     do.call(
++       dplyr::bind_rows,  
++       lapply((j + 1):(length(methods)), function(k) {
++         kk <- methods[k]
++         message(jj, " - ", kk)
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))))
++         corrs_spliced <- mapply(a, b, FUN = cor, 
++                                 MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))))
++         corrs_unspliced <- mapply(a, b, FUN = cor, 
++                                   MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity")))))
++         corrs_velocity <- mapply(a, b, FUN = cor, 
++                                  MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                              t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++         b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced")))) + 
++                              t(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced")))))
++         corrs_total <- mapply(a, b, FUN = cor, 
++                               MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         dplyr::bind_rows(
++           data.frame(method1 = jj,
++                      method2 = kk, 
++                      gene = names(corrs_spliced), 
++                      ctype = "spliced",
++                      dtype = "gene",
++                      corrs = corrs_spliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_unspliced), 
++                      ctype = "unspliced",
++                      dtype = "gene",
++                      corrs = corrs_unspliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_velocity), 
++                      ctype = "velocity",
++                      dtype = "gene",
++                      corrs = corrs_velocity, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      gene = names(corrs_total), 
++                      ctype = "total",
++                      dtype = "gene",
++                      corrs = corrs_total, 
++                      stringsAsFactors = FALSE)
++         )
++       }))
++   })) %>%
++   dplyr::mutate(method1 = methods_short$method_short[match(method1, methods_short$method)],
++                 method2 = methods_short$method_short[match(method2, methods_short$method)])
+kallisto_bustools_prepref_isoseparate_exclude - kb_python_lamanno
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_gentrome
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+kb_python_lamanno - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+There were 50 or more warnings (use warnings() to see the first 50)
+> gene_corrs$method1 <- factor(gene_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+> gene_corrs$method2 <- factor(gene_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> gene_corrs_within <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods)), function(j) {
++     jj <- methods[j]
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))))
++     b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     corrs_spliced_unspliced <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                          t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     b <- as.data.frame(t(abs(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))))
++     corrs_total_absvelocity <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))/
++                          (t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) + 
++                             t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))))
++     b <- as.data.frame(t(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_fracunspl_velocity <- mapply(a, b, FUN = cor, 
++                                        MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     dplyr::bind_rows(
++       data.frame(method = jj,
++                  gene = names(corrs_spliced_unspliced), 
++                  ctype = "spliced-unspliced",
++                  dtype = "gene",
++                  corrs = corrs_spliced_unspliced, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  gene = names(corrs_total_absvelocity), 
++                  ctype = "total-absvelocity",
++                  dtype = "gene",
++                  corrs = corrs_total_absvelocity, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  gene = names(corrs_fracunspl_velocity), 
++                  ctype = "fracunspliced-velocity",
++                  dtype = "gene",
++                  corrs = corrs_fracunspl_velocity, 
++                  stringsAsFactors = FALSE)
++     )
++   })) %>%
++   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
+There were 18 warnings (use warnings() to see them)
+> gene_corrs_within$method <- factor(gene_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> ## Same but for cells
+> cell_corrs <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods) - 1), function(j) {
++     jj <- methods[j]
++     do.call(
++       dplyr::bind_rows,  
++       lapply((j + 1):(length(methods)), function(k) {
++         kk <- methods[k]
++         message(jj, " - ", kk)
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))))
++         corrs_spliced <- mapply(a, b, FUN = cor, 
++                                 MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))))
++         corrs_unspliced <- mapply(a, b, FUN = cor, 
++                                   MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "velocity"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "velocity"))))
++         corrs_velocity <- mapply(a, b, FUN = cor, 
++                                  MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                              as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++         b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[kk]], "spliced"))) + 
++                              as.matrix(GetAssayData(GetAssay(seurats[[kk]], "unspliced"))))
++         corrs_total <- mapply(a, b, FUN = cor, 
++                               MoreArgs = list(use = "na.or.complete", method = "spearman"))
++         
++         if ("clusters" %in% colnames(colData(sces[[jj]]))) {
++           clsce <- sces[[jj]]$clusters
++           clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
++         } else {
++           clsce <- rep(NA, ncol(sces[[jj]]))
++           clseu <- rep(NA, ncol(sces[[jj]]))
++         }
++         dplyr::bind_rows(
++           data.frame(method1 = jj,
++                      method2 = kk, 
++                      cell = names(corrs_spliced), 
++                      cluster = clseu,
++                      ctype = "spliced",
++                      dtype = "cell",
++                      corrs = corrs_spliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_unspliced), 
++                      cluster = clseu,
++                      ctype = "unspliced",
++                      dtype = "cell",
++                      corrs = corrs_unspliced, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_velocity), 
++                      cluster = clseu,
++                      ctype = "velocity",
++                      dtype = "cell",
++                      corrs = corrs_velocity, 
++                      stringsAsFactors = FALSE),
++           data.frame(method1 = jj,
++                      method2 = kk,
++                      cell = names(corrs_total), 
++                      cluster = clseu,
++                      ctype = "total",
++                      dtype = "cell",
++                      corrs = corrs_total, 
++                      stringsAsFactors = FALSE)
++         )
++       }))
++   })) %>%
++   dplyr::mutate(method1 = methods_short$method_short[match(method1, methods_short$method)],
++                 method2 = methods_short$method_short[match(method2, methods_short$method)])
+kallisto_bustools_prepref_isoseparate_exclude - kb_python_lamanno
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_gentrome
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+kallisto_bustools_prepref_isoseparate_exclude - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+kb_python_lamanno - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+kb_python_lamanno - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded - alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome - alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+There were 50 or more warnings (use warnings() to see the first 50)
+> cell_corrs$method1 <- factor(cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+> cell_corrs$method2 <- factor(cell_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> cell_corrs_within <- do.call(
++   dplyr::bind_rows, 
++   lapply(seq_len(length(methods)), function(j) {
++     jj <- methods[j]
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))))
++     b <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++     corrs_spliced_unspliced <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                          as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
++     b <- as.data.frame(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_total_absvelocity <- mapply(a, b, FUN = cor, 
++                                       MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     a <- as.data.frame(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))/
++                          (as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
++                             as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced")))))
++     b <- as.data.frame(as.matrix(abs(GetAssayData(GetAssay(seurats[[jj]], "velocity")))))
++     corrs_fracunspl_velocity <- mapply(a, b, FUN = cor, 
++                                        MoreArgs = list(use = "na.or.complete", method = "spearman"))
++     
++     if ("clusters" %in% colnames(colData(sces[[jj]]))) {
++       clsce <- sces[[jj]]$clusters
++       clseu <- levels(factor(sces[[jj]]$clusters))[seurats[[jj]]@meta.data$clusters + 1]
++     } else {
++       clsce <- rep(NA, ncol(sces[[jj]]))
++       clseu <- rep(NA, ncol(sces[[jj]]))
++     }
++     dplyr::bind_rows(
++       data.frame(method = jj,
++                  cell = names(corrs_spliced_unspliced), 
++                  cluster = clseu,
++                  ctype = "spliced-unspliced",
++                  dtype = "cell",
++                  corrs = corrs_spliced_unspliced, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  cell = names(corrs_total_absvelocity), 
++                  cluster = clseu,
++                  ctype = "total-absvelocity",
++                  dtype = "cell",
++                  corrs = corrs_total_absvelocity, 
++                  stringsAsFactors = FALSE),
++       data.frame(method = jj,
++                  cell = names(corrs_fracunspl_velocity), 
++                  cluster = clseu,
++                  ctype = "fracunspliced-velocity",
++                  dtype = "cell",
++                  corrs = corrs_fracunspl_velocity, 
++                  stringsAsFactors = FALSE)
++     )
++   })) %>%
++   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
+There were 32 warnings (use warnings() to see them)
+> cell_corrs_within$method <- factor(cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> ## Combine gene and cell correlations
+> gene_cell_corrs <- dplyr::bind_rows(
++   gene_corrs %>% dplyr::rename(m1 = method1) %>%
++     dplyr::rename(method1 = method2,
++                   method2 = m1) %>%
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
++     dplyr::select(method1, method2, ctype, dtype, cdtype, corrs),
++   cell_corrs %>% 
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
++     dplyr::select(method1, method2, ctype, dtype, cdtype, corrs)
++ )
+> gene_cell_corrs$method1 <- factor(gene_cell_corrs$method1, levels = methods_short$method_short[match(methods, methods_short$method)])
+> gene_cell_corrs$method2 <- factor(gene_cell_corrs$method2, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> gene_cell_corrs_within <- dplyr::bind_rows(
++   gene_corrs_within %>% 
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
++     dplyr::select(method, ctype, dtype, cdtype, corrs),
++   cell_corrs_within %>% 
++     tidyr::unite(dtype, ctype, col = "cdtype", sep = ": ", remove = FALSE) %>%
++     dplyr::select(method, ctype, dtype, cdtype, corrs)
++ )
+> gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
+> 
+> 
+> pdf(gsub("rds$", "pdf", outrds), width = 0.75 * length(methods) + 6.5, 
++     height = 0.85 * (0.75 * length(methods) + 6.5))
+> 
+> ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 5),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 20),
++         legend.position = "none") + 
++   labs(title = "Correlation, abundances and velocities, by gene",
++        subtitle = "For genes selected by all methods")
+> 
+> ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 5),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 20)) + 
++   labs(title = "Correlation, abundances and velocities, by cell",
++        subtitle = "Over genes selected by all methods")
+Warning message:
+Removed 30 rows containing non-finite values (stat_boxplot). 
+> 
+> if (!any(is.na(cell_corrs$cluster))) {
++   for (ct in unique(cell_corrs$ctype)) {
++     print(ggplot(cell_corrs %>% dplyr::filter(ctype == ct), 
++                  aes(x = cluster, y = corrs, fill = cluster)) + 
++             geom_boxplot() + 
++             facet_grid(method1 ~ method2) + 
++             theme_bw() + 
++             theme(strip.text = element_text(size = 5),
++                   axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++                   title = element_text(size = 20)) + 
++             labs(title = paste0("Correlation, counts and velocities, by cell (", ct, ")"),
++                  subtitle = "Over genes selected by all methods"))
++   }
++ }
+Warning message:
+Removed 30 rows containing non-finite values (stat_boxplot). 
+> 
+> dev.off()
+null device 
+          1 
+> 
+> png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 0.75 * length(methods) + 6.5, 
++     height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 300)
+> ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
++   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
++   geom_boxplot() + 
++   facet_grid(method1 ~ method2) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 18)) + 
++   labs(title = "Correlation, abundances and velocities, by gene and cell",
++        subtitle = "Using genes selected by all methods",
++        x = "", y = "Correlation") + 
++   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
+Warning message:
+Removed 30 rows containing non-finite values (stat_boxplot). 
+> dev.off()
+null device 
+          1 
+> 
+> png(gsub("\\.rds$", "_genes_plus_cells_within.png", outrds), width = 9, height = 9,
++     unit = "in", res = 300)
+> ggplot(gene_cell_corrs_within, aes(x = cdtype, y = corrs, fill = dtype)) + 
++   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
++   geom_boxplot() + 
++   facet_wrap(~ method) + 
++   theme_bw() + 
++   theme(strip.text = element_text(size = 8),
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         title = element_text(size = 18)) + 
++   labs(title = "Correlation, abundances and velocities, by gene and cell",
++        subtitle = "Using genes selected by all methods",
++        x = "", y = "Correlation") + 
++   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
+Warning message:
+Removed 14 rows containing non-finite values (stat_boxplot). 
+> dev.off()
+null device 
+          1 
+> 
+> saveRDS(NULL, file = outrds)
+> 
+> date()
+[1] "Sun Feb 16 21:59:43 2020"
+> sessionInfo()
+R version 3.6.1 (2019-07-05)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS Linux 7 (Core)
+
+Matrix products: default
+BLAS/LAPACK: /tungstenfs/groups/gbioinfo/Appz/easybuild/software/OpenBLAS/0.3.7-GCC-8.3.0/lib/libopenblas_skylakex-r0.3.7.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] Seurat_3.1.2                scater_1.14.6              
+ [3] SingleCellExperiment_1.8.0  SummarizedExperiment_1.16.1
+ [5] DelayedArray_0.12.2         BiocParallel_1.20.1        
+ [7] matrixStats_0.55.0          Biobase_2.46.0             
+ [9] GenomicRanges_1.38.0        GenomeInfoDb_1.22.0        
+[11] IRanges_2.20.2              S4Vectors_0.24.3           
+[13] BiocGenerics_0.32.0         ggplot2_3.2.1              
+[15] dplyr_0.8.4                 tximeta_1.4.3              
+
+loaded via a namespace (and not attached):
+  [1] BiocFileCache_1.10.2     sn_1.5-5                 plyr_1.8.5              
+  [4] igraph_1.2.4.2           lazyeval_0.2.2           splines_3.6.1           
+  [7] listenv_0.8.0            TH.data_1.0-10           digest_0.6.23           
+ [10] htmltools_0.4.0          ensembldb_2.10.2         viridis_0.5.1           
+ [13] gdata_2.18.0             magrittr_1.5             memoise_1.1.0           
+ [16] cluster_2.1.0            ROCR_1.0-7               globals_0.12.5          
+ [19] Biostrings_2.54.0        RcppParallel_4.4.4       R.utils_2.9.2           
+ [22] sandwich_2.5-1           askpass_1.1              prettyunits_1.1.1       
+ [25] colorspace_1.4-1         blob_1.2.1               rappdirs_0.3.1          
+ [28] ggrepel_0.8.1            crayon_1.3.4             RCurl_1.98-1.1          
+ [31] jsonlite_1.6.1           tximport_1.14.0          survival_3.1-8          
+ [34] zoo_1.8-7                ape_5.3                  glue_1.3.1              
+ [37] gtable_0.3.0             zlibbioc_1.32.0          XVector_0.26.0          
+ [40] leiden_0.3.3             BiocSingular_1.2.1       future.apply_1.4.0      
+ [43] scales_1.1.0             mvtnorm_1.0-12           DBI_1.1.0               
+ [46] bibtex_0.4.2.2           Rcpp_1.0.3               plotrix_3.7-7           
+ [49] metap_1.3                viridisLite_0.3.0        progress_1.2.2          
+ [52] reticulate_1.14          bit_1.1-15.2             rsvd_1.0.2              
+ [55] SDMTools_1.1-221.2       tsne_0.1-3               htmlwidgets_1.5.1       
+ [58] httr_1.4.1               gplots_3.0.1.2           RColorBrewer_1.1-2      
+ [61] ellipsis_0.3.0           TFisher_0.2.0            ica_1.0-2               
+ [64] farver_2.0.3             pkgconfig_2.0.3          XML_3.99-0.3            
+ [67] R.methodsS3_1.7.1        uwot_0.1.5               dbplyr_1.4.2            
+ [70] labeling_0.3             reshape2_1.4.3           tidyselect_1.0.0        
+ [73] rlang_0.4.4              AnnotationDbi_1.48.0     munsell_0.5.0           
+ [76] tools_3.6.1              RSQLite_2.2.0            ggridges_0.5.2          
+ [79] stringr_1.4.0            npsurv_0.4-0             bit64_0.9-7             
+ [82] fitdistrplus_1.0-14      caTools_1.18.0           purrr_0.3.3             
+ [85] RANN_2.6.1               AnnotationFilter_1.10.0  pbapply_1.4-2           
+ [88] future_1.16.0            nlme_3.1-143             R.oo_1.23.0             
+ [91] biomaRt_2.42.0           hdf5r_1.3.1              compiler_3.6.1          
+ [94] png_0.1-7                plotly_4.9.1             beeswarm_0.2.3          
+ [97] curl_4.3                 lsei_1.2-0               tibble_2.1.3            
+[100] stringi_1.4.5            GenomicFeatures_1.38.1   lattice_0.20-38         
+[103] ProtGenerics_1.18.0      Matrix_1.2-18            multtest_2.42.0         
+[106] vctrs_0.2.2              mutoss_0.1-12            pillar_1.4.3            
+[109] lifecycle_0.1.0          Rdpack_0.11-1            lmtest_0.9-37           
+[112] RcppAnnoy_0.0.14         BiocNeighbors_1.4.1      data.table_1.12.8       
+[115] cowplot_1.0.0            bitops_1.0-6             irlba_2.3.3             
+[118] gbRd_0.4-11              rtracklayer_1.46.0       R6_2.4.1                
+[121] KernSmooth_2.23-16       gridExtra_2.3            vipor_0.4.5             
+[124] codetools_0.2-16         MASS_7.3-51.4            gtools_3.8.1            
+[127] assertthat_0.2.1         openssl_1.4.1            withr_2.1.2             
+[130] sctransform_0.2.1        GenomicAlignments_1.22.1 Rsamtools_2.2.1         
+[133] mnormt_1.5-6             multcomp_1.4-12          GenomeInfoDbData_1.2.2  
+[136] hms_0.5.3                grid_3.6.1               tidyr_1.0.2             
+[139] DelayedMatrixStats_1.8.0 Rtsne_0.15               numDeriv_2016.8-1.1     
+[142] ggbeeswarm_0.6.0        
+> 
+> proc.time()
+   user  system elapsed 
+102.828   5.855 112.987 

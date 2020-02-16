@@ -46,6 +46,19 @@ ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>%
        y = "Within-cell type standard deviation of latent time estimate")
 dev.off()  
 
+pdf("velocity_max_cosine_corr_across_datasets.pdf")
+ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron"), 
+       aes(x = dataset, y = max_cosine_corr)) + 
+  geom_boxplot(outlier.size = 0.1, aes(fill = mtype)) + 
+  facet_wrap(~ method_short) + 
+  theme_bw() + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+  labs(x = "", 
+       y = "Maximal cosine correlation by cell")
+dev.off()  
+
 pdf("summary_velocity.pdf", width = 8, height = 8)
 g1 <- ggplot(cellinfo, aes(x = method_short, y = velocity_confidence)) + 
   geom_boxplot(aes(fill = mtype), alpha = 0.5, size = 0.5) + 

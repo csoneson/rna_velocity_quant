@@ -78,6 +78,20 @@ for (m in c("prepref")) {
       read_alevin_cdna_introns(
         alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome/alevin")),
         sampleid = samplename, tx2gene = tx2gene)
+    
+    if (v == "separate") {
+      sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded")]] <- 
+        read_alevin_cdna_introns(
+          alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded/alevin")),
+          sampleid = samplename, tx2gene = tx2gene)
+      
+      for (u in c("_flankL20", "_flankL40")) {
+        sces[[paste0("alevin_", m, "_iso", v, u, "_cdna_introns_gentrome")]] <- 
+          read_alevin_cdna_introns(
+            alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, u, "_cdna_introns_gentrome/alevin")),
+            sampleid = samplename, tx2gene = tx2gene)
+      }
+    }
   }
 }
 

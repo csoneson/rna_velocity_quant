@@ -143,7 +143,8 @@ lowerfun <- function(data, mapping) {
 
 for (i in c("spliced", "unspliced")) {
   png(gsub("\\.rds$", paste0("_total_count_scatter_", i, ".png"), outrds), 
-      width = 13, height = 13, unit = "in", res = 400)
+      width = 0.85*(0.75 * length(methods) + 6.5), 
+      height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 400)
   print(GGally::ggpairs(
     sumdf_bygene %>% dplyr::left_join(methods_short, by = "method") %>%
       dplyr::select(c("gene", "method_short", i)) %>%
@@ -153,7 +154,7 @@ for (i in c("spliced", "unspliced")) {
     lower = list(continuous = wrap(lowerfun)),
     title = i, xlab = "log(total gene count + 1)", 
     ylab = "log(total gene count + 1)") + 
-      theme(strip.text = element_text(size = 5))
+      theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)))
   )
   dev.off()
 }
@@ -191,7 +192,8 @@ res <- do.call(dplyr::bind_rows, lapply(c("spliced", "unspliced"), function(tp) 
   }))
 }))
 
-pdf(gsub("\\.rds$", "_frac_diff_btw_methods.pdf", outrds), width = 13, height = 13)
+pdf(gsub("\\.rds$", "_frac_diff_btw_methods.pdf", outrds), 
+    width = 0.85*(0.75 * length(methods) + 6.5), height = 0.85*(0.75 * length(methods) + 6.5))
 print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
         tidyr::gather(key = "ftype", value = "fraction", -m1, -m2, -ctype) %>%
         dplyr::mutate(ftype = replace(ftype, ftype == "frac_equal", "Equal"),
@@ -208,7 +210,7 @@ print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
         facet_grid(m1 ~ m2) + 
         theme_bw() + 
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-              strip.text = element_text(size = 5)) + 
+              strip.text = element_text(size = 8.75 - 0.25 * length(methods))) + 
         scale_fill_manual(values = c(spliced = "red", unspliced = "blue"),
                           name = "") + 
         labs(title = "Differences in total gene count across cells",

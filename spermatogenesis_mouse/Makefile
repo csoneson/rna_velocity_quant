@@ -29,27 +29,54 @@ outprefix := spermatogenesis
 datalabel := Spermatogenesis
 
 flanklength := 99
+flanklengthL20 := 79
+flanklengthL40 := 59
 
-ncores := 24
+ncores := 48
 
 genestoplot := Id4 Gfra1 Zbtb16 Stra8 Magea4 Rhox13 Sycp3 Dmc1 Piwil1 Pgk2 Acr Gapdhs Prm1 \
 Gm498 Spaca9 1700008N11Rik Gm11978 Gm5893
 
+## All methods to run quantification and create SCEs for
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
 alevin_spliced_unspliced starsolo starsolo_subtr \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
-alevin_spliced_unspliced_gentrome kb_python_lamanno
+alevin_spliced_unspliced_gentrome kb_python_lamanno \
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
+alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
 methodsc := $(subst $(space),$(comma),$(methods))
 
+## Main set of methods for figures
 methodssel := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 starsolo starsolo_subtr \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
-alevin_spliced_unspliced_gentrome kb_python_lamanno
+alevin_spliced_unspliced_gentrome
 methodsselc := $(subst $(space),$(comma),$(methodssel))
+
+## Methods to compare flank length
+methodssel2 := kallisto_bustools_prepref_isoseparate_exclude \
+kb_python_lamanno \
+alevin_prepref_isoseparate_cdna_introns_gentrome \
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
+alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+methodssel2c := $(subst $(space),$(comma),$(methodssel2))
+
+methodssel3 := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
+starsolo starsolo_subtr \
+$(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
+$(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
+alevin_spliced_unspliced_gentrome \
+kb_python_lamanno \
+alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
+alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
+alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+methodssel3c := $(subst $(space),$(comma),$(methodssel3))
 
 all: ref quantific veloc plot
 
@@ -60,6 +87,8 @@ $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_in
 reference/kb_python_lamanno/kb_python_lamanno.kbidx \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns_gentrome.sidx/seq.bin)) \
+reference/prepref_isoseparate_flankL20_cdna_introns_gentrome.sidx/seq.bin \
+reference/prepref_isoseparate_flankL40_cdna_introns_gentrome.sidx/seq.bin \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_intronsasdecoy.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_intronsasdecoy_gentrome.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_introns_cdnaasdecoy.sidx/seq.bin)) \
@@ -78,6 +107,9 @@ $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(
 quants/kb_python_lamanno/inspect.unspliced.json \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome/lib_format_counts.json)) \
+quants/alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded/lib_format_counts.json \
+quants/alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome/lib_format_counts.json \
+quants/alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome/lib_format_counts.json \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy_gentrome/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
@@ -104,7 +136,9 @@ $(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_shared_genes
 
 plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
+plots/count_correlation/$(outprefix)_plot_count_correlation_flanklength.rds \
 plots/total_count/$(outprefix)_plot_total_count.rds \
+plots/total_count/$(outprefix)_plot_total_count_flanklength.rds \
 plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds \
 plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds \
 $(foreach g,$(genestoplot),plots/genes/$(outprefix)_$(g).pdf) \
@@ -193,16 +227,17 @@ reference/cellranger2.2.0-737K-august-2016.txt
 ## Generate fasta file with transcripts + introns (with some flanking sequence)
 ## -----------------------------------------------------------------------------------------------------
 ## Extracts intronic sequences flanked by L-1 bases of exonic sequences where L is the biological 
-## read length (for this data set, 91)
+## read length
 define farefrule
-reference/$(2)_iso$(1)/cDNA_introns.fa.gz: $(genome) $(gtf) \
+reference/$(2)_iso$(1)$(6)/cDNA_introns.fa.gz: $(genome) $(gtf) \
 $(scriptdir)/generate_cdna_intron_fa_$(2).R $(3) $(4)
 	mkdir -p Rout
 	mkdir -p $$(@D)
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args scriptdir='$(scriptdir)' gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=$(flanklength) outdir='$$(@D)'" $(scriptdir)/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args scriptdir='$(scriptdir)' gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=$(5) outdir='$$(@D)'" $(scriptdir)/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1)$(6).Rout
 endef
-$(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R)))
+$(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklength),)))
+$(foreach u,20 40,$(foreach v,separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklengthL$(u)),_flankL$(u)))))
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 define swaprule
@@ -218,14 +253,15 @@ $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call swaprule,$(v),$(
 ## Add suffix to gene ID for introns in transcript-to-gene mapping (to avoid both 
 ## spliced and unspliced reads being assigned to the same gene ID and thus be indistinguishable)
 define suffixrule
-reference/$(2)_iso$(1)/tr2g_modified.tsv: \
-reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
+reference/$(2)_iso$(1)$(3)/tr2g_modified.tsv: \
+reference/$(2)_iso$(1)$(3)/cDNA_introns.fa.gz \
 $(scriptdir)/identify_unspliced_genes_in_tx2gene.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args intsv='$$(<D)/tr2g.tsv' outtsv='$$@'" $(scriptdir)/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_$(2)_$(1).Rout
+	R CMD BATCH --no-save --no-restore "--args intsv='$$(<D)/tr2g.tsv' outtsv='$$@'" $(scriptdir)/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_$(2)_$(1)$(3).Rout
 endef
-$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call suffixrule,$(v),$(m)))))
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call suffixrule,$(v),$(m),))))
+$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call suffixrule,$(v),$(m),$(u))))))
 
 ## Generate fasta file with spliced + unspliced transcripts
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
@@ -294,13 +330,14 @@ $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call sidxrule1,$(v),$
 
 ## Build Salmon index with genome decoy
 define sidxrule1genome
-reference/$(2)_iso$(1)_cdna_introns_gentrome.sidx/seq.bin: \
-reference/$(2)_iso$(1)/cDNA_introns.fa.gz $(genome) $(chrnames)
+reference/$(2)_iso$(1)$(3)_cdna_introns_gentrome.sidx/seq.bin: \
+reference/$(2)_iso$(1)$(3)/cDNA_introns.fa.gz $(genome) $(chrnames)
 	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $$(@D) -t <(cat <(zcat $$<) $(genome)) \
 	--gencode -p $(ncores) --type puff -d $(chrnames) 
 endef
-$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call sidxrule1genome,$(v),$(m)))))
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call sidxrule1genome,$(v),$(m),))))
+$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call sidxrule1genome,$(v),$(m),$(u))))))
 
 ## cDNAs, introns as decoys
 define sidxrule2
@@ -455,19 +492,21 @@ $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L00
 ## -----------------------------------------------------------------------------------------------------
 ## cDNA + introns
 define alevincdnaintronrule
-quants/alevin_$(2)_iso$(1)_cdna_introns$(3)/lib_format_counts.json: \
-reference/$(2)_iso$(1)_cdna_introns$(3).sidx/seq.bin \
-reference/$(2)_iso$(1)/tr2g_modified.tsv \
+quants/alevin_$(2)_iso$(1)$(4)_cdna_introns$(3)$(5)/lib_format_counts.json: \
+reference/$(2)_iso$(1)$(4)_cdna_introns$(3).sidx/seq.bin \
+reference/$(2)_iso$(1)$(4)/tr2g_modified.tsv \
 $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
 	module load Salmon/1.0.0 && \
-	salmon alevin -l ISR -i $$(<D) \
+	salmon alevin -l $(6) -i $$(<D) \
 	-1 $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
 	-2 $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
 	-o $$(@D) -p $(ncores) --tgMap $$(word 2,$$^) \
 	--chromium --dumpFeatures --dumpBfh --expectCells 1850
 endef
-$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),))))
-$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome))))
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),,,,ISR))))
+$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,,,ISR))))
+$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,$(u),,ISR)))))
+$(foreach m,prepref,$(foreach v,separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,,_unstranded,IU))))
 
 define alevincdnaintrondecoyrule
 quants/alevin_$(2)_iso$(1)_cdna_intronsasdecoy$(3)/lib_format_counts.json: \
@@ -539,6 +578,8 @@ output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/s
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).mtx)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome/lib_format_counts.json)) \
+$(foreach m,prepref,$(foreach v,separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome_unstranded/lib_format_counts.json)) \
+$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,quants/alevin_$(m)_iso$(v)$(u)_cdna_introns_gentrome/lib_format_counts.json))) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy_gentrome/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
@@ -574,6 +615,15 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
 
+plots/total_count/$(outprefix)_plot_total_count_flanklength.rds: output/sce/sces_spliced_unspliced.rds \
+$(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
+$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
+$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodssel2c)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count_flanklength.Rout
+
 plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
@@ -583,6 +633,7 @@ $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 
 plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R $(tx2genefull) \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p $(@D)
@@ -606,13 +657,21 @@ $(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
 
-plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/genesets/shared_genes.txt output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/sce/sces_spliced_unspliced.rds \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' genetxt='$<' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
+
+plots/count_correlation/$(outprefix)_plot_count_correlation_flanklength.rds: output/sce/sces_spliced_unspliced.rds \
+$(foreach m,$(methodssel2),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodssel2c)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation_flanklength.Rout
 
 plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
@@ -640,13 +699,13 @@ $(scriptdir)/plot_compare_dimred_velocities.R $(scriptdir)/plot_helpers.R
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_dimred_velocities.R Rout/plot_compare_dimred_velocities.Rout
 
-plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: output/genesets/shared_genes.txt \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodsselc)' genetxt='$<' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodssel3c)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
 
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds: \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \

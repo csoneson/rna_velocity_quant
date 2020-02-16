@@ -106,6 +106,32 @@ for (m in c("prepref")) {
         colnames(tmp) <- paste0(s, "__", colnames(tmp))
         tmp
       }))
+    
+    if (v == "separate") {
+      sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded")]] <- 
+        do.call(cbind, lapply(samplenames, function(s) {
+          tmp <- read_alevin_cdna_introns(
+            alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded/alevin")),
+            sampleid = s, tx2gene = tx2gene
+          )
+          colnames(tmp) <- paste0(s, "__", colnames(tmp))
+          tmp
+        }))
+        
+      
+      for (u in c("_flankL20", "_flankL40")) {
+        sces[[paste0("alevin_", m, "_iso", v, u, "_cdna_introns_gentrome")]] <- 
+          do.call(cbind, lapply(samplenames, function(s) {
+            tmp <- read_alevin_cdna_introns(
+              alevindir = file.path(topdir, paste0("quants/", s, "/alevin_", m, "_iso", v, u, "_cdna_introns_gentrome/alevin")),
+              sampleid = s, tx2gene = tx2gene
+            )
+            colnames(tmp) <- paste0(s, "__", colnames(tmp))
+            tmp
+          }))
+      }
+    }
+    
   }
 }
 

@@ -41,7 +41,8 @@ ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>%
   theme_bw() + 
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        strip.text = element_text(size = 8)) + 
   labs(x = "", 
        y = "Within-cell type standard deviation of latent time estimate")
 dev.off()  
@@ -54,7 +55,8 @@ ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron"),
   theme_bw() + 
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        strip.text = element_text(size = 8)) + 
   labs(x = "", 
        y = "Maximal cosine correlation by cell")
 dev.off()  

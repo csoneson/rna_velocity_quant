@@ -147,7 +147,8 @@ plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projection
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
 $(foreach g,$(genestoplot),plots/fracunspliced_velocity_singlegene/$(outprefix)_$(g)_velocity.png) \
-plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
+plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds
 #plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds \
 
 ## -----------------------------------------------------------------------------------------------------
@@ -206,6 +207,15 @@ quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam $(chrleng
 	module load Kent_tools/20190212-linux.x86_64 && \
 	bedGraphToBigWig $(samplename).neg.tmp.bedGraph $(chrlengths) $@
 	rm -f $(samplename).neg.tmp.bedGraph
+
+plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds: \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
+$(genome) $(gtf) $(scriptdir)/plot_polyAT_coverage.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args genome='$(genome)' gtf='$(gtf)' bwpos='$(word 1,$^)' bwneg='$(word 2,$^)' outrds='$@'" $(scriptdir)/plot_polyAT_coverage.R Rout/plot_polyAT_coverage.Rout
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo

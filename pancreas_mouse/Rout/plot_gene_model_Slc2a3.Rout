@@ -77,9 +77,9 @@ Type 'q()' to quit R.
 > print(samplename)
 [1] "Pancreas"
 > print(showgene)
-[1] "Gm6750"
+[1] "Slc2a3"
 > print(outpdf)
-[1] "plots/genes/pancreas_Gm6750.pdf"
+[1] "plots/genes/pancreas_Slc2a3.pdf"
 > 
 > source(plothelperscript)
 > 
@@ -187,14 +187,12 @@ Warning messages:
 > print(plot_gene_model(gr = gr, bwf = bwf, bwc = bwc, showgene = showgene,
 +                       sumdfg = sumdf_bygene, methodsdf = methods_short,
 +                       uniq = uniq))
-Warning message:
-Removed 9 rows containing missing values (position_stack). 
 > dev.off()
 null device 
           1 
 > 
 > date()
-[1] "Sun Feb 16 23:00:10 2020"
+[1] "Mon Feb 17 11:16:27 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -262,4 +260,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-137.402   5.840 142.811 
+141.020   5.605 147.619 

@@ -355,7 +355,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb  9 21:50:17 2020"
+[1] "Sun Feb 16 23:12:48 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -389,10 +389,10 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] TH.data_1.0-10         Rtsne_0.15             colorspace_1.4-1      
   [4] ggridges_0.5.2         XVector_0.26.0         farver_2.0.3          
-  [7] leiden_0.3.2           listenv_0.8.0          npsurv_0.4-0          
+  [7] leiden_0.3.3           listenv_0.8.0          npsurv_0.4-0          
  [10] ggrepel_0.8.1          mvtnorm_1.0-12         codetools_0.2-16      
- [13] splines_3.6.1          R.methodsS3_1.7.1      mnormt_1.5-5          
- [16] lsei_1.2-0             TFisher_0.2.0          jsonlite_1.6          
+ [13] splines_3.6.1          R.methodsS3_1.7.1      mnormt_1.5-6          
+ [16] lsei_1.2-0             TFisher_0.2.0          jsonlite_1.6.1        
  [19] ica_1.0-2              cluster_2.1.0          png_0.1-7             
  [22] R.oo_1.23.0            uwot_0.1.5             sctransform_0.2.1     
  [25] readr_1.3.1            compiler_3.6.1         httr_1.4.1            
@@ -427,4 +427,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 21.685   1.973  24.116 
+ 20.188   1.449  22.510 

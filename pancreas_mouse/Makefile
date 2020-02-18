@@ -37,7 +37,8 @@ ncores := 48
 genestoplot := Ccl9 Ei24 Gm11425 Irf6 Krit1 Kxd1 Rpl29 Slc24a5 Zfp143 \
 Tcp11 Itga1 A130010J15Rik Rrm2b Traf5 Tgm7 Gm6083 Rab40c Tacc2 Gm21983 Gm20716 \
 Kdm2b Icam1 Cyp39a1 Rgs3 Id3 Gspt2 Tspan3 Slc25a27 Brsk2 Sirt3 \
-4930526A20Rik Cox4i1 Ptprn2 Gm6750 Auts2 Meis2 Zbtb20 Kcnb2
+4930526A20Rik Cox4i1 Ptprn2 Gm6750 Auts2 Meis2 Zbtb20 Kcnb2 \
+Pabpn1 Chkb Rassf1 Kif1bp Cnot6 Slc2a3 Ssr1 1810019D21Rik Map1b Txndc12 Tmem120b Znrf3
 
 ## All methods to run quantification and create SCEs for
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
@@ -127,7 +128,8 @@ plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projection
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
 plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds \
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
-plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
+plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds
 
 
 ## -----------------------------------------------------------------------------------------------------
@@ -186,6 +188,15 @@ quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam $(chrleng
 	module load Kent_tools/20190212-linux.x86_64 && \
 	bedGraphToBigWig $(samplename).neg.tmp.bedGraph $(chrlengths) $@
 	rm -f $(samplename).neg.tmp.bedGraph
+
+plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds: \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
+quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
+$(genome) $(gtf) $(scriptdir)/plot_polyAT_coverage.R
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args genome='$(genome)' gtf='$(gtf)' bwpos='$(word 1,$^)' bwneg='$(word 2,$^)' outrds='$@'" $(scriptdir)/plot_polyAT_coverage.R Rout/plot_polyAT_coverage.Rout
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo

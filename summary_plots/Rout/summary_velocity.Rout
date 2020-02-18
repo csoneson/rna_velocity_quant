@@ -70,9 +70,26 @@ Warning messages:
 +   theme_bw() + 
 +   scale_fill_manual(values = base_method_colors, name = "") + 
 +   theme(legend.position = "none",
-+         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         strip.text = element_text(size = 8)) + 
 +   labs(x = "", 
 +        y = "Within-cell type standard deviation of latent time estimate")
+> dev.off()  
+null device 
+          1 
+> 
+> pdf("velocity_max_cosine_corr_across_datasets.pdf")
+> ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron"), 
++        aes(x = dataset, y = max_cosine_corr)) + 
++   geom_boxplot(outlier.size = 0.1, aes(fill = mtype)) + 
++   facet_wrap(~ method_short) + 
++   theme_bw() + 
++   scale_fill_manual(values = base_method_colors, name = "") + 
++   theme(legend.position = "none",
++         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
++         strip.text = element_text(size = 8)) + 
++   labs(x = "", 
++        y = "Maximal cosine correlation by cell")
 > dev.off()  
 null device 
           1 
@@ -102,7 +119,7 @@ null device
           1 
 > 
 > date()
-[1] "Sun Feb  9 22:04:45 2020"
+[1] "Mon Feb 17 10:55:04 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -155,4 +172,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  9.300   0.897  10.217 
+  9.693   0.727  11.448 

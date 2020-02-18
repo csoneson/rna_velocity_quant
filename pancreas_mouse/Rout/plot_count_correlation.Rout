@@ -805,7 +805,7 @@ null device
 > saveRDS(NULL, file = outrds)
 > 
 > date()
-[1] "Sun Feb  9 21:56:11 2020"
+[1] "Sun Feb 16 23:20:03 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -847,14 +847,14 @@ loaded via a namespace (and not attached):
  [22] sandwich_2.5-1           askpass_1.1              prettyunits_1.1.1       
  [25] colorspace_1.4-1         blob_1.2.1               rappdirs_0.3.1          
  [28] ggrepel_0.8.1            crayon_1.3.4             RCurl_1.98-1.1          
- [31] jsonlite_1.6             tximport_1.14.0          survival_3.1-8          
+ [31] jsonlite_1.6.1           tximport_1.14.0          survival_3.1-8          
  [34] zoo_1.8-7                ape_5.3                  glue_1.3.1              
  [37] gtable_0.3.0             zlibbioc_1.32.0          XVector_0.26.0          
- [40] leiden_0.3.2             BiocSingular_1.2.1       future.apply_1.4.0      
+ [40] leiden_0.3.3             BiocSingular_1.2.1       future.apply_1.4.0      
  [43] scales_1.1.0             mvtnorm_1.0-12           DBI_1.1.0               
  [46] bibtex_0.4.2.2           Rcpp_1.0.3               plotrix_3.7-7           
  [49] metap_1.3                viridisLite_0.3.0        progress_1.2.2          
- [52] reticulate_1.14          bit_1.1-15.1             rsvd_1.0.2              
+ [52] reticulate_1.14          bit_1.1-15.2             rsvd_1.0.2              
  [55] SDMTools_1.1-221.2       tsne_0.1-3               htmlwidgets_1.5.1       
  [58] httr_1.4.1               gplots_3.0.1.2           RColorBrewer_1.1-2      
  [61] ellipsis_0.3.0           TFisher_0.2.0            ica_1.0-2               
@@ -881,11 +881,11 @@ loaded via a namespace (and not attached):
 [124] codetools_0.2-16         MASS_7.3-51.4            gtools_3.8.1            
 [127] assertthat_0.2.1         openssl_1.4.1            withr_2.1.2             
 [130] sctransform_0.2.1        GenomicAlignments_1.22.1 Rsamtools_2.2.1         
-[133] mnormt_1.5-5             multcomp_1.4-12          GenomeInfoDbData_1.2.2  
+[133] mnormt_1.5-6             multcomp_1.4-12          GenomeInfoDbData_1.2.2  
 [136] hms_0.5.3                grid_3.6.1               tidyr_1.0.2             
 [139] DelayedMatrixStats_1.8.0 Rtsne_0.15               numDeriv_2016.8-1.1     
 [142] ggbeeswarm_0.6.0        
 > 
 > proc.time()
    user  system elapsed 
-491.987  21.848 525.099 
+444.144  11.677 457.543 

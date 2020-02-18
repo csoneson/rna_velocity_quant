@@ -345,7 +345,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb  9 21:50:30 2020"
+[1] "Sun Feb 16 23:13:08 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -379,11 +379,11 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] TH.data_1.0-10           Rtsne_0.15               ggbeeswarm_0.6.0        
   [4] colorspace_1.4-1         ggridges_0.5.2           XVector_0.26.0          
-  [7] BiocNeighbors_1.4.1      farver_2.0.3             leiden_0.3.2            
+  [7] BiocNeighbors_1.4.1      farver_2.0.3             leiden_0.3.3            
  [10] listenv_0.8.0            npsurv_0.4-0             bit64_0.9-7             
  [13] mvtnorm_1.0-12           codetools_0.2-16         splines_3.6.1           
- [16] R.methodsS3_1.7.1        mnormt_1.5-5             lsei_1.2-0              
- [19] TFisher_0.2.0            jsonlite_1.6             ica_1.0-2               
+ [16] R.methodsS3_1.7.1        mnormt_1.5-6             lsei_1.2-0              
+ [19] TFisher_0.2.0            jsonlite_1.6.1           ica_1.0-2               
  [22] cluster_2.1.0            png_0.1-7                R.oo_1.23.0             
  [25] uwot_0.1.5               sctransform_0.2.1        compiler_3.6.1          
  [28] httr_1.4.1               assertthat_0.2.1         Matrix_1.2-18           
@@ -404,7 +404,7 @@ loaded via a namespace (and not attached):
  [73] SDMTools_1.1-221.2       rlang_0.4.4              pkgconfig_2.0.3         
  [76] bitops_1.0-6             lattice_0.20-38          ROCR_1.0-7              
  [79] purrr_0.3.3              labeling_0.3             htmlwidgets_1.5.1       
- [82] bit_1.1-15.1             cowplot_1.0.0            tidyselect_1.0.0        
+ [82] bit_1.1-15.2             cowplot_1.0.0            tidyselect_1.0.0        
  [85] RcppAnnoy_0.0.14         plyr_1.8.5               magrittr_1.5            
  [88] R6_2.4.1                 gplots_3.0.1.2           multcomp_1.4-12         
  [91] pillar_1.4.3             withr_2.1.2              sn_1.5-5                
@@ -419,4 +419,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 32.318   5.367  37.800 
+ 33.014   5.101  42.586 

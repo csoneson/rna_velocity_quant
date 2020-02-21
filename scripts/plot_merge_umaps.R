@@ -19,7 +19,11 @@ print(dimred)
 print(methods)
 print(outrds)
 
-methods_short <- shorten_methods(methods)
+methods_short <- shorten_methods(methods) %>%
+  dplyr::filter(method %in% methods) %>%
+  dplyr::arrange(as.factor(method_short))
+methods <- methods_short$method
+names(methods) <- methods
 
 ## Individually chosen genes
 umaps <- lapply(methods, function(m) {

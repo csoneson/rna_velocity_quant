@@ -37,6 +37,8 @@ Type 'q()' to quit R.
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/pancreas_mouse"
 > print(plothelperscript)
 [1] "/tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts/plot_helpers.R"
+> print(dataset)
+[1] "Pancreas"
 > print(methods)
                                                 velocyto 
                                               "velocyto" 
@@ -167,9 +169,9 @@ null device
 > g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
 +   geom_point(alpha = 0.5) +
 +   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
-+                         name = "Concordance between velocity projections") + 
++                         name = "Concordance between\nvelocity projections") + 
 +   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
-+        title = "Individually selected genes") + 
++        title = paste0(dataset, ", individually selected genes")) + 
 +   theme_bw() + theme(legend.position = "bottom")
 > 
 > ## ------------------------------------------------------------------------- ##
@@ -194,19 +196,19 @@ null device
 > g2 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
 +   geom_point(alpha = 0.5) +
 +   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
-+                         name = "Concordance between velocity projections") + 
++                         name = "Concordance between\nvelocity projections") + 
 +   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
-+        title = "Shared genes") + 
++        title = paste0(dataset, ", shared genes")) + 
 +   theme_bw() + theme(legend.position = "bottom")
 > 
 > 
-> png(gsub("\\.rds", "_across_methods.png", outrds), width = 8, height = 4.5,
+> png(gsub("\\.rds", "_across_methods.png", outrds), width = 4.5, height = 8,
 +     unit = "in", res = 200)
 > print(cowplot::plot_grid(
 +   cowplot::plot_grid(
 +     g1 + theme(legend.position = "none"), 
 +     g2 + theme(legend.position = "none"),
-+     nrow = 1, rel_widths = c(1, 1)),
++     ncol = 1, rel_heights = c(1, 1)),
 +   cowplot::get_legend(g1), ncol = 1, rel_heights = c(1, 0.2)
 +   ))
 > dev.off()
@@ -216,7 +218,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb 16 23:12:42 2020"
+[1] "Sat Feb 22 16:07:37 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -264,4 +266,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 14.856   0.925  16.373 
+ 21.046   1.166  26.988 

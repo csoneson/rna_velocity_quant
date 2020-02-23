@@ -335,17 +335,18 @@ Reading velocity_u into new assay, putting data into data
 +   labs(x = "MDS1", y = "MDS2")
 + )
 > 
-> pdf(gsub("\\.rds$", "_mds.pdf", outrds), width = 5, height = 5)
+> pdf(gsub("\\.rds$", "_mds.pdf", outrds), width = 7, height = 0.85 * 7)
 > print(ggplot(cmd_vel_shared) + 
 +         plset + ggtitle("MDS, velocities, shared genes") + 
-+         theme(legend.position = "right"))
++         theme(legend.position = "bottom") + 
++         guides(color = guide_legend(nrow = 2, byrow = TRUE)))
 > dev.off()
 null device 
           1 
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb 16 23:13:08 2020"
+[1] "Sat Feb 22 16:30:58 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -419,4 +420,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 33.014   5.101  42.586 
+ 45.762   5.885  62.956 

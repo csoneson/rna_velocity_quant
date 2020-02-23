@@ -215,7 +215,7 @@ $(genome) $(gtf) $(scriptdir)/plot_polyAT_coverage.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args genome='$(genome)' gtf='$(gtf)' bwpos='$(word 1,$^)' bwneg='$(word 2,$^)' outrds='$@'" $(scriptdir)/plot_polyAT_coverage.R Rout/plot_polyAT_coverage.Rout
+	R CMD BATCH --no-save --no-restore "--args genome='$(genome)' gtf='$(gtf)' bwpos='$(word 1,$^)' bwneg='$(word 2,$^)' dataset='$(datalabel)' outrds='$@'" $(scriptdir)/plot_polyAT_coverage.R Rout/plot_polyAT_coverage.Rout
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo
@@ -699,7 +699,7 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
 
 plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds: \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \

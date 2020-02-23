@@ -72,10 +72,11 @@ plset <- list(
   labs(x = "MDS1", y = "MDS2")
 )
 
-pdf(gsub("\\.rds$", "_mds.pdf", outrds), width = 5, height = 5)
+pdf(gsub("\\.rds$", "_mds.pdf", outrds), width = 7, height = 0.85 * 7)
 print(ggplot(cmd_vel_shared) + 
         plset + ggtitle("MDS, velocities, shared genes") + 
-        theme(legend.position = "right"))
+        theme(legend.position = "bottom") + 
+        guides(color = guide_legend(nrow = 2, byrow = TRUE)))
 dev.off()
 
 saveRDS(NULL, file = outrds)

@@ -72,7 +72,11 @@ Type 'q()' to quit R.
 [1] "plots/shared_genes_scvelo/pfc_plot_shared_genes_scvelo.rds"
 > 
 > source(plothelperscript)
-> methods_short <- shorten_methods(methods)
+> methods_short <- shorten_methods(methods) %>%
++   dplyr::filter(method %in% methods) %>%
++   dplyr::arrange(as.factor(method_short))
+> methods <- methods_short$method
+> names(methods) <- methods
 > 
 > geneinfo <- lapply(methods, function(nm) {
 +   readr::read_csv(file.path(topdir, paste0("plots/velocity/anndata_",
@@ -183,7 +187,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb 16 22:09:28 2020"
+[1] "Sat Feb 22 16:58:57 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -236,4 +240,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-  7.245   0.744   8.273 
+ 10.049   0.741  11.105 

@@ -40,6 +40,8 @@ Type 'q()' to quit R.
 [1] "quants/cellranger/PFCsample2/outs/possorted_genome_bam_retcells_plusstrand.bw"
 > print(bwneg)
 [1] "quants/cellranger/PFCsample2/outs/possorted_genome_bam_retcells_minusstrand.bw"
+> print(dataset)
+[1] "PFC"
 > print(outrds)
 [1] "plots/polyAT_coverage/pfc_plot_polyAT_coverage.rds"
 > 
@@ -150,7 +152,7 @@ In .get_cds_IDX(mcols0$type, mcols0$phase) :
 +              stringsAsFactors = FALSE)
 + )
 > 
-> pdf(gsub("rds", "pdf", outrds), height = 4, width = 6)
+> pdf(gsub("rds", "pdf", outrds), height = 3, width = 6)
 > ggplot(df, aes(x = position, y = coverage, color = gtype)) + 
 +   geom_line(aes(size = ctype)) + 
 +   scale_size_manual(values = c(discordant = 1.5, concordant = 3),
@@ -162,14 +164,15 @@ In .get_cds_IDX(mcols0$type, mcols0$phase) :
 +                      name = "") + 
 +   theme_bw() + 
 +   labs(x = "Position relative to end of polyA/T stretch",
-+        y = "Average coverage")
++        y = "Average coverage",
++        title = dataset)
 > dev.off()
 null device 
           1 
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Tue Feb 18 09:22:39 2020"
+[1] "Sat Feb 22 17:01:33 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -232,4 +235,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
-173.506  15.020 193.792 
+138.267  11.333 167.471 

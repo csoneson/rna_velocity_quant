@@ -16,6 +16,7 @@ names(methods) <- methods
 
 print(topdir)
 print(plothelperscript)
+print(dataset)
 print(methods)
 print(outrds)
 
@@ -119,9 +120,9 @@ df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced_gentrome"), speed_ratio = 
 g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
   geom_point(alpha = 0.5) +
   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
-                        name = "Concordance between velocity projections") + 
+                        name = "Concordance between\nvelocity projections") + 
   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
-       title = "Individually selected genes") + 
+       title = paste0(dataset, ", individually selected genes")) + 
   theme_bw() + theme(legend.position = "bottom")
 
 ## ------------------------------------------------------------------------- ##
@@ -146,19 +147,19 @@ df <- data.frame(reducedDim(sce, "UMAP_alevin_spliced_gentrome"), speed_ratio = 
 g2 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) + 
   geom_point(alpha = 0.5) +
   scale_color_gradientn(colors = viridis::viridis(21), na.value = "grey50", limits = c(0, 1),
-                        name = "Concordance between velocity projections") + 
+                        name = "Concordance between\nvelocity projections") + 
   labs(x = "UMAP_alevin_spliced 1", y = "UMAP_alevin_spliced 2",
-       title = "Shared genes") + 
+       title = paste0(dataset, ", shared genes")) + 
   theme_bw() + theme(legend.position = "bottom")
 
 
-png(gsub("\\.rds", "_across_methods.png", outrds), width = 8, height = 4.5,
+png(gsub("\\.rds", "_across_methods.png", outrds), width = 4.5, height = 8,
     unit = "in", res = 200)
 print(cowplot::plot_grid(
   cowplot::plot_grid(
     g1 + theme(legend.position = "none"), 
     g2 + theme(legend.position = "none"),
-    nrow = 1, rel_widths = c(1, 1)),
+    ncol = 1, rel_heights = c(1, 1)),
   cowplot::get_legend(g1), ncol = 1, rel_heights = c(1, 0.2)
   ))
 dev.off()

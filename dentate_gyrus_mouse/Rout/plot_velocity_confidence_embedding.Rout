@@ -65,7 +65,11 @@ Type 'q()' to quit R.
 > print(outrds)
 [1] "plots/velocity_confidence_embedding/dentate_gyrus_plot_velocity_confidence_embedding.rds"
 > 
-> methods_short <- shorten_methods(methods)
+> methods_short <- shorten_methods(methods) %>%
++   dplyr::filter(method %in% methods) %>%
++   dplyr::arrange(as.factor(method_short))
+> methods <- methods_short$method
+> names(methods) <- methods
 > 
 > ## ------------------------------------------------------------------------- ##
 > ## Read data
@@ -335,7 +339,7 @@ null device
 > 
 > saveRDS(NULL, file = outrds)
 > date()
-[1] "Sun Feb 16 22:14:18 2020"
+[1] "Fri Feb 21 17:57:21 2020"
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -407,4 +411,4 @@ loaded via a namespace (and not attached):
 > 
 > proc.time()
    user  system elapsed 
- 16.789   1.378  18.574 
+ 19.510   3.014  36.652 

@@ -25,7 +25,11 @@ print(methods)
 print(outrds)
 
 source(plothelperscript)
-methods_short <- shorten_methods(methods)
+methods_short <- shorten_methods(methods) %>%
+  dplyr::filter(method %in% methods) %>%
+  dplyr::arrange(as.factor(method_short))
+methods <- methods_short$method
+names(methods) <- methods
 
 geneinfo <- lapply(methods, function(nm) {
   readr::read_csv(file.path(topdir, paste0("plots/velocity/anndata_",

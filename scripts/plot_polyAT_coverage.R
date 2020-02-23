@@ -17,6 +17,7 @@ print(genome)
 print(gtf)
 print(bwpos)
 print(bwneg)
+print(dataset)
 print(outrds)
 
 ## Read genome sequence
@@ -119,7 +120,7 @@ df <- dplyr::bind_rows(
              stringsAsFactors = FALSE)
 )
 
-pdf(gsub("rds", "pdf", outrds), height = 4, width = 6)
+pdf(gsub("rds", "pdf", outrds), height = 3, width = 6)
 ggplot(df, aes(x = position, y = coverage, color = gtype)) + 
   geom_line(aes(size = ctype)) + 
   scale_size_manual(values = c(discordant = 1.5, concordant = 3),
@@ -131,7 +132,8 @@ ggplot(df, aes(x = position, y = coverage, color = gtype)) +
                      name = "") + 
   theme_bw() + 
   labs(x = "Position relative to end of polyA/T stretch",
-       y = "Average coverage")
+       y = "Average coverage",
+       title = dataset)
 dev.off()
 
 saveRDS(NULL, file = outrds)

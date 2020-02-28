@@ -1,0 +1,2931 @@
+index,clusters,age(days),clusters_enlarged
+AAACATACCCATGA,Granule immature,35,Granule-immature
+AAACATACCGTAGT,Radial Glia-like,12,Radial Glia-like
+AAACATACGAGAGC,Granule mature,35,Granule-mature
+AAACATACTGAGGG,Granule immature,12,Granule-immature
+AAACATTGGCATCA,Granule immature,35,Granule-immature
+AAACATTGTTTGTC,Neuroblast,12,Neuroblast 2
+AAACCGTGCACTCC,Granule mature,35,Granule-mature
+AAACCGTGCGTAGT,Granule immature,12,Granule-immature
+AAACCGTGGATAAG,Microglia,12,Microglia
+AAACCGTGGTTCGA,Granule mature,35,Granule-mature
+AAACGCACACTGTG,Cajal Retzius,35,Cajal-Retzius
+AAACGCACCCCACT,Neuroblast,12,Neuroblast 2
+AAACGCACCTTCCG,Granule immature,35,Granule-immature
+AAACGCTGAAAACG,Granule immature,35,Granule-immature
+AAACGCTGATACCG,Granule mature,35,Granule-mature
+AAACGCTGTTCGTT,OPC,35,OPC
+AAACGGCTTCGTTT,Neuroblast,12,Neuroblast 2
+AAACTTGATGCTCC,Granule mature,35,Granule-mature
+AAAGACGAAAGTGA,Granule mature,35,Granule-mature
+AAAGACGACGTAGT,Neuroblast,12,Neuroblast 2
+AAAGACGAGAATGA,Neuroblast,12,Neuroblast 2
+AAAGACGATACTTC,Granule mature,35,Granule-mature
+AAAGACGATCTCGC,Cck-Tox,35,Cck-Tox
+AAAGATCTCCTCGT,Microglia,35,Microglia
+AAAGATCTCCTGAA,Granule mature,35,Granule-mature
+AAAGATCTGGTCTA,Neuroblast,12,Neuroblast 2
+AAAGCAGACCAATG,Granule mature,35,Granule-mature
+AAAGCAGACTGCAA,Granule mature,35,Granule-mature
+AAAGCAGATGCTAG,Granule immature,12,Granule-immature
+AAAGGCCTACCACA,Granule immature,35,Granule-immature
+AAAGGCCTAGCTAC,Granule mature,35,Granule-mature
+AAAGGCCTCCTGAA,Granule mature,35,Granule-mature
+AAAGGCCTTTCTTG,Granule immature,12,Granule-immature
+AAAGTTTGTACGCA,Granule mature,35,Granule-mature
+AAATACTGACTAGC,Granule mature,35,Granule-mature
+AAATACTGACTTTC,GABA,35,GABA-Lhx6
+AAATACTGCTAGAC,Granule immature,12,Granule-immature
+AAATACTGGTTGAC,Radial Glia-like,35,Radial Glia-like
+AAATACTGTGCTAG,Granule mature,35,Granule-mature
+AAATCAACCCCTCA,Endothelial,12,Endothelial
+AAATCAACGTTTGG,Granule immature,12,Granule-immature
+AAATCATGAAAGCA,Granule mature,35,Granule-mature
+AAATCATGGGGCAA,Granule mature,35,Granule-mature
+AAATCATGTAAGCC,Granule mature,35,Granule-mature
+AAATCATGTGTCAG,Granule immature,12,Granule-immature
+AAATCCCTGGAGTG,Granule immature,12,Granule-immature
+AAATCCCTGGATTC,Granule mature,35,Granule-mature
+AAATCCCTGTTTGG,Granule mature,35,Granule-mature
+AAATCTGAAGCCTA,Astrocytes,35,Astrocytes
+AAATCTGAGGAGCA,Granule immature,12,Granule-immature
+AAATGGGAACACTG,Granule mature,35,Granule-mature
+AAATGGGAACCCAA,Endothelial,12,Endothelial
+AAATGTTGCGACAT,Granule immature,12,Granule-immature
+AAATGTTGGGACTT,Granule mature,35,Granule-mature
+AAATTCGAGTAAGA,Neuroblast,12,Neuroblast 2
+AAATTGACGCTACA,Neuroblast,35,Neuroblast 2
+AACAAACTAGCCAT,Granule mature,12,Granule-mature
+AACAAACTGACAGG,Granule immature,12,Granule-immature
+AACAAACTGGTAGG,Granule mature,35,Granule-mature
+AACAATACCTCCAC,Granule mature,35,Granule-mature
+AACACGTGATGTCG,Endothelial,12,Endothelial
+AACACGTGGGGACA,Granule mature,35,Granule-mature
+AACACGTGTCACCC,Granule immature,12,Granule-immature
+AACACTCTTGGATC,Granule mature,35,Granule-mature
+AACACTCTTGTCTT,Granule immature,35,Granule-immature
+AACAGAGAAATCGC,OPC,35,OPC
+AACAGAGACGAATC,Astrocytes,35,Astrocytes
+AACAGAGAGATAAG,Granule mature,35,Granule-mature
+AACAGCACCAAAGA,OPC,12,NFOL
+AACATATGGCTACA,Neuroblast,35,Neuroblast 2
+AACATTGAACCTTT,Granule immature,35,Granule-immature
+AACATTGACAACTG,Neuroblast,12,Neuroblast 2
+AACATTGACCGATA,Granule mature,35,Granule-mature
+AACCACGAAAGCCT,Endothelial,35,Endothelial
+AACCACGACAGGAG,Granule immature,12,Granule-immature
+AACCAGTGATGCCA,OL,35,OL
+AACCAGTGGGTAGG,Granule mature,35,Granule-mature
+AACCAGTGGTACCA,Microglia,12,Microglia
+AACCGATGCTGGTA,Granule immature,35,Granule-immature
+AACCGATGTATGCG,Granule immature,12,Granule-immature
+AACCGCCTATGCCA,Granule mature,35,Granule-mature
+AACCGCCTTCATTC,Granule mature,35,Granule-mature
+AACCTACTATCTTC,Granule mature,35,Granule-mature
+AACCTACTCTTGTT,Granule immature,12,Granule-immature
+AACCTACTGATAGA,Granule mature,35,Granule-mature
+AACCTTACAGCGGA,Granule immature,12,Granule-immature
+AACCTTTGAGAATG,Granule immature,35,Granule-immature
+AACCTTTGCCTTCG,Granule immature,35,Granule-immature
+AACCTTTGCGGTAT,Neuroblast,12,Neuroblast 2
+AACGCAACGACGGA,Microglia,12,Microglia
+AACGCATGCAGGAG,Neuroblast,12,Neuroblast 2
+AACGCATGCTTGCC,Granule mature,35,Granule-mature
+AACGCATGGACGAG,Granule mature,35,Granule-mature
+AACGCATGTTGCAG,Granule mature,12,Granule-mature
+AACGCCCTCATTGG,Astrocytes,35,Astrocytes
+AACGCCCTGGGCAA,Neuroblast,12,Neuroblast 2
+AACGCCCTTTCCGC,Neuroblast,12,Neuroblast 2
+AACGGTACTCCGTC,Granule mature,35,Granule-mature
+AACGGTTGAACAGA,Granule mature,35,Granule-mature
+AACGGTTGGAAACA,Granule mature,35,Granule-mature
+AACGGTTGGCCCTT,Granule mature,35,Granule-mature
+AACGGTTGGCTGAT,GABA,35,GABA-Lhx6
+AACGGTTGGGATTC,Granule mature,35,Granule-mature
+AACGTCGAACCAGT,Granule mature,35,Granule-mature
+AACGTCGAGCGGAA,Neuroblast,12,Neuroblast 2
+AACGTCGAGTACGT,Granule mature,35,Granule-mature
+AACGTGTGAGTGTC,Granule mature,35,Granule-mature
+AACGTGTGCGACAT,Granule immature,35,Granule-immature
+AACGTTCTAAGGTA,Granule mature,35,Granule-mature
+AACGTTCTAGTCAC,Granule immature,12,Granule-immature
+AACGTTCTTAACCG,Radial Glia-like,12,nIPC
+AACGTTCTTCCCAC,Astrocytes,12,Astrocytes
+AACTACCTAGTGTC,Granule mature,35,Granule-mature
+AACTACCTGAGCTT,Granule immature,12,Granule-immature
+AACTCACTAGAGGC,Granule immature,35,Granule-immature
+AACTCGGAAAACAG,Granule mature,35,Granule-mature
+AACTGTCTAAAAGC,Granule immature,35,Granule-immature
+AACTGTCTCGTACA,Neuroblast,12,Neuroblast 2
+AACTTGCTATGTCG,Granule immature,35,Granule-immature
+AACTTGCTTACTTC,Astrocytes,35,Astrocytes
+AAGAACGAGAGCAG,Neuroblast,35,Neuroblast 2
+AAGAACGAGTACAC,Astrocytes,35,Astrocytes
+AAGAACGATCCTAT,Granule mature,35,Granule-mature
+AAGAAGACCTGAAC,Granule mature,35,Granule-mature
+AAGAAGACGCTGTA,Neuroblast,35,Neuroblast 2
+AAGAAGACGTCGAT,Granule mature,35,Granule-mature
+AAGAAGACGTTTGG,Granule immature,12,Granule-immature
+AAGAATCTCGCAAT,Granule mature,35,Granule-mature
+AAGAATCTGTGTAC,Granule immature,12,Granule-immature
+AAGAATCTTTACCT,Granule mature,35,Granule-mature
+AAGAATCTTTCGTT,Neuroblast,12,Neuroblast 2
+AAGACAGACACACA,Astrocytes,35,Astrocytes
+AAGACAGAGAGGGT,Granule mature,35,Granule-mature
+AAGACAGATCGCTC,Granule mature,35,Granule-mature
+AAGAGATGCTCCAC,Granule mature,35,Granule-mature
+AAGCAAGAACCCTC,Granule immature,12,Granule-immature
+AAGCAAGAACTCTT,Granule mature,35,Granule-mature
+AAGCAAGAAGCTAC,GABA,12,GABA-Lhx6
+AAGCAAGAAGTCTG,Cajal Retzius,12,Cajal-Retzius
+AAGCAAGACACACA,Neuroblast,12,Neuroblast 2
+AAGCAAGAGGTCAT,Granule immature,35,Granule-immature
+AAGCAAGATCCTTA,Granule mature,35,Granule-mature
+AAGCCAACTTGGCA,Neuroblast,12,Neuroblast 2
+AAGCCATGCTGTCC,Granule immature,35,Granule-immature
+AAGCCATGTGTGAC,Neuroblast,12,Neuroblast 1
+AAGCCATGTTTGTC,Neuroblast,12,Neuroblast 2
+AAGCCTGAATCTTC,Granule mature,35,Granule-mature
+AAGCCTGACATGAC,Granule mature,35,Granule-mature
+AAGCCTGACCGTTC,Granule immature,35,Granule-immature
+AAGCCTGAGCATAC,Granule immature,35,Granule-immature
+AAGCGACTTGTGGT,Granule mature,35,Granule-mature
+AAGCGTACCACACA,Astrocytes,12,Astrocytes
+AAGCGTACCACTCC,Granule immature,35,Granule-immature
+AAGCGTACGGTGTT,Granule mature,35,Granule-mature
+AAGCGTACTCGATG,Granule mature,12,Granule-mature
+AAGGCTACCTCATT,Granule immature,35,Granule-immature
+AAGGCTACCTCCAC,Granule immature,12,Granule-immature
+AAGGCTTGACCATG,Granule mature,35,Granule-mature
+AAGGTCTGCTAGCA,Granule mature,35,Granule-mature
+AAGGTCTGGCATCA,Granule mature,35,Granule-mature
+AAGGTCTGTTCTGT,Granule mature,35,Granule-mature
+AAGGTGCTATGGTC,Astrocytes,12,Astrocytes
+AAGGTGCTTCCCAC,Granule immature,35,Granule-immature
+AAGTAGGAAGAGTA,Granule immature,12,Granule-immature
+AAGTAGGAATCACG,Neuroblast,12,Neuroblast 2
+AAGTATACACTCAG,Granule immature,12,Granule-immature
+AAGTATACTCTCAT,Neuroblast,12,Neuroblast 2
+AAGTCCGAATCACG,Neuroblast,12,Neuroblast 2
+AAGTCCGACGGGAA,Granule immature,35,Granule-immature
+AAGTCCGATCTCTA,Microglia,35,PVM
+AAGTGCACAGCACT,Mossy,35,Mossy-Klk8
+AAGTGCACGTTGAC,Cajal Retzius,35,Cajal-Retzius
+AAGTGGCTAGCTCA,Mossy,35,Mossy-Klk8
+AAGTGGCTCCGATA,Astrocytes,12,Astrocytes
+AAGTGGCTGGTACT,Granule immature,12,Granule-immature
+AAGTGGCTGGTAGG,Neuroblast,35,Neuroblast 2
+AAGTGGCTGTTCTT,Granule immature,35,Granule-immature
+AATAACACTCGCTC,Granule mature,35,Granule-mature
+AATAAGCTAGTCGT,Granule mature,35,Granule-mature
+AATAAGCTGGTCAT,Granule mature,35,Granule-mature
+AATAAGCTTGTCTT,Granule mature,35,Granule-mature
+AATAAGCTTTGCTT,Mossy,12,Mossy-Cyp26b1
+AATACCCTCTAGCA,Granule mature,35,Granule-mature
+AATACCCTGAACTC,Granule mature,35,Granule-mature
+AATACCCTGCTGAT,Granule immature,35,Granule-immature
+AATACTGAAGTAGA,Granule mature,35,Granule-mature
+AATACTGACGCATA,Mossy,12,Mossy-Adcyap1
+AATACTGATGAACC,Neuroblast,35,Neuroblast 2
+AATAGGGAAGTGTC,Granule immature,35,Granule-immature
+AATAGGGAATACCG,Astrocytes,12,Astrocytes
+AATAGGGACTGTGA,GABA,35,GABA-Lhx6
+AATAGGGAGGTACT,Granule mature,35,Granule-mature
+AATATCGAAAGAAC,Cck-Tox,35,Cck-Tox
+AATATCGACAGAAA,Granule mature,35,Granule-mature
+AATATCGACGTACA,Granule mature,35,Granule-mature
+AATATCGAGGGATG,Astrocytes,12,Astrocytes
+AATATCGAGTCGAT,Granule immature,35,Granule-immature
+AATATCGATGCTAG,Neuroblast,12,Neuroblast 2
+AATCCTACCATCAG,Granule mature,12,Granule-mature
+AATCCTACCCTGTC,Granule mature,35,Granule-mature
+AATCCTTGACCAGT,Granule immature,35,Granule-immature
+AATCCTTGTCCAGA,Granule immature,12,Granule-immature
+AATCGGTGCTTGGA,Neuroblast,12,Neuroblast 2
+AATCTAGAACGTAC,Granule immature,12,Granule-immature
+AATCTCACAGACTC,Granule mature,35,Granule-mature
+AATCTCACTCTACT,Granule immature,35,Granule-immature
+AATGCGTGCAAGCT,Granule immature,12,Granule-immature
+AATGCGTGCCTTGC,Neuroblast,12,Neuroblast 2
+AATGCGTGTCACCC,Granule immature,12,Granule-immature
+AATGGAGAGAGATA,OL,35,OL
+AATGGAGAGAGGCA,Granule mature,35,Granule-mature
+AATGGCTGCTTCCG,Granule mature,35,Granule-mature
+AATGTAACATTCTC,Granule mature,35,Granule-mature
+AATGTAACGAATAG,Granule immature,12,Granule-immature
+AATGTCCTATGGTC,Granule immature,12,Granule-immature
+AATGTTGACGTCTC,Neuroblast,12,Neuroblast 2
+AATGTTGATTTGTC,Granule mature,35,Granule-mature
+AATTACGATTATCC,Radial Glia-like,35,Radial Glia-like
+AATTGATGCTGTGA,Granule immature,35,Granule-immature
+AATTGATGTCATTC,Granule immature,35,Granule-immature
+AATTGATGTCGTGA,Neuroblast,12,Neuroblast 2
+AATTGTGAGAGATA,Microglia,35,Microglia
+AATTGTGAGGAAGC,Granule immature,12,Granule-immature
+AATTGTGAGTTGCA,Granule immature,12,Granule-immature
+AATTGTGATGCGTA,GABA,35,GABA-Lhx6
+ACAAAGGAATCTCT,Granule immature,12,Granule-immature
+ACAAAGGAGCAGAG,Granule immature,12,Granule-immature
+ACAAAGGATCGCTC,GABA,35,GABA-Lhx6
+ACAAATTGGGTCTA,Granule immature,35,Granule-immature
+ACAACCGAACCCTC,Astrocytes,12,Astrocytes
+ACAAGAGACGCTAA,Endothelial,12,Endothelial
+ACAAGAGACTCTTA,Cajal Retzius,12,Cajal-Retzius
+ACAAGAGATGTGAC,Granule immature,35,Granule-immature
+ACAAGCACACTACG,Neuroblast,35,Neuroblast 2
+ACAAGCACATTTCC,Granule immature,35,Granule-immature
+ACAAGCACCCGCTT,Granule mature,35,Granule-mature
+ACAATAACACCTAG,Granule immature,12,Granule-immature
+ACAATTGAAGCCAT,OL,35,OL
+ACAATTGACATTTC,Granule mature,35,Granule-mature
+ACAATTGATCTTCA,OPC,35,OPC
+ACAATTGATTCCAT,Endothelial,12,Endothelial
+ACACAGACCTAGCA,Granule immature,12,Granule-immature
+ACACAGACGAGGGT,Granule mature,35,Granule-mature
+ACACCCTGCCCTAC,Granule mature,35,Granule-mature
+ACACCCTGCTACGA,Granule immature,12,Granule-immature
+ACACCCTGTCAAGC,Granule immature,12,Granule-immature
+ACACCCTGTCCTCG,Granule mature,35,Granule-mature
+ACACGAACGGAAAT,Neuroblast,12,Neuroblast 2
+ACACGATGAAAGTG,Granule mature,35,Granule-mature
+ACACGATGACACCA,Endothelial,35,Endothelial
+ACACGATGAGAGTA,Neuroblast,12,Neuroblast 2
+ACACGATGCGCAAT,Granule mature,35,Granule-mature
+ACACGATGGGTACT,Granule immature,12,Granule-immature
+ACACGATGTGCTAG,Radial Glia-like,12,Radial Glia-like
+ACACGTGAACCAGT,Neuroblast,35,Neuroblast 1
+ACACGTGAGACAGG,Endothelial,35,Pericytes
+ACACGTGATGACCA,Granule mature,35,Granule-mature
+ACAGACACGACAGG,Mossy,12,Mossy-Cyp26b1
+ACAGACACGTACGT,Endothelial,35,Pericytes
+ACAGACACTGCAAC,Neuroblast,12,Neuroblast 1
+ACAGACACTTCTTG,Granule mature,35,Granule-mature
+ACAGCAACTGTGGT,Granule immature,35,Granule-immature
+ACAGGTACCACTAG,Neuroblast,12,Neuroblast 2
+ACAGGTACGAGGCA,OPC,12,OPC
+ACAGGTACGTGCAT,Cajal Retzius,12,Cajal-Retzius
+ACAGGTACTGCACA,Neuroblast,12,Neuroblast 2
+ACAGTCGAGGGACA,Granule immature,12,Granule-immature
+ACAGTCGATCTCTA,Granule mature,35,Granule-mature
+ACAGTGACGGAGGT,Granule mature,35,Granule-mature
+ACAGTGTGCCGTTC,Granule mature,35,Granule-mature
+ACAGTTCTGCAGAG,Granule mature,35,Granule-mature
+ACAGTTCTGGTTTG,Granule immature,12,Granule-immature
+ACAGTTCTGTATCG,Neuroblast,12,Neuroblast 2
+ACATCACTTACGAC,Granule immature,12,Granule-immature
+ACATCACTTACTGG,Neuroblast,35,Neuroblast 2
+ACATGGTGAGCAAA,Neuroblast,12,Neuroblast 2
+ACATGGTGCCGCTT,GABA,35,GABA-Lhx6
+ACATGGTGCTACGA,Granule mature,35,Granule-mature
+ACATGGTGCTGGAT,Granule immature,35,Granule-immature
+ACATGGTGTTGCTT,Granule immature,35,Granule-immature
+ACATTCTGCATACG,Microglia,12,Microglia
+ACATTCTGTTCCAT,Endothelial,12,Endothelial
+ACCAACGACCCTTG,Granule immature,12,Granule-immature
+ACCAACGATCACGA,Granule mature,35,Granule-mature
+ACCACAGAAACGAA,Granule immature,12,Granule-immature
+ACCACAGAGGTTTG,Astrocytes,35,Astrocytes
+ACCACCTGCGACTA,Mossy,35,Mossy-Klk8
+ACCACCTGCTGAGT,Granule mature,35,Granule-mature
+ACCACGCTGGTGTT,GABA,12,GABA-Cnr1
+ACCAGTGACTACTT,Granule mature,35,Granule-mature
+ACCAGTGAGAATGA,Granule immature,35,Granule-immature
+ACCAGTGAGGAGGT,Astrocytes,12,Astrocytes
+ACCATTACCACTGA,Granule immature,12,Granule-immature
+ACCATTTGTATCGG,Granule mature,35,Granule-mature
+ACCCAAGAACCTGA,Granule immature,35,Granule-immature
+ACCCAAGACTTGGA,Granule mature,35,Granule-mature
+ACCCAAGAGGTCAT,Granule immature,12,Granule-immature
+ACCCACTGAGAGGC,Granule mature,35,Granule-mature
+ACCCACTGAGGTCT,Granule mature,12,Granule-mature
+ACCCACTGATCGAC,Granule immature,12,Granule-immature
+ACCCACTGTCCAGA,Granule mature,35,Granule-mature
+ACCCACTGTGAGAA,Granule mature,35,Granule-mature
+ACCCAGCTTTCGTT,nIPC,12,nIPC
+ACCCGTTGCAACCA,Granule mature,35,Granule-mature
+ACCCGTTGCCACCT,Neuroblast,12,Neuroblast 2
+ACCCGTTGCTGAGT,Granule mature,35,Granule-mature
+ACCCGTTGTGATGC,Granule immature,35,Granule-immature
+ACCGAAACGAGGTG,Granule mature,35,Granule-mature
+ACCGAAACGTAGGG,GABA,35,GABA-Cnr1
+ACCGCGGATTCCAT,Granule mature,35,Granule-mature
+ACCGTGCTCACCAA,Granule mature,35,Granule-mature
+ACCGTGCTTGAAGA,OPC,35,OPC
+ACCTATTGCCTTAT,Granule mature,35,Granule-mature
+ACCTCCGAGACAGG,Microglia,35,Microglia
+ACCTCCGAGTTGAC,Granule immature,12,Granule-immature
+ACCTCGTGAGCACT,Granule mature,35,Granule-mature
+ACCTCGTGCAGAGG,Neuroblast,12,Neuroblast 2
+ACCTCGTGTTCATC,OL,35,OL
+ACCTGAGAAAGGCG,Granule mature,35,Granule-mature
+ACCTGAGAGCTTCC,Granule mature,35,Granule-mature
+ACCTGAGATCAGTG,Cajal Retzius,12,Cajal-Retzius
+ACCTGGCTCGCCTT,Granule mature,35,Granule-mature
+ACCTGGCTGAGGCA,Granule mature,35,Granule-mature
+ACCTGGCTTGCATG,Granule mature,35,Granule-mature
+ACCTTTGAACACAC,Neuroblast,12,Neuroblast 2
+ACCTTTGATGCTCC,Granule immature,35,Granule-immature
+ACCTTTGATTGTGG,Astrocytes,12,Astrocytes
+ACGAACACCCCTTG,Granule immature,12,Granule-immature
+ACGAACTGCCTGTC,Neuroblast,12,Neuroblast 2
+ACGAAGCTGTGTTG,Granule mature,35,Granule-mature
+ACGACAACATTGGC,Granule immature,35,Granule-immature
+ACGACAACTACGAC,Granule mature,35,Granule-mature
+ACGACCCTAGCACT,Neuroblast,12,Neuroblast 2
+ACGACCCTAGCGGA,Granule immature,12,Granule-immature
+ACGACCCTGGTATC,Mossy,12,Mossy-Adcyap1
+ACGACCCTTTCTTG,Mossy,12,Mossy-Adcyap1
+ACGACCCTTTGGCA,Granule mature,35,Granule-mature
+ACGAGGGACAATCG,Neuroblast,12,Neuroblast 2
+ACGATCGAGTATGC,Neuroblast,12,Neuroblast 2
+ACGATGACATGTCG,OL,35,OL
+ACGATGACCCCTAC,Granule mature,35,Granule-mature
+ACGATGACTGAGGG,Microglia,35,Microglia
+ACGCAATGGATACC,Microglia,12,Microglia
+ACGCAATGTCGCCT,Granule mature,35,Granule-mature
+ACGCCTTGCATGCA,Granule immature,35,Granule-immature
+ACGCCTTGGTAAGA,Radial Glia-like,12,Radial Glia-like
+ACGCCTTGGTAGCT,Neuroblast,12,Neuroblast 2
+ACGCGGTGGAGGCA,Granule immature,12,Granule-immature
+ACGCGGTGTGACTG,Cajal Retzius,12,Cajal-Retzius
+ACGCTCACGCAGTT,Astrocytes,35,Astrocytes
+ACGCTGCTGGTCTA,Granule mature,35,Granule-mature
+ACGCTGCTTCTTTG,Granule immature,35,Granule-immature
+ACGCTGCTTTGTCT,Neuroblast,35,Neuroblast 2
+ACGGAGGAGTACAC,Granule mature,35,Granule-mature
+ACGGATTGACCTGA,Granule mature,35,Granule-mature
+ACGGATTGCCAACA,Astrocytes,35,Astrocytes
+ACGGATTGCCCTCA,Radial Glia-like,35,Radial Glia-like
+ACGGCGTGTCGATG,Mossy,12,Mossy-Cyp26b1
+ACGGCGTGTGTGCA,Granule mature,12,Granule-mature
+ACGGCTCTACAGTC,Granule mature,35,Granule-mature
+ACGGCTCTCTCATT,Granule immature,12,Granule-immature
+ACGGCTCTGGCGAA,Granule mature,35,Granule-mature
+ACGGGAGACAGTTG,OPC,12,OPC
+ACGGGAGAGCTCCT,Granule immature,12,Granule-immature
+ACGGTAACAGTACC,Granule mature,35,Granule-mature
+ACGGTAACCATTGG,Granule mature,35,Granule-mature
+ACGGTATGACTACG,Granule mature,35,Granule-mature
+ACGGTATGGAAGGC,Granule immature,12,Granule-immature
+ACGTAGACAAGTAG,Granule mature,35,Granule-mature
+ACGTAGACACGTTG,Granule mature,12,Granule-mature
+ACGTAGACCTCTTA,Neuroblast,12,Neuroblast 2
+ACGTCAGACAAGCT,Granule mature,35,Granule-mature
+ACGTCAGACTTATC,Cck-Tox,35,Cck-Tox
+ACGTCAGATGGAAA,Granule mature,35,Granule-mature
+ACGTCGCTACCTGA,Granule mature,35,Granule-mature
+ACGTCGCTACTCTT,Granule mature,35,Granule-mature
+ACGTGATGAGGCGA,Radial Glia-like,35,Radial Glia-like
+ACGTGATGCTTCGC,Granule immature,12,Granule-immature
+ACGTGATGGTAAAG,Granule immature,35,Granule-immature
+ACGTGATGTCTCCG,Astrocytes,35,Astrocytes
+ACGTGCCTAGCCTA,Neuroblast,12,Neuroblast 2
+ACGTGCCTTCATTC,Granule mature,35,Granule-mature
+ACGTTACTAGGGTG,Endothelial,35,Pericytes
+ACGTTACTATTCTC,Granule mature,35,Granule-mature
+ACGTTACTCCTATT,Neuroblast,35,Neuroblast 2
+ACGTTACTTTGTGG,Radial Glia-like,35,Radial Glia-like
+ACGTTGGATTTCAC,Neuroblast,12,Neuroblast 2
+ACGTTTACGATAGA,Granule mature,35,Granule-mature
+ACGTTTACGGAACG,Granule immature,12,Granule-immature
+ACTAAAACGTTCAG,Granule immature,12,Granule-immature
+ACTACGGACTGAAC,Microglia,12,Microglia
+ACTACGGACTTAGG,Neuroblast,12,Neuroblast 2
+ACTACGGAGTACAC,Endothelial,35,Pericytes
+ACTACTACCCTACC,Granule immature,12,Granule-immature
+ACTACTACGCTTAG,Astrocytes,35,Astrocytes
+ACTACTACTCGCCT,Granule immature,35,Granule-immature
+ACTACTACTGAAGA,Neuroblast,12,Neuroblast 2
+ACTAGGTGACCAGT,Microglia,12,Microglia
+ACTAGGTGGTCTGA,Granule mature,12,Granule-mature
+ACTATCACGTGCTA,Mossy,12,Mossy-Cyp26b1
+ACTATCACTCTCGC,Granule immature,12,Granule-immature
+ACTCCCGAGCCAAT,Mossy,12,Mossy-Adcyap1
+ACTCCTCTCAGTTG,Granule immature,35,Granule-immature
+ACTCCTCTCTGTCC,Mossy,12,Mossy-Cyp26b1
+ACTCCTCTTAAGCC,Neuroblast,12,Neuroblast 2
+ACTCGAGACGTAAC,Granule mature,35,Granule-mature
+ACTCGCACGGACTT,Granule mature,35,Granule-mature
+ACTCGCACTACGAC,nIPC,12,nIPC
+ACTCGCACTCTACT,Astrocytes,12,Astrocytes
+ACTCGCACTGCTCC,Mossy,35,Mossy-Cyp26b1
+ACTCTATGCCAGTA,Granule mature,35,Granule-mature
+ACTCTCCTCGGAGA,Granule mature,35,Granule-mature
+ACTGAGACGCCCTT,Granule immature,12,Granule-immature
+ACTGAGACTTCGTT,Granule immature,12,Granule-immature
+ACTGCCACGGAAGC,Cajal Retzius,12,Cajal-Retzius
+ACTGCCTGGTCGTA,Granule immature,12,Granule-immature
+ACTGGCCTTATCTC,Granule mature,35,Granule-mature
+ACTGGCCTTGAGCT,Granule mature,35,Granule-mature
+ACTGTGGAACCTAG,Granule mature,35,Granule-mature
+ACTGTGGAAGTTCG,Granule mature,35,Granule-mature
+ACTGTGGAATGTGC,Granule immature,35,Granule-immature
+ACTGTGGACGTAGT,Granule immature,35,Granule-immature
+ACTGTGGAGGTCAT,Granule mature,35,Granule-mature
+ACTGTGGAGGTTTG,Granule mature,35,Granule-mature
+ACTGTGGATATGGC,Granule immature,35,Granule-immature
+ACTGTTACTCAAGC,Granule mature,12,Granule-mature
+ACTGTTACTGTCCC,Astrocytes,35,Astrocytes
+ACTTAAGAACGCTA,Neuroblast,12,Neuroblast 2
+ACTTAAGAGGAGCA,Granule immature,12,Granule-immature
+ACTTAAGAGTACGT,Granule immature,12,Granule-immature
+ACTTAGCTCATACG,Granule mature,35,Granule-mature
+ACTTAGCTCATTCT,Granule mature,35,Granule-mature
+ACTTAGCTGGTTAC,Neuroblast,12,Neuroblast 2
+ACTTAGCTTCTGGA,Granule immature,12,Granule-immature
+ACTTCAACTAGAAG,Granule mature,35,Granule-mature
+ACTTCCCTACCCTC,Radial Glia-like,12,nIPC
+ACTTGACTCATGGT,OPC,35,nIPC
+ACTTGACTGGAGTG,OPC,35,OPC
+ACTTGGGAGTAAAG,Granule immature,12,Granule-immature
+ACTTGGGATCCTCG,Granule mature,35,Granule-mature
+ACTTGTACATCACG,Granule mature,35,Granule-mature
+ACTTTGTGAGTACC,Granule immature,12,Granule-immature
+ACTTTGTGTTAGGC,Granule mature,35,Granule-mature
+AGAAACGACTGCTC,Granule immature,12,Granule-immature
+AGAAACGATTGGTG,Granule immature,35,Granule-immature
+AGAAAGTGAACCAC,Granule immature,12,Granule-immature
+AGAAAGTGGCGTAT,Granule mature,35,Granule-mature
+AGAACAGATACTGG,Granule mature,35,Granule-mature
+AGAACGCTCTACCC,Granule mature,35,Granule-mature
+AGAACGCTGTTAGC,Granule mature,35,Granule-mature
+AGAAGATGCTAGCA,Granule immature,35,Granule-immature
+AGAAGATGGTACGT,Microglia,12,Microglia
+AGAAGATGTTGTCT,Astrocytes,12,Astrocytes
+AGAATACTCGGGAA,Granule mature,35,Granule-mature
+AGAATACTCTTGTT,Granule immature,12,Granule-immature
+AGAATTTGAACCTG,GABA,35,GABA-Cnr1
+AGAATTTGTGCCTC,Granule immature,35,Granule-immature
+AGACACACTTTCTG,Astrocytes,12,Astrocytes
+AGACACTGCGGAGA,Granule immature,12,Granule-immature
+AGACACTGTAGAGA,Granule mature,35,Granule-mature
+AGACCTGACCATAG,Neuroblast,12,Neuroblast 2
+AGACCTGAGTACGT,Granule mature,35,Granule-mature
+AGACGTACAACAGA,Cck-Tox,35,Cck-Tox
+AGACGTACTCCTAT,Neuroblast,12,Neuroblast 2
+AGACGTACTTCATC,Granule immature,12,Granule-immature
+AGACTCGAACCAAC,Neuroblast,12,Neuroblast 2
+AGACTCGATGGATC,Granule immature,12,Granule-immature
+AGACTGACCCTCGT,Granule mature,35,Granule-mature
+AGACTGACCTGTAG,Granule immature,12,Granule-immature
+AGACTGACTCAGGT,Granule mature,35,Granule-mature
+AGACTTCTCTTAGG,Neuroblast,12,Neuroblast 2
+AGAGAAACAACCAC,Granule immature,35,Granule-immature
+AGAGAAACCCCAAA,Granule immature,35,Granule-immature
+AGAGAAACTTCGCC,Microglia,12,Microglia
+AGAGAATGCTGACA,Granule mature,35,Granule-mature
+AGAGATGACTAAGC,Granule mature,35,Granule-mature
+AGAGATGAGCTATG,Granule mature,35,Granule-mature
+AGAGCGGATAGCCA,Granule immature,12,Granule-immature
+AGAGCTACGAAACA,Granule immature,12,Granule-immature
+AGAGGTCTTCGTTT,Radial Glia-like,12,Radial Glia-like
+AGAGTCACTAGAGA,Granule immature,35,Granule-immature
+AGAGTCTGTCCAGA,Endothelial,35,Pericytes
+AGAGTGCTACTTTC,Neuroblast,12,Neuroblast 1
+AGAGTGCTAGCCAT,Endothelial,12,Endothelial
+AGAGTGCTCGTAGT,Neuroblast,12,Neuroblast 2
+AGATATACATTGGC,Neuroblast,35,Neuroblast 2
+AGATATACCGAGTT,Granule mature,35,Granule-mature
+AGATATACTTTGTC,Granule immature,12,Granule-immature
+AGATATTGCCCTCA,Granule mature,35,Granule-mature
+AGATCGTGGGTCTA,Granule mature,35,Granule-mature
+AGATCTCTCAAAGA,OL,35,OL
+AGATTAACCCGATA,Granule mature,35,Granule-mature
+AGATTAACGGTATC,Granule mature,35,Granule-mature
+AGATTAACTCACGA,Neuroblast,12,Neuroblast 2
+AGATTCCTAGTGTC,Neuroblast,12,Neuroblast 2
+AGATTCCTCACAAC,Microglia,12,Microglia
+AGATTCCTCGCTAA,GABA,12,GABA-Lhx6
+AGATTCCTCTGTCC,Granule immature,35,Granule-immature
+AGCAAAGAACCCAA,Granule mature,35,Granule-mature
+AGCAAAGATTGCGA,Granule immature,12,Granule-immature
+AGCAACACAAGAAC,Granule mature,35,Granule-mature
+AGCAAGCTTCGATG,Cajal Retzius,35,Cajal-Retzius
+AGCACAACGAAAGT,Granule mature,35,Granule-mature
+AGCACAACTTGGCA,Neuroblast,12,Neuroblast 2
+AGCACTGACTGCAA,Granule immature,35,Granule-immature
+AGCACTGATTCACT,Granule mature,35,Granule-mature
+AGCATGACCTAGCA,Microglia,35,Microglia
+AGCATGACTGCTAG,OPC,35,OPC
+AGCATTCTATCGAC,OL,35,OL
+AGCATTCTCTACTT,Granule mature,12,Granule-mature
+AGCATTCTTCTTAC,Granule immature,35,Granule-immature
+AGCCAATGCACTGA,Neuroblast,12,Neuroblast 2
+AGCCAATGTCGCTC,Radial Glia-like,12,Radial Glia-like
+AGCCAATGTTACCT,Cck-Tox,35,Cck-Tox
+AGCCACCTACCATG,Endothelial,35,Pericytes
+AGCCACCTGTCGAT,Granule immature,35,Granule-immature
+AGCCGGACCCCAAA,Astrocytes,12,Astrocytes
+AGCCGGACGGCATT,Granule mature,35,Granule-mature
+AGCCGGACTTCCAT,Granule mature,35,Granule-mature
+AGCCGGTGGCTTAG,Granule mature,35,Granule-mature
+AGCCGTCTAGATCC,Granule mature,35,Granule-mature
+AGCCGTCTCAGAGG,Granule mature,35,Granule-mature
+AGCCTCACCGGAGA,Granule mature,35,Granule-mature
+AGCCTCTGCCATAG,Neuroblast,12,Neuroblast 2
+AGCGAACTCGGGAA,Granule immature,35,Granule-immature
+AGCGAACTTCCTCG,Microglia,35,Microglia
+AGCGATACATTGGC,GABA,35,GABA-Cnr1
+AGCGATACTATTCC,Neuroblast,12,Neuroblast 2
+AGCGATACTCGCTC,OPC,35,NFOL
+AGCGATTGAAGATG,Granule immature,35,Granule-immature
+AGCGCCGAAGAAGT,Neuroblast,12,Neuroblast 2
+AGCGCCGAGCCAAT,Neuroblast,35,Neuroblast 2
+AGCGCCGAGTAGGG,Granule immature,35,Granule-immature
+AGCGCCGATCGTTT,Astrocytes,12,Astrocytes
+AGCGCTCTAAGAAC,Granule mature,35,Granule-mature
+AGCGGCACCGAATC,Granule immature,35,Granule-immature
+AGCGGCACGGACAG,Granule mature,35,Granule-mature
+AGCGGCACTGACAC,Radial Glia-like,12,Radial Glia-like
+AGCGGCTGTCTTCA,Granule mature,35,Granule-mature
+AGCGGGCTGTCTGA,GABA,35,GABA-Cnr1
+AGCGGGCTTACGAC,Granule mature,35,Granule-mature
+AGCGTAACTATCGG,Microglia,12,Microglia
+AGCTCGCTCTTGTT,Neuroblast,12,Neuroblast 2
+AGCTCGCTTAGACC,Granule mature,35,Granule-mature
+AGCTCGCTTTCTTG,Mossy,35,Mossy-Adcyap1
+AGCTGAACAGCCTA,Granule mature,35,Granule-mature
+AGCTGAACGCAGTT,Granule immature,35,Granule-immature
+AGCTGAACTGTCGA,Neuroblast,12,Neuroblast 2
+AGCTGCCTGAGGCA,Granule immature,35,Granule-immature
+AGCTGCCTGTACGT,Microglia,35,Microglia
+AGCTGTGACCGCTT,Neuroblast,12,Neuroblast 2
+AGCTTACTAGAGAT,Granule immature,35,Granule-immature
+AGCTTACTGGGATG,Cajal Retzius,12,Cajal-Retzius
+AGCTTTACCCATAG,Neuroblast,35,Neuroblast 2
+AGGAACCTGGCATT,Neuroblast,12,Neuroblast 2
+AGGAATGAGTGTAC,Neuroblast,12,Neuroblast 2
+AGGACACTAGTCGT,Granule immature,12,Granule-immature
+AGGACACTAGTCTG,Radial Glia-like,35,Radial Glia-like
+AGGACACTATCTTC,GABA,12,GABA-Cnr1
+AGGACACTTCTTAC,Neuroblast,12,Neuroblast 2
+AGGACTTGACCTTT,Granule mature,35,Granule-mature
+AGGACTTGCTTGGA,Granule immature,12,Granule-immature
+AGGAGTCTCCGAAT,Granule mature,35,Granule-mature
+AGGAGTCTCGAATC,Neuroblast,35,Neuroblast 2
+AGGAGTCTCGTAGT,Granule immature,12,Granule-immature
+AGGAGTCTGAGAGC,Granule immature,35,Granule-immature
+AGGATAGAACTCTT,Granule immature,12,Granule-immature
+AGGATAGAGCGATT,Granule immature,12,Granule-immature
+AGGATGCTCTGACA,Granule mature,35,Granule-mature
+AGGATGCTTACAGC,GABA,35,GABA-Cnr1
+AGGATGCTTGAGAA,Granule mature,35,Granule-mature
+AGGATGCTTTCATC,Neuroblast,12,Neuroblast 2
+AGGCAACTCTCATT,Granule immature,35,Granule-immature
+AGGCAGGAAGAGGC,OL,35,OL
+AGGCAGGACATCAG,Granule mature,35,Granule-mature
+AGGCCTCTTCCCAC,Granule immature,35,Granule-immature
+AGGCTAACAGAGTA,Granule mature,35,Granule-mature
+AGGCTAACTTACCT,Radial Glia-like,12,Radial Glia-like
+AGGGACGAGCTCCT,Granule mature,35,Granule-mature
+AGGGACGATAGAAG,Granule immature,12,Granule-immature
+AGGGACGATCTCCG,Granule immature,12,Granule-immature
+AGGGCCACAGTGCT,Granule mature,35,Granule-mature
+AGGGCCTGAGTGCT,Granule mature,35,Granule-mature
+AGGGCCTGAGTTCG,Cajal Retzius,35,Cajal-Retzius
+AGGGCCTGCTGTCC,Granule immature,35,Granule-immature
+AGGGCGCTAAGGGC,Granule mature,35,Granule-mature
+AGGGCGCTCTGTAG,Neuroblast,12,Neuroblast 2
+AGGGCGCTGCTACA,Granule immature,35,Granule-immature
+AGGGCGCTGTACGT,Microglia,35,Microglia
+AGGGTGGAACAGTC,Granule immature,12,Granule-immature
+AGGGTGGAATGACC,Granule mature,35,Granule-mature
+AGGGTGGAATGTGC,Granule immature,35,Granule-immature
+AGGGTGGACGTGTA,Granule mature,35,Granule-mature
+AGGGTGGAGGTAAA,Granule immature,35,Granule-immature
+AGGGTTTGACTCTT,Neuroblast,12,Neuroblast 2
+AGGGTTTGTAGACC,Neuroblast,35,Neuroblast 2
+AGGGTTTGTCAGGT,Granule mature,12,Granule-mature
+AGGTCTGAACGGTT,Granule immature,12,Granule-immature
+AGGTCTGAGGAAAT,Granule immature,35,Granule-immature
+AGGTCTGAGGATCT,Granule mature,35,Granule-mature
+AGGTGGGAACCTGA,Neuroblast,12,Neuroblast 2
+AGGTGGGAACTGGT,Granule immature,12,Granule-immature
+AGGTGGGAGGTGTT,Granule mature,35,Granule-mature
+AGGTGGGATTGCGA,Granule mature,35,Granule-mature
+AGGTGTTGACCGAT,Granule immature,12,Granule-immature
+AGGTGTTGCCTATT,Granule mature,35,Granule-mature
+AGGTGTTGTCTCCG,Granule mature,35,Granule-mature
+AGGTTCGAGGACTT,Neuroblast,12,Neuroblast 2
+AGGTTCGATCGATG,Radial Glia-like,12,Radial Glia-like
+AGGTTGTGAGACTC,Granule immature,12,Granule-immature
+AGTAAGGAACGGAG,Endothelial,12,Endothelial
+AGTAAGGAGGAGCA,Granule immature,12,Granule-immature
+AGTAAGGATCGATG,Microglia,35,Microglia
+AGTAATTGAAACGA,Granule immature,35,Granule-immature
+AGTACGTGAGAGGC,Granule immature,35,Granule-immature
+AGTACGTGCGTAAC,Neuroblast,12,Neuroblast 2
+AGTACGTGTATGGC,Astrocytes,35,Astrocytes
+AGTACTCTAAAGTG,Neuroblast,12,Neuroblast 2
+AGTACTCTGAATGA,Endothelial,12,Endothelial
+AGTACTCTGCTACA,OPC,35,OPC
+AGTAGAGAGGAACG,Granule immature,35,Granule-immature
+AGTAGAGAGGTATC,Neuroblast,12,Neuroblast 2
+AGTAGAGATGAAGA,Granule mature,35,Granule-mature
+AGTAGGCTACTGTG,Granule immature,12,Granule-immature
+AGTAGGCTCTACTT,Granule immature,35,Granule-immature
+AGTAGGCTTGGAGG,Granule immature,35,Granule-immature
+AGTATAACACCCTC,Granule immature,35,Granule-immature
+AGTATAACCCTACC,OPC,35,OPC
+AGTATAACGCAAGG,Granule mature,35,Granule-mature
+AGTATAACGGTAAA,Granule immature,35,Granule-immature
+AGTATCCTACGTTG,Granule mature,35,Granule-mature
+AGTATCCTGGACAG,Granule immature,12,Granule-immature
+AGTCAGACGCTATG,Granule immature,12,Granule-immature
+AGTCAGACGGAGCA,Granule immature,35,Granule-immature
+AGTCAGACTCCCAC,Granule mature,35,Granule-mature
+AGTCCAGACTCTTA,Granule mature,35,Granule-mature
+AGTCCAGACTTACT,Neuroblast,12,Neuroblast 2
+AGTCCAGAGCCAAT,Neuroblast,35,Neuroblast 2
+AGTCCAGAGTTCAG,Granule mature,35,Granule-mature
+AGTCCAGAGTTGAC,Granule mature,35,Granule-mature
+AGTCCAGATGTCAG,Granule mature,35,Granule-mature
+AGTCCAGATTTGGG,Mossy,35,Mossy-Klk8
+AGTCGAACACGTAC,Granule mature,35,Granule-mature
+AGTCGAACGTGTTG,Neuroblast,12,Neuroblast 2
+AGTCGCCTCACAAC,Granule mature,35,Granule-mature
+AGTCGCCTGCTACA,Granule mature,35,Granule-mature
+AGTCGCCTGGGCAA,Neuroblast,12,Neuroblast 2
+AGTCGCCTGTTAGC,Granule immature,35,Granule-immature
+AGTCTACTAGTACC,Granule mature,35,Granule-mature
+AGTCTACTCATGAC,Granule mature,35,Granule-mature
+AGTCTACTGTACAC,Granule immature,12,Granule-immature
+AGTCTACTGTACGT,Granule mature,35,Granule-mature
+AGTGACACCGTGTA,OPC,12,OPC
+AGTGACTGTCGCTC,OL,35,OL
+AGTGACTGTGAACC,Granule mature,35,Granule-mature
+AGTGCAACAAGGTA,Granule immature,35,Granule-immature
+AGTGCAACACCATG,Granule mature,35,Granule-mature
+AGTGTGACTTTGGG,Radial Glia-like,12,Radial Glia-like
+AGTGTTCTGAACCT,Granule mature,35,Granule-mature
+AGTGTTCTGGACGA,Granule mature,35,Granule-mature
+AGTGTTCTTCTATC,Granule mature,35,Granule-mature
+AGTTAAACACCCTC,Neuroblast,12,Neuroblast 2
+AGTTCTACCACTCC,nIPC,12,nIPC
+AGTTCTACGACGGA,Neuroblast,12,Neuroblast 2
+AGTTCTACTCGTTT,Radial Glia-like,12,Radial Glia-like
+AGTTCTACTCTCGC,Granule mature,35,Granule-mature
+AGTTCTACTGTAGC,Granule mature,12,Granule-mature
+AGTTCTTGGGTGAG,Microglia,35,Microglia
+AGTTGTCTCCTGTC,Granule mature,35,Granule-mature
+AGTTTAGAATTCCT,Granule mature,35,Granule-mature
+AGTTTAGACTTGTT,Neuroblast,12,Neuroblast 2
+AGTTTCACGTAGGG,Granule mature,35,Granule-mature
+ATAACAACCGAGAG,Granule mature,35,Granule-mature
+ATAACATGTCAAGC,Microglia,35,Microglia
+ATAACATGTGTCCC,Granule immature,12,Granule-immature
+ATAACCCTCCTCAC,Microglia,35,PVM
+ATAACCCTCTGTCC,Neuroblast,12,Neuroblast 2
+ATAACCCTGTCTAG,Granule mature,12,Granule-mature
+ATAAGTACAGATCC,Astrocytes,12,Astrocytes
+ATAAGTACGATGAA,Granule mature,35,Granule-mature
+ATAAGTACGTCGAT,Granule mature,12,Granule-mature
+ATAAGTTGCCAATG,Granule mature,35,Granule-mature
+ATAAGTTGCGAGTT,Granule mature,35,Granule-mature
+ATAAGTTGGACAGG,Neuroblast,35,Neuroblast 2
+ATAAGTTGGCATAC,Granule immature,35,Granule-immature
+ATAAGTTGTAGACC,Granule immature,12,Granule-immature
+ATAAGTTGTTCCCG,Granule immature,12,Granule-immature
+ATAATCGACGTGAT,Granule immature,12,Granule-immature
+ATAATCGATTGGTG,Endothelial,35,Pericytes
+ATAATGACTGCACA,Granule mature,35,Granule-mature
+ATACAATGTGCAAC,Granule mature,35,Granule-mature
+ATACACCTGCTGAT,Neuroblast,12,Neuroblast 2
+ATACACCTTGCCTC,Granule mature,35,Granule-mature
+ATACACCTTGGTTG,Astrocytes,12,Astrocytes
+ATACCTACCTGGTA,Granule mature,35,Granule-mature
+ATACCTTGGACGGA,Granule mature,35,Granule-mature
+ATACCTTGTGAGGG,Granule mature,35,Granule-mature
+ATACGGACCAGAAA,Endothelial,35,Endothelial
+ATACGGACTCTCAT,Neuroblast,12,Neuroblast 2
+ATAGATTGAATCGC,Granule mature,35,Granule-mature
+ATAGATTGTCAGAC,Granule mature,35,Granule-mature
+ATAGCCGAATTCTC,Neuroblast,12,Neuroblast 2
+ATAGCCGAGGCATT,Granule mature,35,Granule-mature
+ATAGCGTGTCCTAT,Mossy,35,Mossy-Klk8
+ATAGCGTGTCGCTC,Granule immature,12,Granule-immature
+ATAGCTCTTGTGAC,Granule mature,35,Granule-mature
+ATAGCTCTTTGAGC,Granule mature,35,Granule-mature
+ATAGGAGAACACAC,OPC,12,OPC
+ATAGGAGAAGTCAC,Granule immature,35,Granule-immature
+ATAGGAGACCTTAT,Granule mature,35,Granule-mature
+ATAGGAGATCTACT,Neuroblast,35,Neuroblast 2
+ATAGGCTGGTACGT,Granule mature,35,Granule-mature
+ATAGTCCTACGCAT,Mossy,12,Mossy-Cyp26b1
+ATAGTCCTAGGTTC,Granule mature,35,Granule-mature
+ATAGTTGAGTAAGA,Granule mature,35,Granule-mature
+ATATACGACAACTG,Neuroblast,12,Neuroblast 2
+ATATAGTGAACCGT,Granule mature,35,Granule-mature
+ATATAGTGAAGGTA,Granule immature,12,Granule-immature
+ATATAGTGTTCACT,Granule immature,35,Granule-immature
+ATATGAACCCTTAT,Granule immature,12,Granule-immature
+ATATGAACCTCTAT,Cajal Retzius,35,Cajal-Retzius
+ATATGCCTGGAGGT,Radial Glia-like,35,Radial Glia-like
+ATCAAATGATCGTG,Granule mature,35,Granule-mature
+ATCAACCTCGACAT,Granule mature,35,Granule-mature
+ATCAACCTCTCATT,Granule immature,12,Granule-immature
+ATCAACCTGAAACA,Granule immature,35,Granule-immature
+ATCAACCTTGCCCT,Neuroblast,12,Neuroblast 2
+ATCACACTCACTCC,Cajal Retzius,12,Cajal-Retzius
+ATCACACTTGCCTC,Granule immature,12,Granule-immature
+ATCACACTTGGTGT,Granule immature,35,Granule-immature
+ATCACGGAGGAGTG,Granule immature,12,Granule-immature
+ATCACGGATGTCCC,Endothelial,12,Endothelial
+ATCACTACCTGACA,Neuroblast,12,Neuroblast 2
+ATCACTACCTTAGG,Radial Glia-like,35,Radial Glia-like
+ATCACTTGACAGCT,Neuroblast,12,Neuroblast 2
+ATCAGGTGCCACAA,Granule mature,35,Granule-mature
+ATCAGGTGGGGCAA,Granule immature,12,Granule-immature
+ATCAGGTGTTTGTC,Granule mature,35,Granule-mature
+ATCATCTGCACTCC,Granule mature,35,Granule-mature
+ATCCAGGAGGGACA,GABA,12,GABA-Lhx6
+ATCCAGGATGCTGA,Granule mature,35,Granule-mature
+ATCCATACAAGGTA,OPC,35,OPC
+ATCCATACAATGCC,Neuroblast,12,Neuroblast 2
+ATCCATACATGCTG,OPC,12,OPC
+ATCCATACGGCGAA,Granule mature,35,Granule-mature
+ATCCCGTGACTCTT,Granule mature,35,Granule-mature
+ATCCGCACTGTTTC,Granule mature,35,Granule-mature
+ATCCTAACCATTTC,Granule mature,35,Granule-mature
+ATCCTAACGGGACA,Granule mature,12,Granule-mature
+ATCCTAACGTGAGG,Granule mature,35,Granule-mature
+ATCGACGAACGACT,Granule immature,12,Granule-immature
+ATCGAGTGATGACC,Granule mature,35,Granule-mature
+ATCGAGTGCGAATC,GABA,35,GABA-Lhx6
+ATCGCAGACCAAGT,Neuroblast,12,Neuroblast 2
+ATCGCAGAGGATCT,Granule immature,35,Granule-immature
+ATCGCAGAGGTAAA,Neuroblast,12,Neuroblast 2
+ATCGCCACAAACAG,Granule immature,12,Granule-immature
+ATCGCCACGATAGA,Granule immature,12,Granule-immature
+ATCGCCACTCGTTT,Mossy,12,Mossy-Cyp26b1
+ATCGCCTGACTACG,Granule immature,35,Granule-immature
+ATCGCCTGAGGTCT,Granule immature,35,Granule-immature
+ATCGCGCTACACCA,Granule immature,35,Granule-immature
+ATCGCGCTACCAAC,Granule immature,12,Granule-immature
+ATCGCGCTACGGAG,Neuroblast,12,Neuroblast 1
+ATCGCGCTATGTGC,Granule immature,12,Granule-immature
+ATCGCGCTGATAAG,Granule immature,12,Granule-immature
+ATCGCGCTGGAAAT,Granule mature,35,Granule-mature
+ATCGCGCTTAAGCC,Granule immature,35,Granule-immature
+ATCGGAACAAACAG,Granule mature,35,Granule-mature
+ATCGGAACACTACG,Granule immature,12,Granule-immature
+ATCGGAACTGACCA,Neuroblast,12,Neuroblast 2
+ATCGGAACTGGTAC,GABA,35,GABA-Lhx6
+ATCGGAACTTAGGC,Granule immature,35,Granule-immature
+ATCGGTGAAGCGGA,Granule mature,35,Granule-mature
+ATCGGTGAATTGGC,Granule mature,35,Granule-mature
+ATCGTTTGCTATGG,Granule mature,35,Granule-mature
+ATCTACACGAACCT,Granule immature,12,Granule-immature
+ATCTACTGAAAAGC,Granule immature,12,Granule-immature
+ATCTACTGCCTAAG,Radial Glia-like,12,Radial Glia-like
+ATCTCAACCTTGAG,nIPC,35,nIPC
+ATCTCAACTGGTAC,Granule mature,35,Granule-mature
+ATCTGACTATGGTC,Mossy,12,Mossy-Cyp26b1
+ATCTGACTGTTTGG,Neuroblast,12,Neuroblast 2
+ATCTGGGAGTCGAT,Granule mature,35,Granule-mature
+ATCTGGGAGTGCTA,Granule immature,35,Granule-immature
+ATCTGTTGATGTCG,Neuroblast,12,Neuroblast 2
+ATCTGTTGCCTATT,Granule immature,35,Granule-immature
+ATCTGTTGCTTCGC,Granule immature,12,Granule-immature
+ATCTGTTGGAAAGT,Astrocytes,12,Astrocytes
+ATCTTTCTTACTTC,Endothelial,12,VLMC
+ATCTTTCTTTTGCT,Microglia,12,Microglia
+ATGAAACTCATCAG,Granule immature,35,Granule-immature
+ATGAAGGAATACCG,Granule mature,35,Granule-mature
+ATGAAGGAATGCCA,Cajal Retzius,35,Cajal-Retzius
+ATGAAGGAGAACTC,Granule mature,35,Granule-mature
+ATGACGTGTAGCGT,Granule mature,35,Granule-mature
+ATGAGCACACTTTC,Granule mature,35,Granule-mature
+ATGAGCACGACTAC,Granule mature,35,Granule-mature
+ATGAGCACTTTGGG,Neuroblast,12,Neuroblast 2
+ATGCACGAGCTACA,Neuroblast,12,Neuroblast 2
+ATGCAGACAGAACA,Granule immature,12,Granule-immature
+ATGCAGACCCGTTC,Granule immature,35,Granule-immature
+ATGCAGACCTGAAC,Granule mature,35,Granule-mature
+ATGCAGACGTCATG,Neuroblast,12,Neuroblast 2
+ATGCAGACGTCTGA,Granule immature,12,Granule-immature
+ATGCAGTGCCTCAC,Neuroblast,12,Neuroblast 2
+ATGCAGTGTGTCTT,Neuroblast,12,Neuroblast 2
+ATGCCAGATACGCA,Neuroblast,12,Neuroblast 2
+ATGCCAGATGACTG,Neuroblast,12,Neuroblast 2
+ATGCCGCTGTGCAT,Microglia,35,Microglia
+ATGCCGCTTTTCTG,Mossy,35,Mossy-Cyp26b1
+ATGCGATGAAGCCT,Neuroblast,35,Neuroblast 2
+ATGCGCCTTTCCAT,Granule immature,12,Granule-immature
+ATGCTTTGGGTGTT,Astrocytes,35,Astrocytes
+ATGCTTTGGTCATG,Granule mature,35,Granule-mature
+ATGCTTTGTGGTGT,Granule mature,35,Granule-mature
+ATGGGTACCTTAGG,Granule mature,35,Granule-mature
+ATGGTGACTGAGAA,Granule immature,35,Granule-immature
+ATGTAAACCTACGA,Granule mature,35,Granule-mature
+ATGTAAACTGTCTT,nIPC,35,nIPC
+ATGTACCTCATGGT,Granule mature,35,Granule-mature
+ATGTACCTTACGAC,Granule mature,35,Granule-mature
+ATGTACCTTTTCAC,Granule mature,35,Granule-mature
+ATGTCACTAAACAG,Neuroblast,12,Neuroblast 2
+ATGTCACTAGCCTA,Granule mature,35,Granule-mature
+ATGTCACTGTACGT,Mossy,12,Mossy-Adcyap1
+ATGTCACTGTTGAC,Granule mature,35,Granule-mature
+ATGTCGGAGGGACA,Granule immature,12,Granule-immature
+ATGTTAGATAAAGG,Endothelial,12,Endothelial
+ATGTTCACAGGTCT,Neuroblast,12,Neuroblast 2
+ATGTTCACCTTGAG,Mossy,12,Mossy-Adcyap1
+ATGTTCACTGTGGT,Neuroblast,12,Neuroblast 2
+ATGTTGCTCTTCGC,Granule mature,35,Granule-mature
+ATTAACGATGGAGG,Radial Glia-like,12,Radial Glia-like
+ATTAAGACAGGAGC,Granule mature,35,Granule-mature
+ATTAAGACCTGTAG,Granule mature,35,Granule-mature
+ATTACCACCGTTAG,GABA,12,GABA-Lhx6
+ATTACCACTAAGGA,Granule immature,35,Granule-immature
+ATTACCTGGGACGA,Neuroblast,12,Neuroblast 2
+ATTAGATGCACTGA,Granule immature,35,Granule-immature
+ATTAGTGAAGTCGT,Neuroblast,12,Neuroblast 2
+ATTAGTGACGCCTT,Granule immature,35,Granule-immature
+ATTAGTGATGCAGT,Neuroblast,12,Neuroblast 2
+ATTATGGAACCTGA,Granule mature,35,Granule-mature
+ATTCAAGAGTCTAG,Granule mature,35,Granule-mature
+ATTCAAGATATGGC,OL,35,OL
+ATTCAAGATTGTGG,Endothelial,35,Pericytes
+ATTCAGCTCCAACA,Granule mature,12,Granule-mature
+ATTCCAACAACTGC,Granule immature,12,Granule-immature
+ATTCCAACTACTCT,Granule mature,35,Granule-mature
+ATTCCAACTGTTCT,Granule mature,35,Granule-mature
+ATTCCATGGAATAG,Neuroblast,12,Neuroblast 2
+ATTCCATGGTGCAT,Granule mature,35,Granule-mature
+ATTCGACTCATTGG,Granule mature,35,Granule-mature
+ATTCGGGAAGAGGC,Granule mature,12,Granule-mature
+ATTCTGACACACGT,Neuroblast,12,Neuroblast 2
+ATTCTGACCTCGCT,Granule immature,12,Granule-immature
+ATTCTGACCTTGAG,Granule immature,35,Granule-immature
+ATTCTGACGTTACG,Granule mature,35,Granule-mature
+ATTCTGACTCCCGT,Granule immature,35,Granule-immature
+ATTCTTCTAGTACC,Granule immature,35,Granule-immature
+ATTCTTCTATCTCT,Neuroblast,12,Neuroblast 2
+ATTGAATGGACTAC,OL,35,OL
+ATTGAATGGGTGTT,Neuroblast,12,Neuroblast 2
+ATTGAATGTGGGAG,Granule immature,12,Granule-immature
+ATTGATGAACGACT,Microglia,35,Microglia
+ATTGATGACTACTT,OL,35,OL
+ATTGATGAGTTGGT,Granule immature,35,Granule-immature
+ATTGCACTCAGTTG,Neuroblast,12,Neuroblast 2
+ATTGCACTTCGATG,OL,35,OL
+ATTGCGGACATACG,Granule mature,12,Granule-mature
+ATTGCGGATATCTC,Astrocytes,12,Astrocytes
+ATTGCTTGTCCCGT,Granule immature,12,Granule-immature
+ATTGTAGACACTCC,Granule mature,35,Granule-mature
+ATTGTAGAGGAAAT,Neuroblast,12,Neuroblast 2
+ATTGTCTGCAGTCA,Granule immature,12,Granule-immature
+ATTGTCTGGACAGG,Neuroblast,12,Neuroblast 2
+ATTTAGGAACGTTG,Neuroblast,12,Neuroblast 2
+ATTTAGGATTACCT,Granule immature,35,Granule-immature
+ATTTCCGACAGGAG,Granule immature,35,Granule-immature
+ATTTCCGATCGTTT,Granule mature,35,Granule-mature
+ATTTCTCTACTACG,Granule immature,35,Granule-immature
+ATTTCTCTATGCTG,Granule mature,35,Granule-mature
+ATTTCTCTGACACT,Radial Glia-like,12,Radial Glia-like
+ATTTGCACGTCTTT,Neuroblast,35,Neuroblast 2
+ATTTGCACTCCTAT,Granule mature,35,Granule-mature
+ATTTGCACTGACTG,Neuroblast,12,Neuroblast 2
+CAAACTCTGCTATG,Granule mature,35,Granule-mature
+CAAAGCACAACCAC,OPC,35,NFOL
+CAAAGCACACCATG,Granule immature,35,Granule-immature
+CAAAGCTGACTGTG,Granule mature,35,Granule-mature
+CAAAGCTGCAAAGA,Endothelial,35,Pericytes
+CAAAGCTGGCGATT,Granule immature,12,Granule-immature
+CAAAGCTGGTAGGG,Neuroblast,12,Neuroblast 2
+CAAATATGCACTGA,Granule immature,35,Granule-immature
+CAAATATGCATGAC,Granule immature,35,Granule-immature
+CAAATTGATCCAAG,Granule mature,35,Granule-mature
+CAACAGACCCCTAC,Granule mature,12,Granule-mature
+CAACCGCTGGAGCA,nIPC,35,nIPC
+CAACGAACAAGCCT,Granule immature,35,Granule-immature
+CAACGAACCAGTCA,Microglia,35,PVM
+CAACGAACTTCGGA,Granule immature,12,Granule-immature
+CAACGATGAGCGGA,Granule mature,35,Granule-mature
+CAACGATGCTCCAC,Granule immature,35,Granule-immature
+CAACGTGAAATGCC,Granule mature,35,Granule-mature
+CAACGTGAATCTTC,Granule mature,35,Granule-mature
+CAACGTGACATTGG,Endothelial,12,VLMC
+CAACGTGATGAGGG,Granule mature,35,Granule-mature
+CAACTTTGGTCATG,Granule mature,35,Granule-mature
+CAAGAAGATTCTAC,OL,35,OL
+CAAGAAGATTTCGT,Granule immature,35,Granule-immature
+CAAGACTGCTACTT,GABA,35,GABA-Lhx6
+CAAGACTGGAAAGT,Granule mature,35,Granule-mature
+CAAGCATGACTTTC,Granule mature,35,Granule-mature
+CAAGCATGGGACTT,Microglia,12,Microglia
+CAAGCATGTTTGTC,Granule mature,35,Granule-mature
+CAAGCTGACTTCTA,Granule mature,35,Granule-mature
+CAAGCTGATCTTTG,Neuroblast,12,Neuroblast 2
+CAAGGACTCAGTTG,Cajal Retzius,12,Cajal-Retzius
+CAAGGACTGGGACA,Granule immature,12,Granule-immature
+CAAGGACTTCTAGG,Neuroblast,12,Neuroblast 2
+CAAGGTTGCGGGAA,Astrocytes,12,Astrocytes
+CAAGGTTGGTGTTG,Astrocytes,12,Astrocytes
+CAAGGTTGTCTTTG,Granule mature,35,Granule-mature
+CAAGTCGACCCAAA,OL,35,OL
+CAAGTCGACTACCC,Granule immature,35,Granule-immature
+CAAGTCGACTCTCG,Neuroblast,12,Neuroblast 2
+CAAGTTCTACCTCC,Granule mature,35,Granule-mature
+CAAGTTCTGAGCAG,Endothelial,35,Endothelial
+CAAGTTCTGTCAAC,Granule immature,12,Granule-immature
+CAATAAACCTGTTT,Neuroblast,12,Neuroblast 2
+CAATAAACTCTGGA,GABA,35,GABA-Lhx6
+CAATAAACTTCCCG,Granule mature,35,Granule-mature
+CAATAATGACTGTG,Granule mature,35,Granule-mature
+CAATAATGCTGCAA,Astrocytes,12,Astrocytes
+CAATATGAGCCATA,Microglia,35,Microglia
+CAATCGGACCCTAC,Cajal Retzius,35,Cajal-Retzius
+CAATCGGACCTACC,Granule immature,35,Granule-immature
+CAATCTACATCTCT,Neuroblast,12,Neuroblast 2
+CAATGGACAACGGG,Granule mature,35,Granule-mature
+CAATGGACGACTAC,Granule immature,35,Granule-immature
+CAATGGACTGTTCT,Radial Glia-like,35,Radial Glia-like
+CAATTCACGCTTAG,Granule immature,35,Granule-immature
+CAATTCTGATTCGG,Neuroblast,12,Neuroblast 2
+CAATTCTGGGAAGC,OL,35,OL
+CAATTCTGTGCTCC,Granule mature,35,Granule-mature
+CACAACGAAGATGA,Granule mature,35,Granule-mature
+CACAACGATCAAGC,Granule immature,35,Granule-immature
+CACAATCTACGCAT,Granule mature,35,Granule-mature
+CACACCTGATACCG,Astrocytes,35,Astrocytes
+CACACCTGCGGGAA,Granule immature,35,Granule-immature
+CACAGAACAGCGTT,Granule immature,12,Granule-immature
+CACAGATGCTAAGC,Granule immature,35,Granule-immature
+CACAGATGGAATGA,Granule immature,35,Granule-immature
+CACAGCCTGACACT,Granule immature,35,Granule-immature
+CACAGCCTGTTACG,Granule immature,35,Granule-immature
+CACAGTGACCGCTT,Granule immature,12,Granule-immature
+CACAGTGACGTTGA,OPC,12,OPC
+CACAGTGATGAGAA,Granule mature,35,Granule-mature
+CACATACTACCTGA,Astrocytes,35,Astrocytes
+CACATACTCCACAA,Astrocytes,35,Astrocytes
+CACATACTCGCCTT,Granule immature,12,Granule-immature
+CACCCATGCTAGTG,Astrocytes,35,Astrocytes
+CACCGGGACACACA,Granule immature,35,Granule-immature
+CACCGGGACCCAAA,Granule mature,35,Granule-mature
+CACCGTACTGTGGT,Granule immature,35,Granule-immature
+CACCGTTGAGCATC,Neuroblast,12,Neuroblast 2
+CACCGTTGGCTACA,Granule mature,35,Granule-mature
+CACCTGACAGCATC,Endothelial,12,Endothelial
+CACCTGACCTAGTG,Neuroblast,12,Neuroblast 2
+CACCTGACTCCAAG,Neuroblast,12,Neuroblast 2
+CACGACCTGAGCAG,Cajal Retzius,35,Cajal-Retzius
+CACGACCTTCACCC,Granule immature,12,Granule-immature
+CACGATGAAGTCTG,Granule immature,35,Granule-immature
+CACGCTACATACCG,Granule immature,12,Granule-immature
+CACGCTACCTTCCG,Granule mature,35,Granule-mature
+CACGCTACGAGGAC,Granule mature,35,Granule-mature
+CACGGGACAAGTAG,Endothelial,35,Pericytes
+CACGGGACACCTAG,Neuroblast,12,Neuroblast 2
+CACGGGACCCCTCA,Mossy,35,Mossy-Cyp26b1
+CACGGGACTTCAGG,Granule immature,12,Granule-immature
+CACTAACTCATACG,GABA,12,GABA-Lhx6
+CACTAACTTAACCG,Granule immature,12,Granule-immature
+CACTAGGAGAATCC,Granule mature,35,Granule-mature
+CACTAGGAGAGCTT,Cajal Retzius,35,Cajal-Retzius
+CACTATACGAACCT,Neuroblast,12,nIPC
+CACTATACGTGTTG,Granule mature,35,Granule-mature
+CACTCCGAACAGCT,Granule immature,35,Granule-immature
+CACTCCGAAGGTCT,Granule mature,35,Granule-mature
+CACTCCGATCCCAC,Astrocytes,12,Astrocytes
+CACTGAGAAGTGCT,Granule immature,35,Granule-immature
+CACTGAGACCTACC,Granule mature,35,Granule-mature
+CACTGAGACTACGA,Granule immature,35,Granule-immature
+CACTTAACACTTTC,Neuroblast,12,Neuroblast 2
+CACTTAACTGACAC,Granule mature,35,Granule-mature
+CACTTATGACGACT,Astrocytes,12,Astrocytes
+CACTTATGATCGAC,Granule immature,12,Granule-immature
+CACTTATGCCACAA,Granule immature,12,Granule-immature
+CACTTATGTCTGGA,Microglia,35,Microglia
+CACTTTGACCTGTC,GABA,35,GABA-Cnr1
+CACTTTGAGAACTC,Microglia,35,Microglia
+CAGAAGCTACGGGA,Neuroblast,12,Neuroblast 2
+CAGAAGCTCAGATC,Granule mature,35,Granule-mature
+CAGAAGCTCTCATT,Granule immature,12,Granule-immature
+CAGAAGCTGTTGCA,Granule immature,35,Granule-immature
+CAGACAACAACGTC,Astrocytes,35,Astrocytes
+CAGACAACACGTGT,Granule mature,35,Granule-mature
+CAGACAACATCGTG,Granule immature,12,Granule-immature
+CAGACATGCCCAAA,Granule immature,12,Granule-immature
+CAGACATGGAATGA,Granule immature,12,Granule-immature
+CAGACATGGTACCA,Granule immature,12,Granule-immature
+CAGACCCTATGGTC,Granule immature,12,Granule-immature
+CAGACCCTGCGATT,Neuroblast,12,Neuroblast 2
+CAGACCCTTAACGC,Granule immature,35,Granule-immature
+CAGACTGAACCTTT,Neuroblast,35,Neuroblast 2
+CAGACTGAAGCCAT,Granule immature,12,Granule-immature
+CAGACTGAGTTGTG,Granule mature,12,Granule-mature
+CAGAGGGAGACGAG,Granule mature,35,Granule-mature
+CAGAGGGATAAGCC,Granule mature,35,Granule-mature
+CAGATCGAGCGGAA,Granule mature,35,Granule-mature
+CAGATGACAGCACT,Granule mature,35,Granule-mature
+CAGCAATGAGTCTG,Granule mature,35,Granule-mature
+CAGCACCTTGCTTT,Granule mature,35,Granule-mature
+CAGCATGAATGTGC,GABA,12,GABA-Cnr1
+CAGCATGAGGAGGT,Granule mature,35,Granule-mature
+CAGCCTACAGCGGA,Neuroblast,12,Neuroblast 2
+CAGCCTACCCTTCG,Neuroblast,12,Neuroblast 2
+CAGCCTACGAAGGC,Granule immature,35,Granule-immature
+CAGCCTACGCGTTA,Granule mature,35,Granule-mature
+CAGCCTACTTCAGG,Granule mature,35,Granule-mature
+CAGCGGACCTTAGG,Granule mature,12,Granule-mature
+CAGCGTCTCCAATG,Granule immature,35,Granule-immature
+CAGCGTCTGCGTTA,Granule immature,12,Granule-immature
+CAGCGTCTTGACAC,Granule mature,35,Granule-mature
+CAGCTAGAGGCAAG,Granule immature,35,Granule-immature
+CAGCTCACAAGCAA,Neuroblast,12,Neuroblast 1
+CAGCTCTGCTCGCT,Endothelial,35,Pericytes
+CAGGAACTTCTCAT,Granule mature,35,Granule-mature
+CAGGAACTTGGAGG,Endothelial,35,Endothelial
+CAGGCCGACCGTTC,Granule immature,12,Granule-immature
+CAGGCCGACTGGTA,Granule immature,12,Granule-immature
+CAGGGCACTTTGGG,Granule mature,35,Granule-mature
+CAGGTAACCTAGTG,Granule mature,35,Granule-mature
+CAGGTAACGGTAGG,Granule mature,35,Granule-mature
+CAGGTATGCACTGA,Granule immature,35,Granule-immature
+CAGGTATGTTGACG,Microglia,12,Microglia
+CAGGTTGAGGAGGT,Microglia,35,Microglia
+CAGGTTGATGGATC,Neuroblast,12,Neuroblast 2
+CAGTCAGAGGACGA,Granule immature,12,Granule-immature
+CAGTCAGATCCTTA,Granule immature,35,Granule-immature
+CAGTGATGATGTGC,Granule mature,35,Granule-mature
+CAGTGATGCCGCTT,Granule immature,12,Granule-immature
+CAGTGTGAACAGCT,Granule mature,35,Granule-mature
+CAGTGTGAAGCATC,Granule immature,12,Granule-immature
+CAGTGTGAGGCATT,Granule immature,12,Granule-immature
+CAGTTACTACTGTG,Granule mature,35,Granule-mature
+CAGTTGGACGACAT,Granule immature,35,Granule-immature
+CAGTTTACAGAGGC,Neuroblast,35,Neuroblast 1
+CAGTTTACAGCTAC,GABA,12,GABA-Cnr1
+CAGTTTACGTAGGG,OPC,12,NFOL
+CATAAATGCTGCAA,Granule mature,35,Granule-mature
+CATAAATGGTAAGA,Neuroblast,12,Neuroblast 2
+CATAAATGTATCTC,Granule mature,12,Granule-mature
+CATAAATGTGGATC,Granule mature,35,Granule-mature
+CATAACCTTACTGG,Mossy,12,Mossy-Adcyap1
+CATAACCTTGGGAG,Neuroblast,12,Neuroblast 2
+CATACTACCTTGGA,Granule immature,12,Granule-immature
+CATACTACTAGCGT,Granule immature,35,Granule-immature
+CATACTTGCAATCG,Neuroblast,12,Neuroblast 1
+CATACTTGGCTTAG,Granule immature,35,Granule-immature
+CATACTTGGGTGTT,Granule immature,35,Granule-immature
+CATAGTCTCACCAA,Neuroblast,12,Neuroblast 2
+CATAGTCTTGACTG,Granule immature,12,Granule-immature
+CATATAGAGGTACT,Granule immature,12,Granule-immature
+CATATAGATTCCCG,Granule immature,35,Granule-immature
+CATCAACTTATGCG,Granule mature,35,Granule-mature
+CATCAACTTTGCAG,Granule immature,35,Granule-immature
+CATCAGGACCCTCA,Granule mature,12,Granule-mature
+CATCATACGAAAGT,Mossy,12,Mossy-Cyp26b1
+CATCATACGCCCTT,Granule mature,35,Granule-mature
+CATCGCTGATGGTC,Granule mature,35,Granule-mature
+CATCGCTGCTCATT,Granule mature,35,Granule-mature
+CATCGCTGGTCAAC,OL,35,OL
+CATCGGCTTGGGAG,Mossy,35,Mossy-Adcyap1
+CATCTCCTAGTCTG,Neuroblast,12,Neuroblast 2
+CATCTCCTCACTCC,Granule immature,35,Granule-immature
+CATCTCCTTCTCCG,Granule mature,35,Granule-mature
+CATCTTGAACAGTC,Granule mature,35,Granule-mature
+CATGAGACATCTTC,Astrocytes,35,Astrocytes
+CATGCCACAGTCAC,Mossy,12,Mossy-Cyp26b1
+CATGCCACTAGTCG,Endothelial,35,Endothelial
+CATGCGCTGAGGAC,Granule immature,12,Granule-immature
+CATGCGCTTGGAAA,Granule mature,35,Granule-mature
+CATGGATGGGAAGC,Granule immature,12,Granule-immature
+CATGGCCTACGTGT,Granule immature,12,Granule-immature
+CATGGCCTGAGGTG,Granule immature,35,Granule-immature
+CATGGCCTGATAGA,Granule immature,35,Granule-immature
+CATGGCCTGTTACG,Granule mature,35,Granule-mature
+CATGTACTGCCATA,Neuroblast,12,Neuroblast 2
+CATGTACTGTGCAT,Granule immature,35,Granule-immature
+CATGTTACTGGTTG,OPC,12,NFOL
+CATGTTACTTCCAT,Granule immature,35,Granule-immature
+CATTACACCCGTAA,Granule mature,35,Granule-mature
+CATTACACGCGTTA,Neuroblast,12,Neuroblast 2
+CATTAGCTAAACAG,Granule immature,12,Granule-immature
+CATTAGCTACACAC,Granule mature,35,Granule-mature
+CATTAGCTACCCAA,Granule mature,35,Granule-mature
+CATTAGCTATCTCT,Granule mature,35,Granule-mature
+CATTCCCTACCAAC,Granule mature,35,Granule-mature
+CATTGACTAAGGGC,Granule mature,35,Granule-mature
+CATTGACTGGAGTG,Granule mature,35,Granule-mature
+CATTGACTTTTGCT,Granule mature,35,Granule-mature
+CATTGGGAGGCATT,Granule immature,35,Granule-immature
+CATTGGGAGGTTCA,Granule immature,12,Granule-immature
+CATTGTACATTCCT,Microglia,12,Microglia
+CATTGTTGAAACGA,Granule mature,35,Granule-mature
+CATTGTTGCGTCTC,Granule mature,35,Granule-mature
+CATTTCGAATGCCA,GABA,12,GABA-Lhx6
+CATTTCGATGCCCT,Granule mature,12,Granule-mature
+CATTTGACCCTCCA,Neuroblast,12,Neuroblast 2
+CATTTGACCGGTAT,Granule mature,35,Granule-mature
+CATTTGTGTAAGGA,Granule immature,35,Granule-immature
+CCAAAGTGTGCGTA,Granule immature,12,Granule-immature
+CCAACCTGCTCAGA,Granule immature,12,Granule-immature
+CCAACCTGGCTGAT,Neuroblast,12,Neuroblast 2
+CCAACCTGGGTAAA,Radial Glia-like,12,Radial Glia-like
+CCAAGAACTATGCG,Radial Glia-like,12,Radial Glia-like
+CCAAGATGCCACAA,Granule immature,35,Granule-immature
+CCAAGATGCTGATG,Granule immature,35,Granule-immature
+CCAAGATGTGCAAC,Cck-Tox,35,Cck-Tox
+CCAATGGACTACTT,Astrocytes,35,Astrocytes
+CCAATTTGAGAAGT,Granule mature,35,Granule-mature
+CCAATTTGGCTGAT,Granule immature,35,Granule-immature
+CCAATTTGGGAGGT,Granule immature,35,Granule-immature
+CCACCATGAGTAGA,Granule immature,12,Granule-immature
+CCACCATGCTGTCC,Granule mature,35,Granule-mature
+CCACCATGTTGCTT,OPC,35,OPC
+CCACCTGATTCACT,Granule immature,35,Granule-immature
+CCACGGGAAAGGTA,Granule mature,35,Granule-mature
+CCACGGGAGCATCA,Endothelial,35,Endothelial
+CCACTGACAGTCGT,Mossy,12,Mossy-Cyp26b1
+CCACTGACTAACGC,Granule mature,35,Granule-mature
+CCACTGTGTCCGTC,OL,35,OL
+CCAGAAACAGGAGC,Radial Glia-like,12,Radial Glia-like
+CCAGAAACGGCAAG,Astrocytes,12,Astrocytes
+CCAGAAACTGGAAA,Granule immature,35,Granule-immature
+CCAGACCTATCGTG,Granule immature,35,Granule-immature
+CCAGATGATGAGAA,Granule mature,35,Granule-mature
+CCAGCACTCAACTG,Mossy,12,Mossy-Adcyap1
+CCAGCGGAGTATCG,Granule immature,12,Granule-immature
+CCAGCTACTGGTTG,Granule mature,35,Granule-mature
+CCAGGTCTGGAAAT,Granule immature,12,Granule-immature
+CCAGGTCTTATTCC,Radial Glia-like,12,Radial Glia-like
+CCAGGTCTTGTAGC,Neuroblast,12,Neuroblast 2
+CCAGTCACTACTGG,Granule immature,35,Granule-immature
+CCAGTCTGTCGCAA,Granule mature,35,Granule-mature
+CCAGTGCTAAAAGC,Granule immature,12,Granule-immature
+CCAGTGCTTATGCG,Granule mature,35,Granule-mature
+CCAGTGCTTCCTTA,Granule immature,35,Granule-immature
+CCATAGGAGGTAGG,Granule immature,35,Granule-immature
+CCATAGGATTCTAC,Neuroblast,12,Neuroblast 1
+CCATATACCATTCT,Granule mature,35,Granule-mature
+CCATCCGAACCTTT,Granule mature,35,Granule-mature
+CCATCCGAAGTTCG,Granule immature,35,Granule-immature
+CCATCCGACATGCA,Granule immature,35,Granule-immature
+CCATCCGATATGCG,Granule immature,12,Granule-immature
+CCATCCGATGTTCT,Granule immature,12,Granule-immature
+CCATCGTGTGCCCT,Microglia,12,Microglia
+CCATGCTGCACTCC,Granule immature,12,Granule-immature
+CCATGCTGGTGTAC,Granule immature,12,Granule-immature
+CCATGCTGTATGGC,Mossy,12,Mossy-Adcyap1
+CCATTAACGACGAG,Granule mature,12,Granule-mature
+CCCAAAGAGAACTC,Endothelial,35,Pericytes
+CCCAAAGAGGTCAT,GABA,12,GABA-Lhx6
+CCCAACACACCACA,Neuroblast,12,Neuroblast 2
+CCCAACACGGTAAA,Granule mature,35,Granule-mature
+CCCAACACTAACGC,Granule mature,35,Granule-mature
+CCCAACACTAGCGT,Radial Glia-like,12,Radial Glia-like
+CCCAACACTTCGCC,Granule immature,12,Granule-immature
+CCCAACTGAGCAAA,Granule mature,35,Granule-mature
+CCCAACTGGACGAG,Neuroblast,35,Neuroblast 1
+CCCACATGCTACCC,Neuroblast,35,Neuroblast 1
+CCCAGACTGCGATT,GABA,12,GABA-Lhx6
+CCCAGACTGTTTGG,Granule immature,12,Granule-immature
+CCCAGTTGAAAACG,Granule immature,12,Granule-immature
+CCCAGTTGACGGGA,GABA,35,GABA-Lhx6
+CCCAGTTGGAACTC,Granule immature,12,Granule-immature
+CCCAGTTGGTTAGC,Granule immature,35,Granule-immature
+CCCATCGAAGAGAT,Granule immature,35,Granule-immature
+CCCATCGAGCGTAT,OL,35,OL
+CCCATCGATGTGGT,Neuroblast,12,Neuroblast 2
+CCCATGTGTGAGGG,Astrocytes,35,Astrocytes
+CCCATGTGTTCCAT,OPC,35,NFOL
+CCCGATTGCAGGAG,Granule mature,35,Granule-mature
+CCCGGAGATGTCCC,Granule immature,12,Granule-immature
+CCCTACGAATCGTG,Mossy,12,Mossy-Cyp26b1
+CCCTACGACCGCTT,Astrocytes,35,Astrocytes
+CCCTCAGATACGAC,Granule mature,35,Granule-mature
+CCCTGAACCCAGTA,Granule immature,12,Granule-immature
+CCCTGAACGAGATA,Granule immature,35,Granule-immature
+CCCTGAACTGAGCT,Granule immature,35,Granule-immature
+CCCTTACTCCAATG,Granule immature,12,Granule-immature
+CCCTTACTTCTTTG,Endothelial,35,Endothelial
+CCGAAAACTTGAGC,GABA,12,GABA-Cnr1
+CCGACTACGAACCT,Mossy,12,Mossy-Cyp26b1
+CCGACTACGGTGAG,Microglia,35,Microglia
+CCGACTACTTTGGG,Granule immature,35,Granule-immature
+CCGATAGACTAGAC,Granule mature,35,Granule-mature
+CCGATAGATTCATC,Mossy,12,Mossy-Cyp26b1
+CCGCGAGAGAGATA,Radial Glia-like,12,Radial Glia-like
+CCGCGAGAGCAGAG,Granule mature,35,Granule-mature
+CCGCTATGAATGCC,Granule mature,35,Granule-mature
+CCGCTATGCGCTAA,Endothelial,12,Endothelial
+CCGCTATGTACTGG,Granule immature,12,Granule-immature
+CCGGAGACCTGGTA,Neuroblast,35,Neuroblast 1
+CCGGAGTGCGTACA,nIPC,35,nIPC
+CCGGTACTAGCCTA,Granule mature,35,Granule-mature
+CCGGTACTGTTTGG,GABA,12,GABA-Lhx6
+CCGGTACTTCAAGC,nIPC,12,nIPC
+CCGTAAGAGGAGGT,Granule mature,35,Granule-mature
+CCGTACACCCCTTG,OPC,12,OPC
+CCGTACACGTAAAG,Granule mature,35,Granule-mature
+CCTAAACTATCTCT,GABA,35,GABA-Lhx6
+CCTAAACTCACAAC,Radial Glia-like,12,Radial Glia-like
+CCTAAACTTGGGAG,Granule mature,35,Granule-mature
+CCTAAGGACGTCTC,Granule mature,35,Granule-mature
+CCTAAGGAGAGATA,Granule immature,35,Granule-immature
+CCTAAGGAGGTCTA,Granule mature,35,Granule-mature
+CCTAAGGAGTACGT,Astrocytes,35,Astrocytes
+CCTACCGACGTAAC,Neuroblast,12,Neuroblast 2
+CCTACCGAGAAGGC,Granule mature,35,Granule-mature
+CCTACCGAGATACC,Granule mature,35,Granule-mature
+CCTACCGAGCCAAT,Granule mature,35,Granule-mature
+CCTAGAGATGGGAG,Granule mature,35,Granule-mature
+CCTATAACGTACCA,Granule mature,35,Granule-mature
+CCTATTGAGTGTAC,Granule mature,35,Granule-mature
+CCTATTGATACTGG,Astrocytes,35,Astrocytes
+CCTCATCTTTGGTG,Granule mature,35,Granule-mature
+CCTCGAACACTCTT,Granule immature,35,Granule-immature
+CCTCGAACCCTACC,Granule immature,12,Granule-immature
+CCTGACTGGAGATA,Granule immature,35,Granule-immature
+CCTGACTGGCTTAG,Cck-Tox,35,Cck-Tox
+CCTGACTGTTATCC,Mossy,35,Mossy-Cyp26b1
+CCTGAGCTCTTGTT,Granule mature,35,Granule-mature
+CCTGAGCTGCGAAG,Radial Glia-like,12,Radial Glia-like
+CCTGCAACAGTACC,Granule mature,35,Granule-mature
+CCTGCAACCTAGCA,Granule mature,35,Granule-mature
+CCTGCAACGTAAAG,Granule mature,35,Granule-mature
+CCTGCAACTAACCG,GABA,35,GABA-Lhx6
+CCTGGACTCATGAC,Cajal Retzius,35,Cajal-Retzius
+CCTTAATGCAACCA,Granule mature,35,Granule-mature
+CCTTAATGCGGTAT,Granule mature,35,Granule-mature
+CCTTAATGGGAGTG,Cck-Tox,35,Cck-Tox
+CCTTAATGGGTATC,Granule immature,35,Granule-immature
+CCTTTAGACCGTAA,Granule mature,35,Granule-mature
+CCTTTAGAGGAAGC,Granule immature,35,Granule-immature
+CGAACATGGTGTCA,Granule mature,35,Granule-mature
+CGAACATGGTTTGG,Granule mature,35,Granule-mature
+CGAAGACTCAAAGA,Granule immature,35,Granule-immature
+CGAAGACTGTCGTA,Neuroblast,12,Neuroblast 2
+CGAAGACTTGAGAA,Granule immature,35,Granule-immature
+CGAAGGGAATCAGC,Neuroblast,12,Neuroblast 2
+CGAAGGGACTACGA,Granule mature,35,Granule-mature
+CGAAGGGAGACGTT,GABA,12,GABA-Lhx6
+CGAAGGGATGTGCA,Granule mature,35,Granule-mature
+CGAAGTACAAACGA,Granule mature,35,Granule-mature
+CGAAGTACGAACTC,Granule mature,35,Granule-mature
+CGAAGTACGTTTCT,Astrocytes,12,Astrocytes
+CGAATCGAACCTAG,Granule mature,35,Granule-mature
+CGAATCGAACGGTT,Granule immature,35,Granule-immature
+CGAATCGAGAACTC,Granule immature,12,Granule-immature
+CGAATCGAGTATGC,Granule immature,12,Granule-immature
+CGACAAACATGCTG,Granule mature,35,Granule-mature
+CGACAAACGATAAG,OPC,12,OPC
+CGACCACTACTCTT,Granule mature,35,Granule-mature
+CGACCACTCGTAGT,Granule mature,35,Granule-mature
+CGACCACTTGCATG,OL,35,OL
+CGACCGGAAGATCC,Neuroblast,12,Neuroblast 2
+CGACCGGATTCTAC,OPC,12,OPC
+CGACCTTGACACGT,Granule mature,35,Granule-mature
+CGACGTCTACCTCC,Granule mature,35,Granule-mature
+CGACGTCTTTGCAG,Neuroblast,12,Neuroblast 2
+CGACTCTGCCATAG,Granule mature,35,Granule-mature
+CGACTGCTGGACTT,Neuroblast,12,Neuroblast 2
+CGAGAACTAACCAC,Granule immature,12,Granule-immature
+CGAGAACTGAGGTG,Granule mature,35,Granule-mature
+CGAGAACTTCAGAC,Neuroblast,12,Neuroblast 2
+CGAGATTGTATCTC,Granule immature,12,Granule-immature
+CGAGATTGTTCACT,Granule immature,35,Granule-immature
+CGAGCCGAGCTTCC,Granule immature,12,Granule-immature
+CGAGCGTGAACCTG,Granule mature,12,Granule-mature
+CGAGCGTGACCAAC,GABA,12,GABA-Lhx6
+CGAGGAGAGGACTT,Granule mature,35,Granule-mature
+CGAGGGCTAGTAGA,GABA,35,GABA-Cnr1
+CGAGTATGACTCAG,Granule immature,12,Granule-immature
+CGATACGACATTTC,Granule mature,35,Granule-mature
+CGATACGATGCGTA,Granule mature,35,Granule-mature
+CGATAGACCTATGG,Granule mature,35,Granule-mature
+CGATAGACGGGAGT,Granule immature,12,Granule-immature
+CGATAGACTTGGCA,Astrocytes,12,Astrocytes
+CGATCAGAAATGCC,Granule mature,35,Granule-mature
+CGATCAGAACCTTT,Endothelial,35,Endothelial
+CGATCAGAAGGGTG,Astrocytes,35,Astrocytes
+CGATCAGATTGTGG,Neuroblast,12,Neuroblast 2
+CGATCCACAACAGA,Neuroblast,12,Neuroblast 2
+CGCAAATGACCAAC,Granule mature,35,Granule-mature
+CGCAAATGCAGGAG,Granule immature,12,Granule-immature
+CGCAAATGGGGACA,Neuroblast,35,Neuroblast 1
+CGCAACCTGTGCTA,Granule mature,35,Granule-mature
+CGCAACCTTGAGCT,Cck-Tox,35,Cck-Tox
+CGCACGGAATAAGG,Neuroblast,12,Neuroblast 1
+CGCACTACAATCGC,Mossy,12,Mossy-Cyp26b1
+CGCACTACGCTACA,Cck-Tox,12,Cck-Tox
+CGCAGGACGTGTTG,Granule immature,12,Granule-immature
+CGCAGGACTGGAAA,Granule immature,12,Granule-immature
+CGCAGGACTGGTGT,GABA,35,GABA-Cnr1
+CGCAGGTGCGACTA,OL,35,OL
+CGCAGGTGGACGTT,Granule mature,35,Granule-mature
+CGCAGGTGGTTCGA,Granule mature,35,Granule-mature
+CGCATAGAACCTAG,Granule immature,12,Granule-immature
+CGCATAGAACGGAG,Granule immature,35,Granule-immature
+CGCATAGACAGGAG,Granule mature,35,Granule-mature
+CGCATAGACCCGTT,Granule mature,35,Granule-mature
+CGCCATACGGATCT,Granule mature,35,Granule-mature
+CGCCATTGTATGCG,Granule mature,35,Granule-mature
+CGCCGAGACAGTCA,Granule immature,12,Granule-immature
+CGCCGAGATGTCTT,Neuroblast,12,Neuroblast 2
+CGCCTAACACGTAC,Granule mature,35,Granule-mature
+CGCCTAACTCTTTG,Granule mature,35,Granule-mature
+CGCGAGACCGCATA,Granule mature,35,Granule-mature
+CGCGATCTCTAGCA,Granule immature,35,Granule-immature
+CGCGATCTTGCATG,OL,35,OL
+CGCGGATGCACTCC,Neuroblast,12,Neuroblast 1
+CGCGGATGCCCTCA,Granule immature,35,Granule-immature
+CGCGGATGGTGAGG,OPC,12,OPC
+CGCGGATGTGTTCT,Granule immature,12,Granule-immature
+CGCTAAGAAGGTCT,Granule mature,35,Granule-mature
+CGCTACACAACTGC,Granule mature,35,Granule-mature
+CGCTACACCTGTAG,Granule mature,35,Granule-mature
+CGCTACTGCCGTTC,Microglia,12,Microglia
+CGCTACTGGGGAGT,Granule mature,35,Granule-mature
+CGCTCATGTGGAGG,Granule mature,35,Granule-mature
+CGGAATTGATGTCG,Granule immature,12,Granule-immature
+CGGAATTGCAGTCA,Granule mature,35,Granule-mature
+CGGAATTGGTCGAT,Granule mature,35,Granule-mature
+CGGAATTGTCCTGC,Granule mature,35,Granule-mature
+CGGACCGAAAAGCA,Granule mature,35,Granule-mature
+CGGACCGAAGCGGA,Neuroblast,12,Neuroblast 2
+CGGACCGAGCGGAA,Granule immature,35,Granule-immature
+CGGAGGCTGCATCA,Granule immature,12,Granule-immature
+CGGAGGCTTGCGTA,GABA,12,GABA-Lhx6
+CGGATATGAGATCC,Granule mature,35,Granule-mature
+CGGATATGGTCAAC,Mossy,35,Mossy-Klk8
+CGGATATGTCTCCG,Neuroblast,12,Neuroblast 2
+CGGCACGAATTGGC,Neuroblast,12,Neuroblast 2
+CGGCACGACTAAGC,Granule immature,35,Granule-immature
+CGGCATCTATCGAC,Granule mature,35,Granule-mature
+CGGCATCTCGTGAT,Granule mature,35,Granule-mature
+CGGCATCTGTGCAT,Granule mature,35,Granule-mature
+CGGCCAGATTGGTG,Astrocytes,35,Astrocytes
+CGGCGAACCTAGTG,Granule immature,12,Granule-immature
+CGGCGAACTCGTGA,OL,35,OL
+CGGCGATGCACTAG,Granule mature,35,Granule-mature
+CGGGACTGACACGT,Granule mature,35,Granule-mature
+CGGGACTGCAGGAG,Endothelial,12,Endothelial
+CGGGACTGTTAGGC,Astrocytes,35,Astrocytes
+CGGGCATGCGTAGT,Granule immature,35,Granule-immature
+CGGGCATGCTAGTG,Granule mature,35,Granule-mature
+CGGTAAACAGGTCT,Granule immature,12,Granule-immature
+CGGTAAACGGTAAA,Astrocytes,35,Astrocytes
+CGGTAAACTATCTC,Granule mature,35,Granule-mature
+CGGTAAACTTCAGG,Granule immature,35,Granule-immature
+CGGTACCTCTCTTA,Granule immature,12,Granule-immature
+CGGTACCTCTGACA,Granule mature,35,Granule-mature
+CGGTACCTGCTAAC,GABA,35,GABA-Lhx6
+CGGTACCTTTGTGG,Granule immature,12,Granule-immature
+CGGTCACTACCAGT,Neuroblast,12,Neuroblast 2
+CGGTCACTTTTCTG,Granule immature,12,Granule-immature
+CGTAACGAAGCACT,Granule immature,12,Granule-immature
+CGTAACGACACTGA,Granule immature,35,Granule-immature
+CGTAACGACCCAAA,Neuroblast,12,Neuroblast 2
+CGTAACGACTACTT,Neuroblast,12,nIPC
+CGTAACGAGGACAG,Neuroblast,35,Neuroblast 2
+CGTACAGAAAGATG,Granule mature,35,Granule-mature
+CGTACAGACTTAGG,Endothelial,12,VLMC
+CGTACAGACTTGGA,Granule mature,35,Granule-mature
+CGTACAGAGAATAG,Granule mature,35,Granule-mature
+CGTACCACAGACTC,Granule immature,12,Granule-immature
+CGTACCACGAAACA,Astrocytes,35,Astrocytes
+CGTACCACGAGGGT,Granule immature,12,Granule-immature
+CGTACCACGTAGCT,Granule immature,35,Granule-immature
+CGTACCACGTGTAC,Granule immature,12,Granule-immature
+CGTAGCCTTCCTAT,Neuroblast,12,Neuroblast 2
+CGTCCAACAGCTAC,Neuroblast,35,Neuroblast 1
+CGTCCAACGATGAA,Granule mature,35,Granule-mature
+CGTCCATGAAAAGC,Granule mature,35,Granule-mature
+CGTCCATGAGTGCT,Granule mature,35,Granule-mature
+CGTCCATGGCGATT,Cck-Tox,35,Cck-Tox
+CGTCCATGTGTCTT,Granule immature,35,Granule-immature
+CGTGAAACAGGCGA,Granule mature,12,Granule-mature
+CGTGAAACTAGACC,Endothelial,12,Endothelial
+CGTGAATGCATACG,Granule immature,35,Granule-immature
+CGTGAATGCGTGAT,Granule immature,12,Granule-immature
+CGTGAATGGCGATT,Granule mature,35,Granule-mature
+CGTGAATGTATGGC,Granule mature,35,Granule-mature
+CGTGAATGTTGCTT,Granule immature,12,Granule-immature
+CGTGATGAGCATCA,Neuroblast,12,Neuroblast 2
+CGTGATGATCTCGC,GABA,12,GABA-Lhx6
+CGTGATGATTCCAT,Granule immature,12,Granule-immature
+CGTGCACTGCTAAC,Granule mature,35,Granule-mature
+CGTGCACTGCTACA,Granule immature,35,Granule-immature
+CGTGCACTTCCGTC,Granule mature,35,Granule-mature
+CGTGTAGATCGATG,Granule mature,35,Granule-mature
+CGTTAACTGCTACA,Granule mature,35,Granule-mature
+CGTTAACTGGCGAA,Microglia,35,Microglia
+CGTTAGGACCGTTC,Granule mature,35,Granule-mature
+CGTTAGGATCTCCG,Granule immature,35,Granule-immature
+CGTTATACACCATG,Neuroblast,35,Neuroblast 2
+CGTTATACACTTTC,Granule immature,35,Granule-immature
+CGTTATACAGGTTC,OL,35,OL
+CGTTATACCCTCCA,Granule mature,35,Granule-mature
+CGTTATACCGAGAG,Granule mature,35,Granule-mature
+CGTTATACTATTCC,Neuroblast,12,Neuroblast 2
+CGTTTAACCTATGG,Granule mature,35,Granule-mature
+CGTTTAACGAATAG,Mossy,12,Mossy-Adcyap1
+CGTTTAACTATCTC,Granule immature,35,Granule-immature
+CGTTTAACTCAGGT,Granule immature,12,Granule-immature
+CGTTTAACTGTCCC,Microglia,12,PVM
+CTAAACCTCCAAGT,GABA,12,GABA-Lhx6
+CTAAACCTCCTTCG,Granule mature,35,Granule-mature
+CTAACACTACCTCC,Granule immature,35,Granule-immature
+CTAACGGAAGAGAT,Neuroblast,12,Neuroblast 2
+CTAACGGACAGATC,Neuroblast,12,Neuroblast 2
+CTAACGGAGACAGG,Neuroblast,12,Neuroblast 2
+CTAACTACCAATCG,OPC,35,NFOL
+CTAACTACCCTAAG,Cck-Tox,35,Cck-Tox
+CTAACTACGAAAGT,Granule immature,35,Granule-immature
+CTAACTACGGTGGA,Granule immature,12,Granule-immature
+CTAACTACTGACAC,Cajal Retzius,12,Cajal-Retzius
+CTAACTACTTCATC,Neuroblast,12,Neuroblast 2
+CTAAGGACGACACT,Granule immature,12,Granule-immature
+CTAAGGTGGACGGA,Microglia,35,Microglia
+CTAAGGTGGGATCT,Granule immature,12,Granule-immature
+CTAAGGTGTGACCA,Neuroblast,12,Neuroblast 2
+CTAATAGATACGAC,Neuroblast,35,Neuroblast 2
+CTAATGCTAGTCAC,Astrocytes,35,Astrocytes
+CTAATGCTCCTAAG,Granule immature,12,Granule-immature
+CTAATGCTTCCCGT,Neuroblast,12,Neuroblast 2
+CTACAACTCATGAC,Granule mature,35,Granule-mature
+CTACCTCTATTGGC,Granule mature,35,Granule-mature
+CTACCTCTGGTGGA,Granule mature,35,Granule-mature
+CTACCTCTTGCCCT,Microglia,12,Microglia
+CTACCTCTTTCAGG,Neuroblast,12,Neuroblast 2
+CTACGCACAATGCC,Neuroblast,12,Neuroblast 2
+CTACGCACGACAAA,Granule mature,35,Granule-mature
+CTACGGCTCCTAAG,Granule mature,12,Granule-mature
+CTACTATGAAAGTG,Granule mature,35,Granule-mature
+CTACTATGAGTACC,Granule mature,35,Granule-mature
+CTACTCCTATCAGC,Astrocytes,35,Astrocytes
+CTAGAGACACTGTG,Astrocytes,12,Astrocytes
+CTAGAGACCTAGTG,Granule mature,35,Granule-mature
+CTAGATCTAGTGTC,Granule mature,35,Granule-mature
+CTAGGATGTTTCGT,Neuroblast,12,Neuroblast 2
+CTAGGTGAGAGCAG,Granule immature,12,Granule-immature
+CTATAAGAAGAATG,Granule mature,35,Granule-mature
+CTATAAGACTTACT,Neuroblast,12,Neuroblast 2
+CTATACTGAGTAGA,Granule mature,35,Granule-mature
+CTATAGCTGAAGGC,OPC,12,OPC
+CTATAGCTGCAGTT,Granule mature,12,Granule-mature
+CTATCAACTGTCGA,Granule immature,12,Granule-immature
+CTATCATGAGGTCT,Astrocytes,35,Astrocytes
+CTATCATGTCTACT,Granule immature,12,Granule-immature
+CTATCCCTCTACCC,Granule immature,12,Granule-immature
+CTATCCCTTTCGTT,Astrocytes,35,Astrocytes
+CTATGACTGCATAC,OPC,12,OPC
+CTATGTACCTGGTA,Granule mature,35,Granule-mature
+CTATGTACTCACCC,Granule mature,35,Granule-mature
+CTATTGACGTCCTC,Granule immature,12,Granule-immature
+CTATTGTGAATGCC,Neuroblast,12,Neuroblast 2
+CTATTGTGGGATCT,Granule mature,35,Granule-mature
+CTATTGTGGGTATC,Granule immature,35,Granule-immature
+CTCAGAGATCTTCA,OL,35,OL
+CTCAGCACGTCAAC,Granule immature,12,Granule-immature
+CTCAGCACTGAGAA,Granule immature,12,Granule-immature
+CTCAGCTGGGGAGT,Granule immature,12,Granule-immature
+CTCATTGACGCTAA,Neuroblast,35,Neuroblast 2
+CTCATTGACTACTT,Granule mature,35,Granule-mature
+CTCATTGAGGAGCA,Neuroblast,12,Neuroblast 2
+CTCCACGAACTGGT,Granule mature,35,Granule-mature
+CTCCACGAAGTGCT,Endothelial,35,Endothelial
+CTCCACGAGGTAGG,Granule immature,35,Granule-immature
+CTCCACGATGTAGC,Granule immature,35,Granule-immature
+CTCCATCTGCCTTC,Granule mature,35,Granule-mature
+CTCCATCTTACTCT,Neuroblast,12,Neuroblast 2
+CTCGACACCTGTTT,OL,35,OL
+CTCGACACTGACCA,Granule immature,12,Granule-immature
+CTCGACACTGGAAA,Granule immature,35,Granule-immature
+CTCTAATGCCAGTA,Granule mature,35,Granule-mature
+CTGAACGACAGTCA,Granule immature,35,Granule-immature
+CTGAACGAGGGATG,OL,35,OL
+CTGAACGATCTTAC,Granule immature,12,Granule-immature
+CTGAAGACGGTCTA,Granule immature,12,Granule-immature
+CTGAAGACTTTCAC,Granule mature,35,Granule-mature
+CTGAAGTGAGCTCA,Granule immature,35,Granule-immature
+CTGAAGTGCTTGAG,Neuroblast,12,Neuroblast 2
+CTGAAGTGGAGGGT,Granule mature,35,Granule-mature
+CTGAATCTAGACTC,Granule mature,35,Granule-mature
+CTGAATCTCTGAAC,Granule immature,35,Granule-immature
+CTGAATCTCTGATG,Granule immature,12,Granule-immature
+CTGAATCTCTTCCG,Granule mature,35,Granule-mature
+CTGACAGACTCTAT,Granule immature,35,Granule-immature
+CTGACAGATGAGGG,Granule mature,35,Granule-mature
+CTGACAGATTCTAC,Granule immature,12,Granule-immature
+CTGAGCCTATCGAC,Granule mature,35,Granule-mature
+CTGAGCCTGACGAG,Neuroblast,12,Neuroblast 2
+CTGAGCCTGAGAGC,Neuroblast,12,Neuroblast 2
+CTGAGCCTGCAGAG,Granule mature,35,Granule-mature
+CTGAGCCTGTGTAC,Granule mature,35,Granule-mature
+CTGAGCCTTGTCAG,Astrocytes,12,Astrocytes
+CTGCAGCTCTTGGA,Granule mature,35,Granule-mature
+CTGCCAACACTGGT,Granule immature,35,Granule-immature
+CTGCCAACCACTCC,Mossy,35,Mossy-Klk8
+CTGCGACTAAGGTA,Neuroblast,35,Neuroblast 2
+CTGCGACTACGGGA,Granule immature,35,Granule-immature
+CTGCGACTCTCAAG,Granule mature,35,Granule-mature
+CTGCGACTGCTAAC,Granule immature,12,Granule-immature
+CTGGAAACACCTGA,Granule mature,35,Granule-mature
+CTGGAAACTGCTAG,Granule mature,35,Granule-mature
+CTGGAAACTTGGTG,Granule immature,35,Granule-immature
+CTGGATGATCCAAG,Granule mature,35,Granule-mature
+CTGGCACTAAGCCT,Granule mature,35,Granule-mature
+CTGGCACTTACAGC,Neuroblast,12,Neuroblast 1
+CTGTAACTGAATAG,Neuroblast,12,Neuroblast 2
+CTGTAACTTTCACT,Granule mature,35,Granule-mature
+CTGTGAGAACACTG,Granule immature,12,Granule-immature
+CTGTGAGAAGAGAT,Neuroblast,12,Neuroblast 2
+CTGTGAGATCACGA,GABA,35,GABA-Lhx6
+CTTAAAGAGCCCTT,Neuroblast,12,Neuroblast 2
+CTTAAAGATGCCAA,Endothelial,35,VLMC
+CTTAACACCCCTAC,Granule mature,35,Granule-mature
+CTTAACACCTGACA,Granule mature,35,Granule-mature
+CTTACAACGGCAAG,Granule immature,12,Granule-immature
+CTTACAACTTCGGA,Granule mature,35,Granule-mature
+CTTACATGACTCAG,Neuroblast,12,Neuroblast 2
+CTTACATGAGGAGC,Granule mature,35,Granule-mature
+CTTACATGGTTGCA,Granule immature,12,Granule-immature
+CTTACTGAAAGGGC,Granule mature,12,Granule-mature
+CTTACTGACTTCGC,Astrocytes,12,Astrocytes
+CTTACTGATCTAGG,Granule immature,12,Granule-immature
+CTTAGACTCAGAAA,Neuroblast,12,Neuroblast 2
+CTTAGACTCTGAGT,Granule mature,35,Granule-mature
+CTTAGGGACCTAAG,Granule immature,35,Granule-immature
+CTTAGGGAGTCACA,Granule immature,35,Granule-immature
+CTTATCGAATTCGG,Astrocytes,12,Astrocytes
+CTTCACCTAAGCAA,Granule immature,12,Granule-immature
+CTTCTAGAAAGGGC,Granule immature,12,Granule-immature
+CTTCTAGAGCTGAT,Granule mature,35,Granule-mature
+CTTGAACTCATACG,Granule immature,12,Granule-immature
+CTTGAACTCCTATT,Endothelial,35,Pericytes
+CTTGAACTTATGGC,GABA,12,GABA-Cnr1
+CTTGAGGATCAAGC,Mossy,12,Mossy-Cyp26b1
+CTTGATTGAGAAGT,Granule mature,35,Granule-mature
+CTTGATTGGAGATA,Granule mature,35,Granule-mature
+CTTGTATGAGATGA,Granule immature,35,Granule-immature
+CTTGTATGGAACCT,Granule mature,35,Granule-mature
+CTTGTATGTAGCGT,Granule mature,35,Granule-mature
+CTTTACGACACACA,Cajal Retzius,35,Cajal-Retzius
+CTTTACGAGTGCTA,Granule immature,35,Granule-immature
+CTTTACGATTCCAT,Granule immature,12,Granule-immature
+CTTTAGACACTACG,Neuroblast,12,Neuroblast 2
+CTTTAGACACTTTC,Astrocytes,12,Astrocytes
+CTTTAGACCTAGAC,Neuroblast,35,Neuroblast 2
+CTTTAGTGTCCTAT,Granule mature,35,Granule-mature
+CTTTCAGAAACCAC,Endothelial,12,PVM
+CTTTCAGAACGGAG,Neuroblast,12,Neuroblast 2
+CTTTCAGACTCGCT,Granule immature,12,Granule-immature
+CTTTCAGAGTCACA,Neuroblast,12,Neuroblast 2
+CTTTGATGTGGTAC,Granule mature,35,Granule-mature
+GAAACAGATGTGAC,Granule immature,12,Granule-immature
+GAAAGATGTCATTC,Granule mature,35,Granule-mature
+GAAAGCCTCTGACA,Granule mature,35,Granule-mature
+GAAAGCCTGACGTT,Granule mature,35,Granule-mature
+GAAAGCCTGTATGC,Granule mature,35,Granule-mature
+GAAAGCCTTGGTCA,nIPC,12,nIPC
+GAAAGTGAAGGGTG,Granule mature,35,Granule-mature
+GAAAGTGATGCTAG,Granule mature,35,Granule-mature
+GAAATACTACGTGT,Granule immature,35,Granule-immature
+GAAATACTGTCTAG,Granule mature,35,Granule-mature
+GAACACACCACTAG,Microglia,35,Microglia
+GAACACACGTCTAG,Granule mature,35,Granule-mature
+GAACAGCTGCGGAA,Neuroblast,35,Neuroblast 2
+GAACAGCTGTAAAG,Granule mature,35,Granule-mature
+GAACCAACCTTGGA,OL,35,OL
+GAACCAACGGACTT,Neuroblast,35,Neuroblast 2
+GAACCAACTGCAGT,Granule mature,35,Granule-mature
+GAACCTGAACCTGA,Neuroblast,12,Neuroblast 2
+GAACCTGAGTGTCA,Neuroblast,35,Neuroblast 2
+GAACGGGAAAGAGT,GABA,12,GABA-Lhx6
+GAACGGGAATGTCG,Granule mature,35,Granule-mature
+GAACGGGACCAGTA,Granule mature,35,Granule-mature
+GAACGGGAGACGTT,Granule mature,35,Granule-mature
+GAACGTTGACCCAA,Granule immature,12,Granule-immature
+GAACTGTGAACTGC,Granule immature,35,Granule-immature
+GAACTGTGCTCTCG,Microglia,12,Microglia
+GAACTGTGGAGGCA,Neuroblast,12,Neuroblast 2
+GAAGAATGGTTCGA,Granule mature,35,Granule-mature
+GAAGATGAAAGTAG,Astrocytes,12,Astrocytes
+GAAGATGAAGCACT,Granule mature,35,Granule-mature
+GAAGATGATCTCTA,Granule mature,35,Granule-mature
+GAAGCGGACACTTT,Granule immature,12,Granule-immature
+GAAGCGGAGTAAGA,Granule mature,35,Granule-mature
+GAAGCTACATAAGG,Granule mature,35,Granule-mature
+GAAGCTACCCTGAA,Granule immature,35,Granule-immature
+GAAGCTACCGACTA,Granule mature,35,Granule-mature
+GAAGCTACCGCCTT,Granule mature,35,Granule-mature
+GAAGCTACGCCTTC,Granule mature,35,Granule-mature
+GAAGCTACTATCGG,Cck-Tox,35,Cck-Tox
+GAAGCTTGAGAGTA,Granule mature,35,Granule-mature
+GAAGCTTGGCCAAT,Granule mature,35,Granule-mature
+GAAGGTCTCTTCCG,Granule mature,12,Granule-mature
+GAAGTAGAGGCGAA,Microglia,35,Microglia
+GAAGTAGAGGGCAA,Granule mature,35,Granule-mature
+GAAGTCACTCGCCT,Granule immature,12,Granule-immature
+GAAGTCTGTAGACC,Granule immature,12,Granule-immature
+GAAGTCTGTGGTGT,Granule immature,12,Granule-immature
+GAAGTGCTAGTTCG,Granule immature,12,Granule-immature
+GAATGCACAGCATC,Granule immature,35,Granule-immature
+GAATGCACGAAACA,Granule immature,35,Granule-immature
+GAATGCACGACAGG,Granule mature,35,Granule-mature
+GAATGCACGTACGT,Granule immature,12,Granule-immature
+GAATGCACTAGCCA,Granule immature,12,Granule-immature
+GAATGCTGCGCTAA,Granule mature,35,Granule-mature
+GAATGGCTCCTTAT,Granule immature,12,Granule-immature
+GAATTAACGCAGAG,Astrocytes,12,Astrocytes
+GAATTAACGGTCTA,Granule immature,12,Granule-immature
+GACAACACAAAAGC,Granule immature,35,Granule-immature
+GACAACACGCAGAG,Granule immature,35,Granule-immature
+GACAACTGAGCCTA,Neuroblast,12,Neuroblast 2
+GACAACTGCACACA,Granule mature,35,Granule-mature
+GACAACTGTCGCAA,OPC,35,OPC
+GACACTGAACTGGT,Granule mature,35,Granule-mature
+GACACTGAAGTGTC,nIPC,35,nIPC
+GACAGGGAAGTCGT,Neuroblast,12,Neuroblast 2
+GACAGGGAAGTGTC,Granule immature,12,Granule-immature
+GACAGTACGGGCAA,Microglia,35,Microglia
+GACAGTACGTCATG,Granule immature,35,Granule-immature
+GACAGTTGATCGTG,Granule mature,35,Granule-mature
+GACAGTTGCTGGTA,Granule mature,35,Granule-mature
+GACAGTTGGTCCTC,Granule mature,35,Granule-mature
+GACCAAACCCAAGT,Granule mature,35,Granule-mature
+GACCATGAAACGAA,Granule mature,35,Granule-mature
+GACCATGAGGTTAC,Granule immature,35,Granule-immature
+GACCATGATGACTG,Astrocytes,35,Astrocytes
+GACCCTACCTGTTT,Microglia,35,Microglia
+GACCCTACTGACAC,Granule mature,35,Granule-mature
+GACCCTACTTGCGA,Granule immature,12,Granule-immature
+GACCTAGACCGTAA,Granule mature,35,Granule-mature
+GACCTAGAGTGTTG,Granule mature,35,Granule-mature
+GACCTAGATACGCA,Granule immature,12,Granule-immature
+GACGAACTAGAGTA,Granule immature,12,Granule-immature
+GACGAGGAACCTTT,Granule immature,35,Granule-immature
+GACGAGGACTTCGC,Granule mature,35,Granule-mature
+GACGAGGATCTTCA,Neuroblast,12,Neuroblast 2
+GACGAGGATTTCTG,Granule mature,35,Granule-mature
+GACGATTGCTTGAG,Neuroblast,12,Neuroblast 2
+GACGCCGACAGAAA,Granule immature,35,Granule-immature
+GACGCCGACTGACA,Granule mature,35,Granule-mature
+GACGCCGACTGGAT,Granule immature,12,Granule-immature
+GACGCCGAGAATAG,Neuroblast,12,Neuroblast 2
+GACGCTCTATGCCA,Granule immature,12,Granule-immature
+GACGCTCTGAGATA,Granule mature,35,Granule-mature
+GACGTAACCGCTAA,Granule immature,35,Granule-immature
+GACGTAACTTGGCA,Granule mature,35,Granule-mature
+GACGTATGAGTCAC,Mossy,35,Mossy-Cyp26b1
+GACGTATGGCCAAT,Neuroblast,12,Neuroblast 2
+GACGTCCTCCCACT,Neuroblast,12,Neuroblast 2
+GACGTCCTGAAAGT,Granule mature,35,Granule-mature
+GACTACGAAAGTGA,Granule immature,35,Granule-immature
+GACTCCTGCGACAT,Endothelial,35,Endothelial
+GACTCCTGTTTGTC,Granule mature,35,Granule-mature
+GACTGAACACTTTC,Granule immature,35,Granule-immature
+GACTGAACGCTACA,Granule immature,35,Granule-immature
+GACTGAACTGAGCT,Granule mature,12,Granule-mature
+GACTGATGAGTAGA,Granule immature,12,Granule-immature
+GACTGATGCTAGAC,Granule immature,12,Granule-immature
+GACTGATGGCTAAC,Granule immature,12,Granule-immature
+GACTGTGACTAGAC,Granule mature,35,Granule-mature
+GACTGTGACTCAGA,Neuroblast,12,Neuroblast 2
+GAGAAATGCAGTTG,Granule mature,35,Granule-mature
+GAGAAATGCTTGAG,Granule mature,35,Granule-mature
+GAGAAATGGCTCCT,Neuroblast,12,Neuroblast 2
+GAGAAATGTCCGTC,Granule mature,35,Granule-mature
+GAGAGGTGACGGGA,Granule mature,35,Granule-mature
+GAGAGGTGAGCGGA,Granule immature,35,Granule-immature
+GAGAGGTGATTTCC,Astrocytes,35,Astrocytes
+GAGATAGAACAGCT,Granule mature,35,Granule-mature
+GAGATAGACTCTAT,Neuroblast,12,Neuroblast 2
+GAGCAACTCTCAAG,Neuroblast,12,Neuroblast 2
+GAGCAACTTCGCAA,Granule mature,35,Granule-mature
+GAGCAGGAATCTTC,Granule mature,12,Granule-mature
+GAGCAGGAGTGCAT,Granule mature,35,Granule-mature
+GAGCGAGAGACGGA,Granule mature,35,Granule-mature
+GAGCGAGAGGAGGT,Granule mature,35,Granule-mature
+GAGCGAGAGTGAGG,GABA,12,GABA-Cnr1
+GAGCGCACCTGGTA,Neuroblast,12,Neuroblast 2
+GAGCGCACTATTCC,Granule immature,35,Granule-immature
+GAGCGCACTTCGTT,Endothelial,35,Endothelial
+GAGCGCTGAACCAC,Granule immature,12,Granule-immature
+GAGCGCTGCATTGG,Neuroblast,12,Neuroblast 1
+GAGCGCTGCCTACC,Granule immature,12,Granule-immature
+GAGCGGCTCCACCT,Granule mature,35,Granule-mature
+GAGCGGCTCCGATA,Granule immature,35,Granule-immature
+GAGCTCCTCCTACC,Granule immature,35,Granule-immature
+GAGCTCCTGCCCTT,Neuroblast,12,Neuroblast 2
+GAGCTCCTGGAGCA,Granule immature,35,Granule-immature
+GAGCTCCTTAACCG,Astrocytes,35,Astrocytes
+GAGCTCCTTGAGGG,Radial Glia-like,35,Radial Glia-like
+GAGGACGACTATGG,Neuroblast,12,Neuroblast 2
+GAGGATCTCGAATC,Neuroblast,12,Neuroblast 2
+GAGGATCTGGGCAA,Granule mature,35,Granule-mature
+GAGGATCTGGTAAA,Granule mature,35,Granule-mature
+GAGGATCTTACTCT,Granule mature,35,Granule-mature
+GAGGATCTTTGAGC,Radial Glia-like,12,Radial Glia-like
+GAGGCCACTACAGC,Mossy,12,Mossy-Adcyap1
+GAGGGAACCCTTTA,Granule immature,12,Granule-immature
+GAGGGAACCTCATT,Granule immature,12,Granule-immature
+GAGGGAACTTTACC,Granule mature,35,Granule-mature
+GAGGGATGAAGAGT,OPC,12,NFOL
+GAGGGATGCAGTCA,Granule immature,35,Granule-immature
+GAGGGATGCCATGA,Microglia,35,Microglia
+GAGGGCCTACTACG,Granule mature,35,Granule-mature
+GAGGGCCTGGAGTG,Granule mature,35,Granule-mature
+GAGGGCCTGTTGAC,Granule mature,35,Granule-mature
+GAGGTACTGTCCTC,Granule mature,35,Granule-mature
+GAGGTTACATCAGC,Granule immature,35,Granule-immature
+GAGGTTACCTGTAG,Granule immature,35,Granule-immature
+GAGTAAGAGGATCT,Granule immature,35,Granule-immature
+GAGTAAGATAAGCC,Granule mature,35,Granule-mature
+GAGTAAGATTTACC,Astrocytes,35,Astrocytes
+GAGTACACACTCTT,Granule immature,35,Granule-immature
+GAGTCAACGAGCAG,Granule mature,35,Granule-mature
+GAGTCAACTATCGG,Granule mature,35,Granule-mature
+GAGTCTGACTGAAC,Granule mature,35,Granule-mature
+GAGTCTGAGTCTAG,Radial Glia-like,12,Radial Glia-like
+GAGTGACTCGGAGA,Granule immature,12,Granule-immature
+GAGTGGGACTGGAT,Mossy,12,Mossy-Adcyap1
+GAGTGGGATGCCCT,Granule mature,35,Granule-mature
+GAGTGTTGCCATAG,Granule immature,12,Granule-immature
+GAGTGTTGGGTTCA,Radial Glia-like,12,Radial Glia-like
+GAGTGTTGTCAGGT,Granule mature,35,Granule-mature
+GAGTGTTGTCCTCG,Granule mature,35,Granule-mature
+GAGTGTTGTCTAGG,Granule immature,12,Granule-immature
+GAGTTGTGGAACTC,Endothelial,12,Endothelial
+GAGTTGTGTCTCCG,Radial Glia-like,35,Radial Glia-like
+GATAAGGAAGGTTC,Microglia,12,PVM
+GATAAGGAGGTAGG,Endothelial,12,Endothelial
+GATAATACCATGCA,Granule immature,12,Granule-immature
+GATACTCTACTTTC,Neuroblast,12,Neuroblast 2
+GATACTCTAGTTCG,Granule mature,35,Granule-mature
+GATACTCTTTCTTG,Granule mature,35,Granule-mature
+GATAGAGACACACA,Astrocytes,35,Astrocytes
+GATAGAGATTGAGC,Granule immature,35,Granule-immature
+GATAGCACCACTTT,Granule immature,35,Granule-immature
+GATATAACTGTCGA,Granule mature,35,Granule-mature
+GATATATGCAGATC,Granule mature,35,Granule-mature
+GATATATGTGGTTG,Granule mature,35,Granule-mature
+GATATCCTCACTCC,Neuroblast,12,Neuroblast 2
+GATATCCTGCCTTC,Granule mature,35,Granule-mature
+GATATCCTGCTCCT,Granule mature,35,Granule-mature
+GATATCCTGTATGC,Granule immature,35,Granule-immature
+GATATCCTTAACGC,Cajal Retzius,35,Cajal-Retzius
+GATATTGATTTGCT,Granule mature,35,Granule-mature
+GATCATCTGTTGAC,Granule mature,35,Granule-mature
+GATCATCTTTTCGT,Granule mature,35,Granule-mature
+GATCATCTTTTGCT,Neuroblast,12,Neuroblast 2
+GATCCCTGGAGGGT,Granule mature,12,Granule-mature
+GATCCGCTGGGTGA,Granule mature,35,Granule-mature
+GATCCGCTTCCCGT,Granule mature,35,Granule-mature
+GATCGAACTCTACT,Astrocytes,35,Astrocytes
+GATCGATGCTTAGG,Granule mature,35,Granule-mature
+GATCGATGGAGGGT,Granule mature,12,Granule-mature
+GATCGTGATCTCCG,Astrocytes,12,Astrocytes
+GATCGTGATGCTAG,Granule immature,12,Granule-immature
+GATCGTGATGGAGG,Granule immature,12,Granule-immature
+GATCTACTCCTTAT,Neuroblast,12,Neuroblast 2
+GATCTACTTTCTAC,Granule mature,35,Granule-mature
+GATCTTACTGCCTC,Granule immature,35,Granule-immature
+GATCTTTGTAACCG,Granule mature,35,Granule-mature
+GATGACACACCTTT,Granule immature,12,Granule-immature
+GATGCAACTCCGTC,Cck-Tox,35,Cck-Tox
+GATGCATGGAATGA,OPC,12,OPC
+GATGCATGTTGAGC,Neuroblast,12,Neuroblast 2
+GATGCCCTCCTCAC,Granule immature,12,Granule-immature
+GATTACCTCCTTCG,Granule mature,12,Granule-mature
+GATTACCTTCGTAG,OL,35,OL
+GATTCGGAATCAGC,Granule mature,35,Granule-mature
+GATTCTACAGCATC,Granule mature,35,Granule-mature
+GATTCTACGCTTAG,Mossy,35,Mossy-Cyp26b1
+GATTCTTGATCGGT,Granule mature,35,Granule-mature
+GATTCTTGATGTGC,Granule immature,35,Granule-immature
+GATTGGTGCCGCTT,Granule mature,35,Granule-mature
+GATTTAGATGACAC,Microglia,12,Microglia
+GCAAACTGGCAGTT,Radial Glia-like,35,Radial Glia-like
+GCAAACTGTCCTGC,Granule immature,35,Granule-immature
+GCAACCCTTTCGGA,Granule immature,12,Granule-immature
+GCAACTGAAGAGTA,Neuroblast,12,Neuroblast 2
+GCAACTGATCAGGT,Granule mature,35,Granule-mature
+GCAACTGATGAGAA,Granule mature,35,Granule-mature
+GCAAGACTCTACCC,Neuroblast,12,Neuroblast 2
+GCAAGACTTATTCC,Granule mature,35,Granule-mature
+GCAATCGAAAGGTA,Granule mature,35,Granule-mature
+GCAATCGACCAGTA,Mossy,12,Mossy-Cyp26b1
+GCAATTCTGGAACG,Granule mature,12,Granule-mature
+GCACAAACATGTCG,Microglia,35,Microglia
+GCACAAACGTGTAC,Granule mature,35,Granule-mature
+GCACAAACTTCGCC,Granule mature,12,Granule-mature
+GCACAAACTTGTGG,Granule mature,35,Granule-mature
+GCACAATGACCAAC,Cajal Retzius,35,Cajal-Retzius
+GCACAATGCACTGA,Granule mature,12,Granule-mature
+GCACACCTAAGCAA,Granule immature,12,Granule-immature
+GCACCACTACTTTC,Neuroblast,12,Neuroblast 2
+GCACCTTGGGTAAA,Granule immature,12,Granule-immature
+GCACGGACCCCGTT,Granule mature,35,Granule-mature
+GCACGGTGCTTGCC,Granule immature,35,Granule-immature
+GCACGGTGGCAGAG,Granule mature,35,Granule-mature
+GCACGGTGGGAGTG,Granule immature,12,Granule-immature
+GCACGGTGTAAGGA,Neuroblast,12,Neuroblast 2
+GCACGTCTCTTAGG,Neuroblast,35,Neuroblast 2
+GCACTAGAACGCTA,Granule mature,35,Granule-mature
+GCACTAGAAGACTC,Granule mature,35,Granule-mature
+GCACTGCTGTTTGG,Neuroblast,12,Neuroblast 2
+GCAGATACCGGTAT,Granule mature,35,Granule-mature
+GCAGATACGTCAAC,OL,35,OL
+GCAGCGTGTCCGAA,Cck-Tox,35,Cck-Tox
+GCAGCTCTGAGCAG,Granule immature,12,Granule-immature
+GCAGGCACACCCAA,Microglia,35,PVM
+GCAGGCACCTAAGC,Granule mature,35,Granule-mature
+GCAGGCACCTATTC,Granule immature,35,Granule-immature
+GCAGGCACGTTAGC,Granule mature,12,Granule-mature
+GCAGGGCTAGCGGA,Granule mature,35,Granule-mature
+GCAGGGCTGGTGAG,Cck-Tox,35,Cck-Tox
+GCAGGGCTTCGTAG,Granule mature,35,Granule-mature
+GCAGTCCTAGCGGA,Neuroblast,35,Neuroblast 2
+GCAGTCCTCGCAAT,Granule mature,35,Granule-mature
+GCAGTCCTTAACCG,Neuroblast,12,Neuroblast 2
+GCAGTCCTTAGAGA,Granule mature,35,Granule-mature
+GCAGTTGAACCCAA,Endothelial,35,Pericytes
+GCATCAGATGCTCC,GABA,35,GABA-Lhx6
+GCATGATGAACTGC,Microglia,12,Microglia
+GCATGATGACGCAT,Neuroblast,12,Neuroblast 2
+GCATGATGGAACTC,Mossy,12,Mossy-Cyp26b1
+GCATGATGGGATTC,Granule mature,35,Granule-mature
+GCATGATGTGGTAC,Granule mature,35,Granule-mature
+GCATGTGAGTACCA,Granule mature,35,Granule-mature
+GCATGTGATGAAGA,Granule immature,12,Granule-immature
+GCATGTGATGCTAG,Granule mature,35,Granule-mature
+GCATGTGATGTGGT,Granule mature,35,Granule-mature
+GCATTGGAAACGGG,Granule mature,35,Granule-mature
+GCATTGGAAGATGA,Granule mature,12,Granule-mature
+GCATTGGACGCTAA,Granule mature,35,Granule-mature
+GCATTGGAGTCTGA,Granule mature,35,Granule-mature
+GCCAAAACCCAAGT,Endothelial,35,VLMC
+GCCAAAACGGGAGT,Neuroblast,35,Neuroblast 1
+GCCAAAACTGAACC,Granule immature,35,Granule-immature
+GCCAAAACTGGATC,Microglia,12,Microglia
+GCCAACCTAGAGTA,Granule immature,12,Granule-immature
+GCCAACCTCTCGAA,Neuroblast,12,Neuroblast 2
+GCCAACCTCTTGCC,Radial Glia-like,12,Radial Glia-like
+GCCAACCTGCATAC,Granule mature,35,Granule-mature
+GCCAACCTTGTGCA,Granule immature,12,Granule-immature
+GCCACGGACAAAGA,Granule mature,12,Granule-mature
+GCCACGGACACTAG,Endothelial,12,Endothelial
+GCCACGGAGGTATC,Neuroblast,35,Neuroblast 2
+GCCATCACCCGTAA,Granule mature,35,Granule-mature
+GCCATCACGAACTC,Granule immature,35,Granule-immature
+GCCATCACGCTAAC,Cajal Retzius,12,Cajal-Retzius
+GCCATCACTCCCAC,Granule immature,35,Granule-immature
+GCCATGCTAGTCAC,Granule immature,12,Granule-immature
+GCCCAACTCAGTCA,Granule mature,35,Granule-mature
+GCCCAACTGAATAG,Neuroblast,12,Neuroblast 2
+GCCCAGGACCATGA,Granule mature,35,Granule-mature
+GCCCAGGATTGCTT,Granule immature,12,Granule-immature
+GCCCATACATCAGC,Granule mature,35,Granule-mature
+GCCCATACGCGGAA,Granule immature,35,Granule-immature
+GCCGACGAGGGAGT,Granule immature,35,Granule-immature
+GCCGACGATAAGGA,Neuroblast,12,Neuroblast 2
+GCCGACGATTGCAG,Granule immature,12,Granule-immature
+GCCGAGTGTAGCCA,Granule immature,12,Granule-immature
+GCCGAGTGTTTACC,Granule immature,12,Granule-immature
+GCCGGAACACGTTG,Astrocytes,35,Astrocytes
+GCCGGAACCGTTGA,Neuroblast,12,Neuroblast 2
+GCCGGAACTCTCTA,Granule mature,35,Granule-mature
+GCCGTACTATTCTC,Mossy,12,Mossy-Adcyap1
+GCCGTACTCGTTGA,Granule immature,12,Granule-immature
+GCCTACACCACAAC,Granule mature,35,Granule-mature
+GCCTACACGTGAGG,Radial Glia-like,12,Radial Glia-like
+GCCTAGCTGCATAC,Astrocytes,12,Astrocytes
+GCCTAGCTTCATTC,Granule mature,35,Granule-mature
+GCCTCAACAAACGA,Granule mature,35,Granule-mature
+GCCTCAACATTTCC,Granule mature,35,Granule-mature
+GCCTCAACTACAGC,Astrocytes,35,Astrocytes
+GCCTCATGACGTGT,Astrocytes,35,Astrocytes
+GCCTCATGACTACG,Neuroblast,12,Neuroblast 2
+GCCTCATGTACAGC,Granule mature,12,Granule-mature
+GCCTGACTAGCTCA,Endothelial,35,VLMC
+GCCTGACTGTTACG,Granule mature,35,Granule-mature
+GCCTGACTTCTCGC,GABA,12,GABA-Cnr1
+GCGAAGGATATGGC,Granule mature,12,Granule-mature
+GCGACTCTGAATGA,Neuroblast,12,Neuroblast 2
+GCGAGAGACGAACT,Granule mature,35,Granule-mature
+GCGAGAGAGTAGCT,Granule mature,35,Granule-mature
+GCGAGAGATAGTCG,Radial Glia-like,35,Radial Glia-like
+GCGAGAGATTTGGG,OL,35,OL
+GCGATATGACGTAC,GABA,35,GABA-Lhx6
+GCGATATGGTAGCT,Granule mature,35,Granule-mature
+GCGATATGGTCACA,Granule immature,12,Granule-immature
+GCGCACGAAGCACT,Neuroblast,12,Neuroblast 2
+GCGCATCTAGCTAC,Endothelial,35,Endothelial
+GCGCATCTTGGTAC,Granule mature,35,Granule-mature
+GCGCGATGATGTCG,Granule mature,35,Granule-mature
+GCGGACTGACTACG,Granule mature,35,Granule-mature
+GCGGACTGCTTACT,Neuroblast,12,Neuroblast 1
+GCGGAGCTCTTACT,Radial Glia-like,12,Radial Glia-like
+GCGGAGCTGAGAGC,Granule immature,12,Granule-immature
+GCGGAGCTGTCATG,Astrocytes,35,Astrocytes
+GCGGCAACACTCTT,Granule immature,35,Granule-immature
+GCGGCAACATCGGT,Granule mature,35,Granule-mature
+GCGGCAACTTCATC,Granule immature,35,Granule-immature
+GCGGGACTACGTTG,Granule immature,35,Granule-immature
+GCGGGACTAGCAAA,Granule mature,35,Granule-mature
+GCGGGACTGGGTGA,Neuroblast,12,Neuroblast 2
+GCGTAAACGGTCAT,Granule immature,35,Granule-immature
+GCGTAATGAGCGGA,Granule mature,35,Granule-mature
+GCGTAATGCATTCT,Granule immature,35,Granule-immature
+GCGTACCTTTCGCC,Granule immature,12,Granule-immature
+GCGTATGAACCAGT,Radial Glia-like,35,Radial Glia-like
+GCTACAGAGGACTT,Neuroblast,12,Neuroblast 2
+GCTACCTGGCTTCC,Cck-Tox,35,Cck-Tox
+GCTACCTGGGAAGC,Mossy,12,Mossy-Adcyap1
+GCTACCTGGGGAGT,Granule mature,35,Granule-mature
+GCTACCTGTGGATC,Granule mature,35,Granule-mature
+GCTACGCTGGTTTG,Granule mature,35,Granule-mature
+GCTACGCTGTGCAT,Granule immature,35,Granule-immature
+GCTAGAACTTCGCC,Granule mature,35,Granule-mature
+GCTAGAACTTTACC,Granule mature,35,Granule-mature
+GCTATACTCAGATC,Granule mature,35,Granule-mature
+GCTATACTGAATGA,Granule mature,35,Granule-mature
+GCTCACTGGAGGGT,Granule mature,35,Granule-mature
+GCTCACTGGGATCT,Granule mature,35,Granule-mature
+GCTCAGCTCCGTTC,Granule mature,35,Granule-mature
+GCTCAGCTGTCTGA,Granule mature,35,Granule-mature
+GCTCAGCTTACTGG,Granule mature,35,Granule-mature
+GCTCCATGCGCCTT,Granule immature,12,Granule-immature
+GCTCGACTAGAAGT,Granule immature,12,Granule-immature
+GCTCGACTATTGGC,Granule immature,12,Granule-immature
+GCTGATGACCTTAT,Granule immature,35,Granule-immature
+GCTGATGACTCGCT,Granule mature,35,Granule-mature
+GCTTAACTGACTAC,Granule immature,35,Granule-immature
+GCTTGAGAGCGATT,Neuroblast,12,Neuroblast 2
+GCTTGAGATCGCAA,Granule immature,12,Granule-immature
+GCTTGAGATGTCGA,Granule mature,35,Granule-mature
+GGAACACTACGTAC,Granule mature,35,Granule-mature
+GGAACACTCATTTC,Granule mature,35,Granule-mature
+GGAACTACCCTACC,Neuroblast,12,Neuroblast 2
+GGAACTACGCATAC,Granule immature,12,Granule-immature
+GGAACTACTGCTAG,Granule immature,35,Granule-immature
+GGAACTTGACACAC,Granule immature,12,Granule-immature
+GGAAGGACCATGCA,Granule mature,35,Granule-mature
+GGAAGGACGAGAGC,Granule mature,35,Granule-mature
+GGAAGGTGCTGATG,Neuroblast,12,Neuroblast 2
+GGAAGGTGGAGCTT,Granule mature,35,Granule-mature
+GGAAGGTGTAACGC,Granule mature,35,Granule-mature
+GGAAGGTGTCATTC,Neuroblast,12,Neuroblast 1
+GGAATCTGCCCACT,Granule mature,35,Granule-mature
+GGAATGCTCAGTCA,Neuroblast,12,Neuroblast 2
+GGAATGCTCCATGA,Granule mature,35,Granule-mature
+GGAATGCTGGACGA,Granule immature,12,Granule-immature
+GGAATGCTGTGTCA,Granule mature,35,Granule-mature
+GGACAACTCTAGCA,Neuroblast,12,Neuroblast 2
+GGACAACTGGTCTA,Granule mature,35,Granule-mature
+GGACAACTTGACCA,Granule mature,35,Granule-mature
+GGACAGGATGCAGT,Granule mature,35,Granule-mature
+GGACATTGACTGTG,Granule immature,12,Granule-immature
+GGACATTGAGCTCA,Granule mature,35,Granule-mature
+GGACCCGAACGACT,Granule mature,35,Granule-mature
+GGACCCGACAGGAG,Granule mature,35,Granule-mature
+GGACCCGATCCGAA,Granule immature,12,Granule-immature
+GGACCGTGAACGTC,Granule mature,35,Granule-mature
+GGACCTCTCCTACC,Granule mature,35,Granule-mature
+GGACCTCTGATAGA,Astrocytes,35,Astrocytes
+GGACCTCTTGCAAC,Granule mature,35,Granule-mature
+GGACGAGACCACAA,Granule mature,35,Granule-mature
+GGACGAGAGTACAC,Cajal Retzius,35,Cajal-Retzius
+GGACGAGATCCTTA,Granule mature,35,Granule-mature
+GGACGAGATGAAGA,Granule mature,35,Granule-mature
+GGACGAGATGCATG,Granule mature,35,Granule-mature
+GGACGCACCAAGCT,Endothelial,12,VLMC
+GGACGCACTTGCAG,Granule immature,12,Granule-immature
+GGACGCTGAGAGAT,Granule mature,35,Granule-mature
+GGACGCTGATCGAC,Granule mature,35,Granule-mature
+GGACGCTGCCAGTA,OL,35,OL
+GGACGCTGTTGGTG,Granule immature,12,Granule-immature
+GGACTATGCACAAC,Neuroblast,35,Neuroblast 2
+GGAGACGATCGCCT,Granule mature,35,Granule-mature
+GGAGACGATTGTGG,Granule mature,35,Granule-mature
+GGAGCAGACATTTC,Cajal Retzius,12,Cajal-Retzius
+GGAGCCACAGATCC,Endothelial,12,Endothelial
+GGAGCCACTAAGGA,Granule mature,35,Granule-mature
+GGAGGATGCGCAAT,Neuroblast,12,Neuroblast 2
+GGAGGATGCTTGAG,Granule mature,35,Granule-mature
+GGAGGCCTGAACTC,Neuroblast,12,Neuroblast 2
+GGAGGCCTGCGATT,Granule mature,35,Granule-mature
+GGAGGCCTTCTTAC,Granule mature,35,Granule-mature
+GGAGGCCTTGGTAC,Granule mature,35,Granule-mature
+GGAGGTGACCCTCA,Granule mature,35,Granule-mature
+GGAGGTGACGGAGA,Granule immature,35,Granule-immature
+GGAGTTTGCCTCAC,Neuroblast,35,Neuroblast 1
+GGAGTTTGTGGTGT,Granule immature,35,Granule-immature
+GGAGTTTGTTCGTT,Granule immature,12,Granule-immature
+GGATACTGATCGTG,Granule mature,35,Granule-mature
+GGATACTGCTGACA,Endothelial,35,PVM
+GGATACTGTCGTTT,Neuroblast,12,Neuroblast 1
+GGATAGCTGGGCAA,Granule mature,35,Granule-mature
+GGATGTACACGCAT,Neuroblast,12,Neuroblast 2
+GGATGTACACTAGC,Granule immature,12,Granule-immature
+GGATGTACCAGCTA,Radial Glia-like,12,Radial Glia-like
+GGATGTACCGTGTA,Granule mature,35,Granule-mature
+GGATGTTGCTTCTA,Neuroblast,12,Neuroblast 2
+GGATGTTGGAGACG,GABA,12,GABA-Cnr1
+GGATGTTGGAGGGT,Astrocytes,12,Astrocytes
+GGATTGTGGCTTCC,Granule mature,35,Granule-mature
+GGCAAGGAAAGTAG,Astrocytes,35,Astrocytes
+GGCAAGGAATCGGT,Granule mature,35,Granule-mature
+GGCAAGGATTCCAT,Granule mature,35,Granule-mature
+GGCAATACCGCAAT,Granule mature,12,Granule-mature
+GGCAATACGCGATT,Neuroblast,35,Neuroblast 2
+GGCAATACGTCGTA,Neuroblast,12,Neuroblast 2
+GGCACGTGACCTTT,Neuroblast,12,Neuroblast 2
+GGCACGTGTAGTCG,Granule mature,35,Granule-mature
+GGCACTCTAACTGC,Granule mature,35,Granule-mature
+GGCATATGATTGGC,Granule mature,35,Granule-mature
+GGCATATGGAGCAG,Neuroblast,12,Neuroblast 2
+GGCATATGTAAGCC,Granule immature,35,Granule-immature
+GGCCACGAGGTCTA,Granule immature,35,Granule-immature
+GGCCACGAGTGTCA,Endothelial,12,Endothelial
+GGCCAGACGAGATA,Neuroblast,12,Neuroblast 1
+GGCCAGACTCCCAC,Microglia,12,Microglia
+GGCCCAGATTGCTT,Granule mature,35,Granule-mature
+GGCCGAACCACTTT,Granule immature,12,Granule-immature
+GGCCGAACCTGTAG,Endothelial,12,Endothelial
+GGCCGAACGCAGTT,Granule mature,35,Granule-mature
+GGCCGAACTGACTG,Granule mature,35,Granule-mature
+GGCCGATGCTCATT,GABA,12,GABA-Lhx6
+GGCCGATGCTTCCG,Granule mature,35,Granule-mature
+GGCGACACGAGATA,Granule mature,35,Granule-mature
+GGCGACACGTAAGA,Granule immature,35,Granule-immature
+GGCGACACTCAGTG,Neuroblast,35,Neuroblast 2
+GGCGACTGTGCTAG,Granule immature,12,Granule-immature
+GGCGGACTAGTCGT,Granule mature,35,Granule-mature
+GGCGGACTGCGTAT,Granule mature,35,Granule-mature
+GGCTAAACCAGAGG,Granule mature,35,Granule-mature
+GGCTAAACTATCTC,Granule mature,35,Granule-mature
+GGCTAATGGCGGAA,Granule mature,35,Granule-mature
+GGCTACCTGCGAAG,Granule mature,35,Granule-mature
+GGCTCACTCACAAC,Granule mature,35,Granule-mature
+GGCTCACTCGGGAA,Microglia,35,Microglia
+GGGAACGAACCGAT,Granule mature,35,Granule-mature
+GGGAACGACAGCTA,Granule immature,12,Granule-immature
+GGGAACGACTTTAC,Granule mature,35,Granule-mature
+GGGAACGATAAGGA,Granule immature,35,Granule-immature
+GGGAAGACGGAGGT,Granule immature,35,Granule-immature
+GGGAAGACGTTTCT,Granule mature,35,Granule-mature
+GGGAAGTGACCATG,Granule mature,35,Granule-mature
+GGGACCACCCAAGT,Granule immature,12,Granule-immature
+GGGACCACGTATCG,Neuroblast,35,Neuroblast 1
+GGGACCTGCATGCA,Granule mature,35,Granule-mature
+GGGACCTGCCTGTC,Granule mature,35,Granule-mature
+GGGACCTGTTCTTG,Mossy,12,Mossy-Adcyap1
+GGGATGGAAAGAAC,Neuroblast,12,Neuroblast 2
+GGGATGGAAAGGTA,OL,35,OL
+GGGATGGAACCTGA,Granule mature,35,Granule-mature
+GGGATGGAGAGGAC,OPC,35,OPC
+GGGATGGATCCTAT,Granule mature,35,Granule-mature
+GGGCAAGAGAGCTT,Granule immature,12,Granule-immature
+GGGCAAGATACAGC,Granule mature,35,Granule-mature
+GGGCAAGATTCAGG,Granule immature,35,Granule-immature
+GGGCAAGATTTCTG,Granule mature,35,Granule-mature
+GGGCACACAACGAA,Granule immature,35,Granule-immature
+GGGCACACCTTATC,Granule mature,35,Granule-mature
+GGGCACACTATCTC,Microglia,12,Microglia
+GGGCAGCTCCGAAT,Neuroblast,12,Neuroblast 2
+GGGCAGCTCTGACA,Granule mature,35,Granule-mature
+GGGCCAACACCACA,Granule mature,35,Granule-mature
+GGGCCAACACGTAC,Granule mature,35,Granule-mature
+GGGCCAACGAACTC,Astrocytes,35,Astrocytes
+GGGCCAACGAGGCA,Microglia,35,Microglia
+GGGCCATGCTAGAC,nIPC,12,nIPC
+GGGTAACTCTCTTA,Granule mature,35,Granule-mature
+GGGTAACTGGGCAA,Neuroblast,12,Neuroblast 2
+GGGTAACTTTCAGG,Granule immature,35,Granule-immature
+GGGTTAACTTATCC,Neuroblast,12,Neuroblast 2
+GGGTTATGCGGAGA,Granule mature,35,Granule-mature
+GGGTTATGCTTGAG,Granule mature,35,Granule-mature
+GGTAAAGAGCTATG,Granule mature,35,Granule-mature
+GGTAAAGATGACCA,Microglia,35,Microglia
+GGTACAACCACCAA,Mossy,12,Mossy-Adcyap1
+GGTACAACTGTCGA,OL,35,OL
+GGTACATGGCCTTC,Astrocytes,35,Astrocytes
+GGTACTGACTTGGA,Granule mature,35,Granule-mature
+GGTAGTACAGGTCT,Mossy,35,Mossy-Klk8
+GGTAGTACATCGAC,Neuroblast,12,Neuroblast 2
+GGTAGTACCTATTC,Granule immature,35,Granule-immature
+GGTAGTACCTGTAG,Granule immature,35,Granule-immature
+GGTATCGAACTGGT,Granule mature,35,Granule-mature
+GGTATCGAGCGTTA,Granule immature,12,Granule-immature
+GGTCAAACTGCGTA,OL,35,OL
+GGTCAAACTTACTC,Neuroblast,12,Neuroblast 2
+GGTCTAGACACTTT,Neuroblast,12,Neuroblast 1
+GGTCTAGATCTACT,Granule mature,35,Granule-mature
+GGTCTAGATTTACC,Neuroblast,12,Neuroblast 2
+GGTGGAGAAGCACT,Granule immature,12,Granule-immature
+GGTTGAACCTTCGC,Granule immature,12,Granule-immature
+GGTTGAACGAAAGT,Neuroblast,12,Neuroblast 2
+GGTTGAACTGCCTC,Granule mature,35,Granule-mature
+GGTTTACTCTTATC,Endothelial,12,Endothelial
+GGTTTACTTATCGG,Neuroblast,12,Neuroblast 2
+GTAACGTGAACCTG,Astrocytes,35,Astrocytes
+GTAACGTGAACGTC,Granule mature,12,Granule-mature
+GTAACGTGCCAAGT,Granule immature,12,Granule-immature
+GTAACGTGCCTAAG,Granule immature,12,Granule-immature
+GTAACGTGCTGTGA,Granule mature,35,Granule-mature
+GTAAGCACCATGAC,Granule immature,35,Granule-immature
+GTAAGCACTATCTC,Neuroblast,12,Neuroblast 2
+GTAAGCACTGTGCA,Granule mature,35,Granule-mature
+GTAAGCACTTGACG,Granule mature,35,Granule-mature
+GTAATAACCCCTAC,Granule immature,12,Granule-immature
+GTAATATGATCTCT,Granule immature,12,Granule-immature
+GTAATATGCACTCC,Granule immature,35,Granule-immature
+GTACAGTGGGCAAG,Cajal Retzius,35,Cajal-Retzius
+GTACAGTGTACTTC,Granule mature,35,Granule-mature
+GTACAGTGTAGTCG,Endothelial,35,Endothelial
+GTACCCTGAGCCAT,Granule mature,35,Granule-mature
+GTACCCTGTAGTCG,Granule mature,35,Granule-mature
+GTACCCTGTCAGAC,Granule immature,35,Granule-immature
+GTACCCTGTGCTGA,Granule mature,35,Granule-mature
+GTACGTGACTTGCC,Astrocytes,35,Astrocytes
+GTACGTGATAACCG,GABA,35,GABA-Cnr1
+GTACTTTGAAGCCT,Mossy,35,Mossy-Cyp26b1
+GTACTTTGTAGAAG,Granule immature,35,Granule-immature
+GTAGCATGCATGGT,Endothelial,12,Endothelial
+GTAGCATGGTTCTT,Granule immature,35,Granule-immature
+GTAGCCCTGGGACA,Granule mature,35,Granule-mature
+GTAGCCCTGTTTGG,Granule mature,35,Granule-mature
+GTAGCTGAAAAGCA,Granule mature,35,Granule-mature
+GTAGCTGAAAGGGC,Granule mature,35,Granule-mature
+GTAGTCGACGGTAT,Granule mature,12,Granule-mature
+GTAGTCGAGCAAGG,Granule immature,12,Granule-immature
+GTAGTGACGACGGA,Granule mature,35,Granule-mature
+GTAGTGACTCGATG,Granule immature,12,Granule-immature
+GTAGTGTGTCTGGA,Granule immature,12,Granule-immature
+GTATCACTTGCCCT,Granule mature,35,Granule-mature
+GTATCTACGACAGG,Astrocytes,12,Astrocytes
+GTATCTACGGTTAC,Neuroblast,12,Neuroblast 2
+GTATGGTGAATGCC,Granule mature,35,Granule-mature
+GTATGGTGCAATCG,OPC,12,NFOL
+GTATGGTGGTACCA,Neuroblast,35,Neuroblast 1
+GTATGGTGTCAGAC,Cajal Retzius,12,Cajal-Retzius
+GTATTAGAATAAGG,Neuroblast,35,Neuroblast 2
+GTATTAGACTGAAC,Granule immature,12,Granule-immature
+GTATTAGAGGATTC,Microglia,35,Microglia
+GTATTAGATAGACC,Granule mature,35,Granule-mature
+GTATTCACAAAGTG,Granule mature,35,Granule-mature
+GTATTCACCGAACT,Endothelial,12,Pericytes
+GTATTCACCTAGTG,Microglia,35,PVM
+GTATTCACTAGACC,Granule mature,35,Granule-mature
+GTCAACGACCTCGT,Granule mature,35,Granule-mature
+GTCAACGACGAGAG,Mossy,12,Mossy-Adcyap1
+GTCAACGACTCGCT,Granule immature,35,Granule-immature
+GTCAACGATCCAAG,Granule immature,35,Granule-immature
+GTCACAGATTCTCA,Granule mature,35,Granule-mature
+GTCACAGATTGGCA,Granule mature,35,Granule-mature
+GTCACCTGTCAAGC,Granule immature,12,Granule-immature
+GTCCAAGACCGAAT,Neuroblast,12,Neuroblast 2
+GTCCAAGACGTAGT,OL,35,OL
+GTCCACACCTGTAG,Granule immature,35,Granule-immature
+GTCCACACGGTTAC,Granule immature,35,Granule-immature
+GTCCACACTTGTCT,Neuroblast,35,Neuroblast 2
+GTCCACTGTTCTTG,Granule mature,35,Granule-mature
+GTCCAGCTGAACCT,Granule mature,35,Granule-mature
+GTCTAGGAGATACC,Granule mature,35,Granule-mature
+GTCTAGGAGTGTCA,Granule immature,12,Granule-immature
+GTCTAGGATTAGGC,Granule mature,35,Granule-mature
+GTCTGAGAGCTATG,Granule immature,35,Granule-immature
+GTCTGAGAGTCTGA,Mossy,12,Mossy-Cyp26b1
+GTGAACACCTGGAT,Astrocytes,12,Astrocytes
+GTGAACACTCGCCT,GABA,12,GABA-Cnr1
+GTGACAACCTCTTA,Granule mature,35,Granule-mature
+GTGACAACGTTTGG,Granule mature,35,Granule-mature
+GTGAGGGAAACTGC,Granule mature,35,Granule-mature
+GTGATCGAAGTGTC,Granule mature,35,Granule-mature
+GTGATCGATCTCAT,Mossy,35,Mossy-Cyp26b1
+GTGATGACGTTCAG,Granule mature,35,Granule-mature
+GTGATGACTATGCG,Neuroblast,12,Neuroblast 2
+GTGATTCTGCTGAT,Astrocytes,35,Astrocytes
+GTGCAAACTACTTC,Granule immature,12,Granule-immature
+GTGCCACTCACTAG,Granule mature,35,Granule-mature
+GTGCCACTGACGAG,Granule mature,35,Granule-mature
+GTGCTAGACCTCAC,Endothelial,35,Endothelial
+GTGCTAGAGCTACA,Granule mature,12,Endothelial
+GTGGAGGAATTCCT,Granule mature,35,Granule-mature
+GTGGATTGCTCAGA,Granule mature,35,Granule-mature
+GTGGTAACCAATCG,Granule mature,35,Granule-mature
+GTGGTAACGCCCTT,Granule immature,35,Granule-immature
+GTGTACGAGAGAGC,Astrocytes,12,Astrocytes
+GTGTACGAGATGAA,OL,35,OL
+GTGTACGATCAAGC,Astrocytes,35,Astrocytes
+GTGTAGTGATTTCC,Mossy,35,Mossy-Klk8
+GTGTAGTGCCTAAG,nIPC,12,nIPC
+GTGTAGTGGACAAA,Granule mature,35,Granule-mature
+GTGTATCTACCTGA,OPC,12,OPC
+GTGTATCTGGGACA,Granule immature,12,Granule-immature
+GTGTATCTTAGCGT,Granule immature,12,Granule-immature
+GTGTCAGACCAATG,Neuroblast,12,Neuroblast 2
+GTGTCAGATACAGC,OPC,35,OPC
+GTGTGATGGCTTAG,Mossy,35,Mossy-Klk8
+GTTAAAACAAGATG,Neuroblast,12,Neuroblast 2
+GTTAAAACACCTGA,GABA,12,GABA-Lhx6
+GTTAAAACAGCTCA,Neuroblast,12,Neuroblast 2
+GTTAAAACGCCTTC,Granule immature,35,Granule-immature
+GTTAACCTAGTCAC,Granule immature,35,Granule-immature
+GTTAACCTCAGAGG,Granule mature,35,Granule-mature
+GTTAACCTTTCTAC,Neuroblast,12,Neuroblast 2
+GTTACGGACACAAC,Granule mature,35,Granule-mature
+GTTACGGACGCTAA,Astrocytes,12,Astrocytes
+GTTACGGACTGTTT,Neuroblast,35,Neuroblast 2
+GTTACTACTGTCCC,Endothelial,35,Endothelial
+GTTAGGTGAACGAA,Granule mature,35,Granule-mature
+GTTAGGTGACGTTG,Granule mature,35,Granule-mature
+GTTAGGTGATAAGG,Granule mature,35,Granule-mature
+GTTAGGTGGCCATA,Neuroblast,12,Neuroblast 1
+GTTAGGTGGCTGAT,Granule immature,12,Granule-immature
+GTTAGGTGTAACGC,Granule mature,35,Granule-mature
+GTTAGGTGTTATCC,Granule mature,35,Granule-mature
+GTTAGTCTCACTAG,Granule mature,35,Granule-mature
+GTTAGTCTCTGCTC,Granule mature,35,Granule-mature
+GTTATCTGGCAGTT,Granule immature,12,Granule-immature
+GTTATCTGTCCAGA,Granule mature,35,Granule-mature
+GTTATGCTCTATTC,Granule immature,35,Granule-immature
+GTTATGCTGAGGGT,OL,35,OL
+GTTATGCTTCGCCT,Granule immature,12,Granule-immature
+GTTATGCTTTCCAT,Granule immature,12,Granule-immature
+GTTCAGGAAACAGA,Granule mature,35,Granule-mature
+GTTCAGGAGATAGA,GABA,12,GABA-Lhx6
+GTTCATACACCCTC,Granule immature,12,Granule-immature
+GTTCATACCAAAGA,Granule immature,35,Granule-immature
+GTTGACGAAGTACC,Microglia,35,Microglia
+GTTGACGAATGACC,Granule immature,35,Granule-immature
+GTTGAGTGATAAGG,Cck-Tox,35,Cck-Tox
+GTTGAGTGCAGTCA,Granule immature,12,Granule-immature
+GTTGAGTGGTCAAC,Granule mature,35,Granule-mature
+GTTGATCTACGCAT,Granule mature,35,Granule-mature
+GTTGATCTAGAGAT,Granule mature,35,Granule-mature
+GTTGATCTTCCTGC,Granule immature,35,Granule-immature
+GTTGGATGAGCATC,OL,35,OL
+GTTGGATGAGGAGC,Neuroblast,12,Neuroblast 2
+GTTGGATGCGACAT,Endothelial,35,Endothelial
+GTTGGATGCTTAGG,Granule mature,35,Granule-mature
+GTTGGATGGATGAA,Granule immature,12,Granule-immature
+GTTGGATGTGTTCT,Granule immature,35,Granule-immature
+GTTGTACTACGTTG,Mossy,35,Mossy-Adcyap1
+GTTGTACTACTGGT,Granule immature,12,Granule-immature
+GTTGTACTATGGTC,Granule mature,35,Granule-mature
+GTTGTACTCATGCA,Granule immature,12,Granule-immature
+GTTTAAGAGCCATA,Granule mature,35,Granule-mature
+TAAACAACGAACCT,Granule immature,12,Granule-immature
+TAAACAACTAAAGG,Astrocytes,12,Astrocytes
+TAAAGACTAGCCTA,Granule mature,35,Granule-mature
+TAAAGACTCTTGAG,Granule mature,35,Granule-mature
+TAAAGACTGATAGA,GABA,12,GABA-Lhx6
+TAAAGTTGTGGAAA,Granule mature,35,Granule-mature
+TAAATCGACTTATC,Granule mature,35,Granule-mature
+TAAATCGAGCTGAT,Granule immature,35,Granule-immature
+TAAATCGAGTCGAT,Granule mature,35,Granule-mature
+TAAATCGAGTGAGG,Granule mature,35,Granule-mature
+TAAATGTGCGGTAT,Granule immature,35,Granule-immature
+TAAATGTGGAGCAG,Mossy,12,Mossy-Adcyap1
+TAACAATGAGGTTC,Granule mature,35,Granule-mature
+TAACAATGTGACCA,Granule immature,35,Granule-immature
+TAACACCTGGTATC,Endothelial,35,VLMC
+TAACACCTTGTCAG,Granule immature,12,Granule-immature
+TAACATGAACACGT,Granule immature,12,Granule-immature
+TAACATGATGACCA,Granule immature,35,Granule-immature
+TAACCGGACCGTTC,Granule mature,35,Granule-mature
+TAACCGGACTTAGG,Neuroblast,12,Neuroblast 2
+TAACCGGACTTGGA,Granule mature,35,Granule-mature
+TAACCGGATTCAGG,Neuroblast,12,Neuroblast 2
+TAACTAGACGCCTT,Endothelial,35,Endothelial
+TAACTAGAGTATCG,Neuroblast,35,Neuroblast 2
+TAACTAGAGTTCTT,Neuroblast,12,Neuroblast 1
+TAAGAACTCAAAGA,Cajal Retzius,12,Cajal-Retzius
+TAAGAACTGAATCC,Cajal Retzius,12,Cajal-Retzius
+TAAGAGGACTGAGT,Granule mature,12,Granule-mature
+TAAGAGGACTGGAT,Neuroblast,12,Neuroblast 2
+TAAGATACAACGTC,Granule immature,12,Granule-immature
+TAAGATACGGTCAT,Granule mature,35,Granule-mature
+TAAGATACTGGGAG,Granule immature,35,Granule-immature
+TAAGATTGACTACG,Endothelial,12,Endothelial
+TAAGATTGACTCTT,Neuroblast,12,Neuroblast 1
+TAAGCGTGTCACCC,Granule mature,35,Granule-mature
+TAAGCTCTACACTG,Granule immature,35,Granule-immature
+TAAGCTCTACCTCC,Microglia,12,Microglia
+TAAGCTCTGTTCAG,Granule mature,12,Granule-mature
+TAAGGCTGACTACG,Granule mature,35,Granule-mature
+TAAGGCTGGATGAA,Granule mature,35,Granule-mature
+TAAGGCTGGTTACG,Granule immature,35,Granule-immature
+TAAGGGCTAGTGTC,Endothelial,35,Endothelial
+TAAGGGCTCTGTGA,Granule mature,35,Granule-mature
+TAAGGGCTCTTTAC,Granule immature,35,Granule-immature
+TAAGGGCTGTGTTG,Microglia,12,Microglia
+TAAGGGCTTCGCTC,Granule mature,35,Granule-mature
+TAAGTAACGGACGA,Endothelial,35,Endothelial
+TAAGTAACGTTGAC,Granule mature,35,Granule-mature
+TAAGTCCTGAATAG,Astrocytes,12,Astrocytes
+TAATCCACCGTCTC,Neuroblast,12,Neuroblast 2
+TAATCCACGGAAAT,Granule immature,12,Granule-immature
+TAATGATGACCCTC,Neuroblast,12,Neuroblast 1
+TAATGATGACCTGA,Neuroblast,12,Neuroblast 2
+TAATGATGCGTTAG,Granule mature,35,Granule-mature
+TAATGATGGTAAAG,Granule immature,12,Granule-immature
+TAATGCCTATTGGC,Cck-Tox,35,Cck-Tox
+TAATGCCTGAAACA,Granule mature,35,Granule-mature
+TAATGCCTTGATGC,Granule mature,35,Granule-mature
+TAATGTGACCCAAA,Granule immature,12,Granule-immature
+TAATGTGACCTACC,OPC,35,OPC
+TACAAATGCCATAG,Granule mature,35,Granule-mature
+TACAAATGCGCTAA,Endothelial,12,Endothelial
+TACAAATGTGCTCC,Granule mature,35,Granule-mature
+TACAATGAAGCCAT,Granule mature,35,Granule-mature
+TACACACTGCATCA,Granule mature,35,Granule-mature
+TACATCACCTGAGT,Granule mature,35,Granule-mature
+TACATCACTCACCC,Granule immature,12,Granule-immature
+TACCATTGAAGATG,OPC,12,NFOL
+TACCATTGCCCTCA,Granule mature,35,Granule-mature
+TACCGAGAGATGAA,Granule immature,35,Granule-immature
+TACCGAGAGTCACA,Granule mature,35,Granule-mature
+TACCGCTGCTTCCG,Granule immature,12,Granule-immature
+TACCGGCTAATGCC,GABA,35,GABA-Cnr1
+TACCGGCTACGTGT,Mossy,35,Mossy-Klk8
+TACCGGCTCGGAGA,Astrocytes,35,Astrocytes
+TACGACGAATCGGT,Granule mature,35,Granule-mature
+TACGACGACTTGAG,Granule mature,35,Granule-mature
+TACGAGACACCCTC,Astrocytes,35,Astrocytes
+TACGAGTGAGTCGT,Endothelial,35,VLMC
+TACGAGTGTTCACT,Granule immature,12,Granule-immature
+TACGATCTCCCTCA,OPC,12,OPC
+TACGCCACCACACA,Neuroblast,12,Neuroblast 2
+TACGCCACCTTATC,Neuroblast,12,Neuroblast 2
+TACGCGCTCCTCAC,Cajal Retzius,35,Cajal-Retzius
+TACGCGCTGAACCT,Neuroblast,35,Neuroblast 2
+TACGCGCTGCGTAT,Granule immature,35,Granule-immature
+TACGCGCTGGAAGC,Granule mature,35,Granule-mature
+TACGCGCTTTCCGC,Granule immature,12,Granule-immature
+TACGGAACAAAGTG,Granule mature,35,Granule-mature
+TACGGCCTAGCTCA,Granule mature,35,Granule-mature
+TACGGCCTTGCATG,Granule immature,12,Granule-immature
+TACGTTACACCTCC,Granule immature,12,Granule-immature
+TACTAAGAAACCTG,Granule immature,12,Granule-immature
+TACTAAGAGCGAAG,Neuroblast,12,Neuroblast 2
+TACTAAGAGGTTAC,Granule mature,35,Granule-mature
+TACTAAGATCTCCG,Neuroblast,35,Neuroblast 2
+TACTACACTGCGTA,Neuroblast,12,Neuroblast 2
+TACTACACTTATCC,Neuroblast,12,Neuroblast 2
+TACTACTGATCACG,Neuroblast,35,Neuroblast 1
+TACTACTGCAAAGA,Granule immature,12,Granule-immature
+TACTCAACGGAAGC,Mossy,12,Mossy-Adcyap1
+TACTCAACGTTCAG,Granule mature,35,Granule-mature
+TACTCAACTTCAGG,Granule mature,35,Granule-mature
+TACTCCCTCTTAGG,Granule immature,12,Granule-immature
+TACTCTGAGAGGTG,Granule immature,12,Granule-immature
+TACTGGGAATTTCC,OL,12,NFOL
+TACTGGGACCTGAA,Granule mature,35,Granule-mature
+TACTGGGACGTAGT,Granule immature,35,Granule-immature
+TACTGTTGAGACTC,GABA,12,GABA-Cnr1
+TACTGTTGGGTAAA,Granule mature,35,Granule-mature
+TACTTGACACACAC,Granule mature,12,Granule-mature
+TACTTTCTCGTTAG,Granule mature,35,Granule-mature
+TACTTTCTCTAGCA,Astrocytes,12,Astrocytes
+TAGAATACTGCAAC,Mossy,35,Mossy-Cyp26b1
+TAGAATTGTAGTCG,Granule mature,12,Granule-mature
+TAGACGTGGTGTCA,nIPC,35,nIPC
+TAGAGCACAGCTCA,Microglia,12,Microglia
+TAGATTGAACCTGA,Granule immature,35,Granule-immature
+TAGATTGATTCACT,Neuroblast,12,Neuroblast 1
+TAGCATCTTTCTCA,Cck-Tox,35,Cck-Tox
+TAGCCCACATTTCC,Granule immature,12,Granule-immature
+TAGCCCACGTATGC,Endothelial,35,VLMC
+TAGCCCTGACGGGA,Granule immature,35,Granule-immature
+TAGCCCTGGACGAG,Granule mature,35,Granule-mature
+TAGCCGCTCACTTT,Neuroblast,12,Neuroblast 2
+TAGCGATGAGGTTC,Granule immature,12,Granule-immature
+TAGCGATGATCTTC,Granule mature,35,Granule-mature
+TAGCGATGCGACAT,Granule mature,35,Granule-mature
+TAGGCAACACCACA,Astrocytes,12,Astrocytes
+TAGGCAACCGGGAA,Granule mature,35,Granule-mature
+TAGGCATGCAACCA,Granule mature,35,Granule-mature
+TAGGCATGCTGACA,Mossy,12,Mossy-Cyp26b1
+TAGGCATGGCCTTC,Endothelial,35,Endothelial
+TAGGCTGACAGTTG,Granule immature,12,Granule-immature
+TAGGCTGACTACCC,Granule immature,35,Granule-immature
+TAGGGACTCGAGAG,Cck-Tox,35,Cck-Tox
+TAGGTCGAAGGCGA,Granule immature,35,Granule-immature
+TAGGTCGATATGCG,Granule immature,12,Granule-immature
+TAGGTGTGCGTTGA,Granule mature,35,Granule-mature
+TAGGTGTGTACGCA,Granule mature,35,Granule-mature
+TAGGTTCTCTGCTC,Cck-Tox,35,Cck-Tox
+TAGTAAACAAGCAA,Granule mature,35,Granule-mature
+TAGTAAACACCATG,Granule mature,35,Granule-mature
+TAGTAAACTGACAC,Granule mature,35,Granule-mature
+TAGTAATGCAGTCA,Granule immature,12,Granule-immature
+TAGTAATGTGTCTT,Granule mature,35,Granule-mature
+TAGTACCTCACTAG,Granule mature,35,Granule-mature
+TAGTATGAAGAAGT,Granule immature,35,Granule-immature
+TAGTATGAGCTTAG,Granule immature,12,Granule-immature
+TAGTATGATAGACC,Granule mature,35,Granule-mature
+TAGTATGATCTTCA,Granule mature,35,Granule-mature
+TAGTCACTCGTCTC,Granule mature,35,Granule-mature
+TAGTCACTGTTGGT,Granule immature,35,Granule-immature
+TAGTCACTTGACAC,Granule mature,35,Granule-mature
+TAGTCGGACAGTCA,Granule mature,35,Granule-mature
+TAGTCGGAGAATGA,Granule immature,35,Granule-immature
+TAGTCGGATGAGCT,Granule immature,35,Granule-immature
+TAGTCGGATGATGC,Granule mature,35,Granule-mature
+TAGTCTTGTTTCAC,Granule mature,35,Granule-mature
+TAGTGGTGGTCATG,Granule mature,35,Granule-mature
+TAGTTAGAGTGCAT,Granule mature,35,Granule-mature
+TAGTTAGATCCTCG,Granule mature,35,Granule-mature
+TAGTTAGATTCTGT,Granule mature,35,Granule-mature
+TAGTTCACGAGACG,Neuroblast,35,Neuroblast 2
+TAGTTGCTATGACC,Granule immature,35,Granule-immature
+TATAAGACAGCCAT,Granule immature,12,Granule-immature
+TATAAGACGCGAAG,Granule mature,35,Granule-mature
+TATAAGACTACGAC,Granule mature,35,Granule-mature
+TATAAGACTCCAAG,Granule mature,35,Granule-mature
+TATAAGTGAGCAAA,Neuroblast,12,Neuroblast 2
+TATAAGTGGGAGGT,Granule immature,12,Granule-immature
+TATAAGTGGGATTC,Neuroblast,12,Neuroblast 2
+TATAAGTGGGGATG,Granule immature,12,Granule-immature
+TATAAGTGTCTGGA,Granule mature,35,Granule-mature
+TATAAGTGTGCTTT,Granule mature,35,Granule-mature
+TATACAGACGTAAC,Granule mature,12,Granule-mature
+TATACCACACAGCT,Neuroblast,12,Neuroblast 2
+TATACCACCTCGCT,Granule mature,35,Granule-mature
+TATACCACGGTACT,Granule mature,35,Granule-mature
+TATACGCTCAGAGG,Cck-Tox,35,Cck-Tox
+TATACGCTCCTGAA,Neuroblast,12,Neuroblast 2
+TATAGATGCAACTG,Granule immature,12,Granule-immature
+TATAGATGTTGCTT,Granule mature,35,Granule-mature
+TATAGCCTGCAAGG,Granule mature,35,Granule-mature
+TATAGCCTTGTCAG,Granule mature,35,Granule-mature
+TATCAAGAAGTTCG,Neuroblast,12,Neuroblast 2
+TATCAAGATAAAGG,Granule immature,35,Granule-immature
+TATCAAGATAGAAG,Granule immature,35,Granule-immature
+TATCACTGGCGAGA,Neuroblast,12,Neuroblast 2
+TATCAGCTAGAGTA,Granule mature,35,Granule-mature
+TATCAGCTATGACC,OPC,35,OPC
+TATCAGCTGGTGTT,Neuroblast,12,Neuroblast 2
+TATCCAACACCATG,Granule mature,35,Granule-mature
+TATCCAACCTGGAT,Neuroblast,12,Neuroblast 2
+TATCCAACGAGGGT,Granule immature,12,Granule-immature
+TATCCAACGGCGAA,Granule mature,35,Granule-mature
+TATCCAACTCGTTT,GABA,12,GABA-Lhx6
+TATCCAACTCTTTG,Neuroblast,12,Neuroblast 2
+TATCCTGAGTTTGG,Radial Glia-like,12,Radial Glia-like
+TATCCTGATCGTAG,Granule immature,12,Granule-immature
+TATCCTGATGTGGT,Neuroblast,35,Neuroblast 2
+TATCCTGATTTCGT,Granule mature,35,Granule-mature
+TATCGACTAGTGCT,Radial Glia-like,35,Radial Glia-like
+TATCGACTCGACTA,Endothelial,35,Endothelial
+TATCGTACAGAAGT,Endothelial,35,Endothelial
+TATCGTACTCAGTG,Neuroblast,12,Neuroblast 2
+TATCTCGACATGCA,Granule immature,12,Granule-immature
+TATCTGACGGGTGA,Granule immature,12,Granule-immature
+TATCTGACGGTGAG,Granule immature,12,Granule-immature
+TATCTTCTAACCGT,Neuroblast,12,Neuroblast 2
+TATCTTCTTAACGC,Granule mature,35,Granule-mature
+TATGAATGCAACTG,Granule immature,12,Granule-immature
+TATGCGGATCTATC,Granule immature,35,Granule-immature
+TATGGGTGCCTATT,Microglia,35,Microglia
+TATGGGTGTGTGGT,Granule immature,12,Granule-immature
+TATGGGTGTTCGTT,Endothelial,35,Pericytes
+TATGGTCTCTTACT,Neuroblast,12,Neuroblast 2
+TATGTCACACAGTC,Granule immature,35,Granule-immature
+TATGTCACCATTTC,Neuroblast,12,Neuroblast 2
+TATGTGCTGAGCAG,Neuroblast,35,Neuroblast 2
+TATGTGCTGAGGTG,Granule immature,12,Granule-immature
+TATTGCTGCATCAG,Granule immature,12,Granule-immature
+TATTGCTGGGTGTT,Granule immature,12,Granule-immature
+TATTGCTGTGTGAC,Granule mature,35,Granule-mature
+TATTTCCTAATGCC,Neuroblast,12,Neuroblast 2
+TATTTCCTAGATGA,Granule mature,35,Granule-mature
+TCAACACTGCGAAG,Granule mature,35,Granule-mature
+TCAAGGACAGCATC,Granule immature,12,Granule-immature
+TCAAGGTGCACTTT,Granule immature,12,Granule-immature
+TCAAGGTGCTAGAC,Granule mature,35,Granule-mature
+TCAAGTCTACTGTG,Microglia,35,Microglia
+TCAAGTCTCCCGTT,Granule mature,35,Granule-mature
+TCAAGTCTTAGCGT,Granule immature,35,Granule-immature
+TCAATCACTCGATG,Granule mature,35,Granule-mature
+TCACAACTGGTGGA,Granule mature,35,Granule-mature
+TCACCGTGCAGTCA,Granule mature,35,Granule-mature
+TCACGAGAATCAGC,Radial Glia-like,12,Radial Glia-like
+TCACGAGAGGTAAA,Neuroblast,35,Neuroblast 2
+TCACTATGCAAGCT,Granule mature,35,Granule-mature
+TCACTATGCTAGAC,Astrocytes,12,Astrocytes
+TCACTATGGGTAGG,OPC,35,OPC
+TCAGACGACGAGAG,Granule immature,35,Granule-immature
+TCAGACGATCTGGA,OPC,12,OPC
+TCAGAGACAGTACC,OPC,35,OPC
+TCAGAGACATCGAC,Granule mature,35,Granule-mature
+TCAGAGACCAACTG,Neuroblast,12,Neuroblast 2
+TCAGAGACTAGAAG,Neuroblast,12,Neuroblast 2
+TCAGCAGACCACAA,Neuroblast,12,Neuroblast 1
+TCAGCAGAGCATAC,Granule mature,35,Granule-mature
+TCAGCAGAGGAGCA,Granule immature,12,Granule-immature
+TCAGCGCTAGCTAC,Granule mature,35,Granule-mature
+TCAGCGCTTCAGTG,Granule mature,35,Granule-mature
+TCAGGATGAGTAGA,Granule immature,12,Granule-immature
+TCAGGATGCTCATT,Neuroblast,12,Neuroblast 2
+TCAGTACTCACACA,GABA,12,GABA-Cnr1
+TCAGTACTTAAGCC,OL,35,OL
+TCAGTACTTACAGC,Radial Glia-like,12,Radial Glia-like
+TCAGTGGAAAGAAC,Cajal Retzius,35,Cajal-Retzius
+TCAGTTACGTTGTG,Neuroblast,12,Neuroblast 2
+TCATCAACGGTGTT,Mossy,35,Mossy-Cyp26b1
+TCATCATGACGGGA,Granule mature,35,Granule-mature
+TCATCATGCGTCTC,Neuroblast,12,Neuroblast 2
+TCATCATGGGTCTA,Astrocytes,35,Astrocytes
+TCATGTACGTTACG,Granule immature,12,Granule-immature
+TCATTGACCTTCCG,nIPC,35,nIPC
+TCCACGTGAGCGTT,Granule immature,35,Granule-immature
+TCCACGTGATAAGG,Granule immature,35,Granule-immature
+TCCACGTGGCTGAT,Mossy,12,Mossy-Cyp26b1
+TCCACTCTGACGAG,Granule immature,35,Granule-immature
+TCCACTCTTGATGC,Granule mature,35,Granule-mature
+TCCAGAGACCGTAA,Granule mature,35,Granule-mature
+TCCAGAGATTCGGA,Granule immature,35,Granule-immature
+TCCATCCTCGAGTT,Astrocytes,35,Astrocytes
+TCCATCCTCTTGAG,Astrocytes,12,Astrocytes
+TCCCACGAACTCTT,Cajal Retzius,12,Cajal-Retzius
+TCCCAGACAAACAG,OPC,12,OPC
+TCCCATCTTATCGG,Endothelial,35,Endothelial
+TCCCGAACCCCGTT,GABA,12,GABA-Lhx6
+TCCCGAACGACTAC,Granule mature,35,Granule-mature
+TCCCGAACGTTGGT,Granule mature,35,Granule-mature
+TCCCGAACTTTCAC,Granule immature,12,Granule-immature
+TCCCGATGAAGCCT,Granule mature,35,Granule-mature
+TCCCTACTCTGATG,Granule immature,12,Granule-immature
+TCCGAAGATAGAGA,Neuroblast,12,Neuroblast 2
+TCCGAAGATATTCC,Endothelial,35,VLMC
+TCCGAGCTGCAGTT,Astrocytes,35,Astrocytes
+TCCGGACTACGCAT,Granule immature,35,Granule-immature
+TCCTAATGCAAGCT,Neuroblast,12,Neuroblast 2
+TCCTACCTACCTTT,Granule immature,35,Granule-immature
+TCCTACCTTTCTTG,Granule mature,35,Granule-mature
+TCCTATGAACGCTA,nIPC,12,nIPC
+TCGAATCTAGAACA,Granule mature,35,Granule-mature
+TCGACCTGTCGCTC,Granule mature,35,Granule-mature
+TCGACCTGTTGAGC,OPC,12,OPC
+TCGACGCTTCGTTT,Granule mature,35,Granule-mature
+TCGAGAACCGTCTC,Granule mature,35,Granule-mature
+TCGAGAACGTTCTT,Endothelial,35,Endothelial
+TCGAGCCTCGAGAG,Granule mature,35,Granule-mature
+TCGAGCCTTTTGCT,Endothelial,35,Pericytes
+TCGATACTAGTCTG,Granule immature,35,Granule-immature
+TCGATACTCGCTAA,Granule immature,12,Granule-immature
+TCGATACTGTTGAC,Granule mature,35,Granule-mature
+TCGCAAGAAGCACT,Granule mature,35,Granule-mature
+TCGCCATGTCATTC,Granule mature,35,Granule-mature
+TCGGACCTCCTTGC,Granule immature,12,Granule-immature
+TCGGACCTGACGAG,Astrocytes,12,Astrocytes
+TCGGTAGAGCGGAA,Microglia,35,Microglia
+TCGTAGGAGGAGTG,Granule mature,12,Granule-mature
+TCGTGAGAACTGTG,Neuroblast,35,Neuroblast 1
+TCGTGAGACTTACT,Mossy,12,Mossy-Adcyap1
+TCGTGAGAGAGCAG,Granule mature,35,Granule-mature
+TCGTTATGTGACCA,Astrocytes,35,Astrocytes
+TCTAACACTCTACT,Neuroblast,12,Neuroblast 2
+TCTAACACTTCACT,Granule mature,35,Granule-mature
+TCTAACTGGGGAGT,Granule mature,35,Granule-mature
+TCTAAGCTCGAGTT,Microglia,35,Microglia
+TCTAAGCTGGTAGG,Cck-Tox,35,Cck-Tox
+TCTAGACTCTCCAC,Granule immature,35,Granule-immature
+TCTAGACTTTTGGG,OPC,12,OPC
+TCTAGTTGAAGGTA,Astrocytes,35,Astrocytes
+TCTAGTTGTGGATC,Mossy,12,Mossy-Adcyap1
+TCTATGTGAGTGTC,Granule mature,35,Granule-mature
+TCTATGTGCAACTG,Granule mature,35,Granule-mature
+TCTATGTGTAAGGA,Granule mature,35,Granule-mature
+TCTATGTGTATGCG,Granule immature,35,Granule-immature
+TCTATGTGTGTCTT,Granule immature,35,Granule-immature
+TCTCAAACACCTCC,Granule immature,12,Granule-immature
+TCTCCACTGTGTAC,OPC,35,nIPC
+TCTGATACACAGTC,Neuroblast,12,Neuroblast 2
+TCTGATACGATAAG,Neuroblast,12,Neuroblast 2
+TCTGATACTCCAGA,Mossy,12,Mossy-Adcyap1
+TCTTACGAACCACA,Granule immature,35,Granule-immature
+TCTTACGAGCATAC,Microglia,35,Microglia
+TCTTCAGATGTGGT,Granule immature,35,Granule-immature
+TCTTGATGCAATCG,Granule mature,35,Granule-mature
+TCTTGATGTTGCAG,OL,35,OL
+TGAAATTGCCCTTG,Granule mature,35,Granule-mature
+TGAAGCACCCTGTC,Neuroblast,35,Neuroblast 2
+TGAAGCTGCCTCGT,OL,35,OL
+TGAAGCTGTTGCAG,Granule immature,35,Granule-immature
+TGAATAACCACACA,Neuroblast,35,Neuroblast 2
+TGAATAACTCCTAT,OPC,12,NFOL
+TGACCAGAAAAGCA,Granule immature,12,Granule-immature
+TGACCAGACAGATC,Granule mature,35,Granule-mature
+TGACCAGATCACGA,Granule immature,12,Granule-immature
+TGACCGCTAACTGC,Granule mature,35,Granule-mature
+TGACCGCTACCAAC,Granule immature,35,Granule-immature
+TGACCGCTATCGAC,Granule mature,35,Granule-mature
+TGACCGCTGGAGCA,Astrocytes,12,Astrocytes
+TGACCGCTTGGTGT,Microglia,35,Microglia
+TGACGAACAGCGGA,Granule mature,35,Granule-mature
+TGACGAACTACTCT,OL,35,OL
+TGACGATGATTTCC,Astrocytes,12,Astrocytes
+TGACGATGTGCTTT,Astrocytes,12,Astrocytes
+TGACGCCTGCTGAT,Astrocytes,12,Astrocytes
+TGACTGGACGAATC,Granule mature,35,Granule-mature
+TGACTGGAGACTAC,Granule mature,35,Granule-mature
+TGACTGGAGCGGAA,Granule mature,35,Granule-mature
+TGACTTACACTACG,Neuroblast,12,Neuroblast 2
+TGACTTACGTCTTT,Granule immature,12,Granule-immature
+TGACTTACTATCTC,Granule mature,35,Granule-mature
+TGACTTTGAAGTAG,Granule mature,35,Granule-mature
+TGACTTTGCAAAGA,Neuroblast,12,Neuroblast 2
+TGACTTTGGGTACT,Endothelial,35,Pericytes
+TGAGACACGTAGCT,Cck-Tox,35,Cck-Tox
+TGAGACACGTAGGG,Granule mature,35,Granule-mature
+TGAGCAACAGAGTA,Granule mature,35,Granule-mature
+TGAGCAACGAACTC,Endothelial,35,VLMC
+TGAGCAACGCTATG,Granule mature,35,Granule-mature
+TGAGCAACTACTGG,Granule mature,35,Granule-mature
+TGAGCTGAGAACTC,Neuroblast,12,Neuroblast 2
+TGAGCTGAGCATAC,Granule mature,35,Granule-mature
+TGAGCTGAGCGATT,Granule immature,35,Granule-immature
+TGAGCTGATCTCTA,Neuroblast,12,Neuroblast 2
+TGAGGACTACTTTC,Granule immature,12,Granule-immature
+TGAGTCGATCGTTT,Neuroblast,12,Neuroblast 2
+TGAGTCGATGCTCC,Granule mature,35,Granule-mature
+TGAGTCGATGGGAG,Granule mature,35,Granule-mature
+TGAGTGACTAAGGA,Granule mature,35,Granule-mature
+TGAGTGACTTTGTC,Granule mature,35,Granule-mature
+TGATACCTACGACT,Neuroblast,12,Neuroblast 2
+TGATACCTGCGGAA,Granule mature,35,Granule-mature
+TGATACCTTCATTC,Granule mature,35,Granule-mature
+TGATATGAAGCCTA,Granule immature,35,Granule-immature
+TGATATGAGACAAA,Granule mature,35,Granule-mature
+TGATATGATGGTAC,Granule immature,12,Granule-immature
+TGATCACTGCTTAG,Neuroblast,12,Neuroblast 2
+TGATCGGAAGCACT,Granule immature,35,Granule-immature
+TGATCGGAATGGTC,OL,35,OL
+TGATCGGACGGAGA,Granule mature,35,Granule-mature
+TGATCGGAGACGTT,Granule mature,35,Granule-mature
+TGATCGGAGCGTAT,Granule immature,12,Granule-immature
+TGATCGGAGGATTC,Granule mature,35,Granule-mature
+TGATCGGATCGATG,Granule immature,35,Granule-immature
+TGATCGGATGTTCT,Granule mature,35,Granule-mature
+TGATTAGACCAAGT,Granule mature,35,Granule-mature
+TGATTAGACTCAAG,Granule mature,35,Granule-mature
+TGATTAGACTCGAA,Neuroblast,12,Neuroblast 2
+TGATTAGATGGGAG,Granule mature,35,Granule-mature
+TGATTAGATTTGCT,Microglia,35,Microglia
+TGATTCACCCATAG,Neuroblast,12,Neuroblast 2
+TGATTCACTCTAGG,Granule mature,35,Granule-mature
+TGATTCTGAGAACA,Astrocytes,35,Astrocytes
+TGATTCTGCGAACT,Granule mature,35,Granule-mature
+TGATTCTGGGTGTT,Granule immature,12,Granule-immature
+TGCAACGATCCAAG,Neuroblast,12,Neuroblast 2
+TGCAAGACGGTGGA,Granule mature,35,Granule-mature
+TGCAAGTGACCGAT,Granule mature,35,Granule-mature
+TGCAAGTGCATGAC,Granule immature,12,Granule-immature
+TGCAAGTGGCCAAT,Astrocytes,12,Astrocytes
+TGCAAGTGTCTCCG,Granule immature,12,Granule-immature
+TGCAAGTGTGCATG,Granule mature,35,Granule-mature
+TGCAATCTTCTCAT,Neuroblast,12,Neuroblast 1
+TGCACAGATCGCTC,Granule mature,35,Granule-mature
+TGCACGCTCATTCT,Neuroblast,12,Neuroblast 2
+TGCACGCTTGTAGC,Granule immature,35,Granule-immature
+TGCAGATGAAGAGT,Granule immature,35,Granule-immature
+TGCAGATGAGTAGA,Cck-Tox,35,Cck-Tox
+TGCAGATGCACAAC,OPC,35,OPC
+TGCAGATGCTCGAA,Granule mature,35,Granule-mature
+TGCATGGAAGCTAC,Granule immature,12,Granule-immature
+TGCATGGACTGGAT,Radial Glia-like,12,Radial Glia-like
+TGCATGGAGGCAAG,Granule immature,35,Granule-immature
+TGCATGGAGTGTCA,Granule immature,12,Granule-immature
+TGCCAAGAAGGTCT,Granule immature,12,Granule-immature
+TGCCAAGAGAGCAG,Granule immature,12,Granule-immature
+TGCCACTGGAGGAC,Neuroblast,12,Neuroblast 2
+TGCCACTGTTCTAC,Endothelial,35,Endothelial
+TGCCAGCTAGATGA,Granule immature,12,Granule-immature
+TGCCAGCTCAACTG,Granule immature,12,Granule-immature
+TGCCAGCTCTGTAG,Granule mature,35,Granule-mature
+TGCCAGCTTACTGG,Granule mature,12,Granule-mature
+TGCCCAACTTCCAT,Granule mature,35,Granule-mature
+TGCCGACTGCGTAT,Neuroblast,12,Neuroblast 2
+TGCGATGATCTGGA,Microglia,35,Microglia
+TGCGCACTAAAGCA,Granule mature,35,Granule-mature
+TGCGCACTTTTGGG,Neuroblast,12,Neuroblast 2
+TGCGTAGAATACCG,Neuroblast,35,Neuroblast 2
+TGCGTAGACCGTTC,Neuroblast,12,Neuroblast 2
+TGCGTAGAGGGACA,Granule mature,35,Granule-mature
+TGCTAGGAATGCTG,Granule mature,35,Granule-mature
+TGCTAGGAGTGTTG,Granule mature,35,Granule-mature
+TGCTAGGATACGAC,Granule immature,35,Granule-immature
+TGCTATACGAAGGC,Granule immature,12,Granule-immature
+TGCTATACTCCGAA,OL,35,OL
+TGCTGAGAAACCTG,Granule mature,35,Granule-mature
+TGCTGAGAGAATAG,Granule immature,12,Granule-immature
+TGCTGAGATGCTAG,Granule immature,12,Granule-immature
+TGCTTAACCATACG,Granule mature,35,Granule-mature
+TGCTTAACGCTGAT,Cck-Tox,35,Cck-Tox
+TGCTTAACTCGCCT,Granule immature,35,Granule-immature
+TGGAAAGATGCAGT,Mossy,35,Mossy-Adcyap1
+TGGAAAGATTCGGA,Granule immature,35,Granule-immature
+TGGAACTGTCCAGA,Granule immature,35,Granule-immature
+TGGACCCTTTTCAC,Granule mature,35,Granule-mature
+TGGACTGAAATCGC,Granule mature,35,Granule-mature
+TGGACTGAATTCCT,Granule immature,12,Granule-immature
+TGGACTGAGAACCT,Radial Glia-like,35,Radial Glia-like
+TGGAGACTTGGCAT,Granule mature,35,Granule-mature
+TGGAGGGAAGTCTG,Granule immature,12,Granule-immature
+TGGAGGGACGTACA,Granule mature,35,Granule-mature
+TGGATGACACGCAT,Endothelial,12,Endothelial
+TGGATGACAGGCGA,Cajal Retzius,12,Cajal-Retzius
+TGGATGACATTCTC,Granule mature,35,Granule-mature
+TGGATGTGAAGAGT,Neuroblast,12,Neuroblast 2
+TGGATGTGACTGTG,Granule immature,12,Granule-immature
+TGGATTCTCATGAC,Neuroblast,12,Neuroblast 2
+TGGATTCTGTGTCA,Granule mature,35,Granule-mature
+TGGATTCTTCACCC,Granule immature,12,Granule-immature
+TGGCAATGGGATCT,Granule immature,35,Granule-immature
+TGGCACCTCCTGAA,Granule immature,12,Granule-immature
+TGGCACCTCTTGGA,Granule mature,35,Granule-mature
+TGGCACCTGCTAAC,Granule mature,12,Granule-mature
+TGGCACCTTAAGCC,Granule immature,12,Granule-immature
+TGGCACCTTTTCTG,Granule immature,12,Granule-immature
+TGGGTATGCTATGG,Endothelial,35,Endothelial
+TGGGTATGTACTGG,Granule mature,35,Granule-mature
+TGGTACGACAGATC,Granule mature,35,Granule-mature
+TGGTACGACTAGCA,Granule mature,35,Granule-mature
+TGGTACGACTTATC,Neuroblast,12,Neuroblast 2
+TGGTACGATGAGAA,Neuroblast,12,Neuroblast 2
+TGGTAGACCTGTAG,Mossy,35,Mossy-Cyp26b1
+TGGTAGACTCCTCG,Neuroblast,12,Neuroblast 2
+TGGTAGACTTCATC,Mossy,12,Mossy-Cyp26b1
+TGGTAGTGAAAACG,Granule immature,12,Granule-immature
+TGGTAGTGGCGAAG,Granule immature,12,Granule-immature
+TGGTAGTGGTTAGC,Microglia,35,Microglia
+TGGTAGTGTTCATC,Granule immature,35,Granule-immature
+TGGTATCTCCGTAA,Astrocytes,35,Astrocytes
+TGGTATCTGATAGA,Granule immature,35,Granule-immature
+TGGTATCTTCCTCG,Neuroblast,12,Neuroblast 1
+TGGTCAGACTATTC,Granule immature,12,Granule-immature
+TGGTCAGATCTTTG,Neuroblast,12,Neuroblast 2
+TGGTCAGATGGCAT,Granule mature,35,Granule-mature
+TGGTTACTACGTGT,Mossy,12,Mossy-Adcyap1
+TGGTTACTGTACGT,Neuroblast,35,Neuroblast 1
+TGTAAAACTCCGAA,Granule immature,12,Granule-immature
+TGTAAAACTGTGAC,Astrocytes,35,Astrocytes
+TGTAATGACACTGA,Astrocytes,12,Astrocytes
+TGTACTTGCATACG,Granule mature,35,Granule-mature
+TGTAGGTGCGACTA,Endothelial,12,Endothelial
+TGTAGTCTCAACCA,Astrocytes,35,Astrocytes
+TGTATCTGTTACTC,Granule immature,35,Granule-immature
+TGTATGCTGAGAGC,Granule immature,35,Granule-immature
+TGTATGCTGTAAAG,Granule mature,35,Granule-mature
+TGTCAGGAACTACG,Granule immature,12,Granule-immature
+TGTCAGGACAGCTA,Granule immature,35,Granule-immature
+TGTCAGGAGGGATG,Granule mature,35,Granule-mature
+TGTCTAACCGACTA,Endothelial,12,VLMC
+TGTCTAACGAATAG,Granule immature,35,Granule-immature
+TGTCTAACGTCCTC,Granule mature,35,Granule-mature
+TGTGACGAAGCAAA,Granule mature,35,Granule-mature
+TGTGAGACCTACTT,Granule immature,12,Granule-immature
+TGTGAGTGGTTGCA,Granule immature,35,Granule-immature
+TGTGATCTGGCGAA,Neuroblast,12,Neuroblast 2
+TGTGATCTGGTCTA,Radial Glia-like,12,nIPC
+TGTGATCTTGCCTC,Microglia,35,Microglia
+TGTGGATGACGTGT,OPC,12,NFOL
+TGTGGATGTCTAGG,Microglia,35,Microglia
+TGTTAAGACTTCGC,Granule mature,35,Granule-mature
+TGTTAAGAGTTGAC,Granule mature,35,Granule-mature
+TGTTACACCGTTAG,Mossy,12,Mossy-Cyp26b1
+TGTTACTGGCTAAC,Neuroblast,35,Neuroblast 2
+TTACACACATCGGT,Microglia,35,Microglia
+TTACAGCTCCCTTG,Granule immature,35,Granule-immature
+TTACAGCTTCGATG,Granule immature,35,Granule-immature
+TTACCATGGAGGGT,Microglia,35,Microglia
+TTACCATGTCTCAT,Granule mature,35,Granule-mature
+TTACGTACATGACC,nIPC,12,nIPC
+TTACGTACGAGCTT,Granule mature,35,Granule-mature
+TTACGTACTGGTGT,Granule mature,12,Granule-mature
+TTACTCGAGTCGAT,Neuroblast,12,Neuroblast 2
+TTACTCGATGACTG,Granule mature,35,Granule-mature
+TTAGAATGACACCA,Neuroblast,12,Neuroblast 2
+TTAGAATGGGAGTG,Granule immature,12,Granule-immature
+TTAGACCTACCGAT,Granule mature,35,Granule-mature
+TTAGACCTATCTCT,Granule immature,12,Granule-immature
+TTAGGGACACGACT,Granule mature,35,Granule-mature
+TTAGGGACAGATCC,Granule mature,35,Granule-mature
+TTAGGGACTGACAC,Granule mature,35,Granule-mature
+TTAGGGACTGGTAC,Granule mature,35,Granule-mature
+TTAGGGTGCCTTGC,nIPC,12,nIPC
+TTAGGTCTAGTGCT,Mossy,12,Mossy-Cyp26b1
+TTAGTCACAGTCAC,Neuroblast,12,Neuroblast 2
+TTAGTCACCAAAGA,Granule immature,12,Granule-immature
+TTAGTCACTCAGGT,Astrocytes,12,Astrocytes
+TTAGTCACTTGTGG,Neuroblast,12,Neuroblast 2
+TTAGTCTGCGTAGT,Granule immature,12,Granule-immature
+TTAGTCTGGTCGAT,Granule mature,35,Granule-mature
+TTATCCGAAGCCAT,Granule immature,12,Granule-immature
+TTATCCGACTTCGC,Granule mature,35,Granule-mature
+TTATGAGAAACAGA,Granule mature,35,Granule-mature
+TTATGAGATCCCAC,Granule mature,35,Granule-mature
+TTATGAGATCTTCA,Granule mature,35,Granule-mature
+TTATGCACCAGAAA,Granule mature,35,Granule-mature
+TTATGCACGTGTAC,Granule mature,35,Granule-mature
+TTATGCACGTGTTG,Granule immature,12,Granule-immature
+TTATGCACTTGACG,Neuroblast,12,Neuroblast 2
+TTATGGCTATCTTC,OPC,12,nIPC
+TTATTCCTACGGTT,Granule mature,35,Granule-mature
+TTATTCCTAGATGA,Granule immature,35,Granule-immature
+TTATTCCTTTAGGC,GABA,12,GABA-Cnr1
+TTCAAAGAAAGGTA,Granule mature,35,Granule-mature
+TTCAAAGAACAGCT,Granule mature,35,Granule-mature
+TTCAAAGATCGATG,Microglia,12,PVM
+TTCAACACATGTCG,OPC,35,OPC
+TTCAAGCTAGCGGA,Granule mature,35,Granule-mature
+TTCAAGCTCTAAGC,Granule immature,12,Granule-immature
+TTCAAGCTCTGGAT,Granule mature,35,Granule-mature
+TTCAAGCTGCTAAC,Astrocytes,35,Astrocytes
+TTCAAGCTTGTGGT,Granule immature,12,Granule-immature
+TTCACAACAGAACA,Granule immature,35,Granule-immature
+TTCACAACAGAGAT,Mossy,35,Mossy-Adcyap1
+TTCACAACCTGTTT,Granule immature,35,Granule-immature
+TTCACAACCTTCGC,Granule immature,12,Granule-immature
+TTCAGACTAAGCCT,Granule immature,35,Granule-immature
+TTCAGACTCACTTT,Granule mature,12,Granule-mature
+TTCAGACTGTCTGA,Granule mature,35,Granule-mature
+TTCAGACTTCTCGC,Granule immature,35,Granule-immature
+TTCAGTACAATCGC,Granule mature,35,Granule-mature
+TTCAGTTGACTGGT,Granule mature,35,Granule-mature
+TTCATCGACTTGAG,OL,35,OL
+TTCATGACAGTCGT,Granule mature,35,Granule-mature
+TTCATGACGGATTC,Granule mature,35,Granule-mature
+TTCATGTGCCACCT,Granule mature,35,Granule-mature
+TTCATGTGGCTATG,Granule mature,35,Granule-mature
+TTCCAAACAGTCAC,Granule immature,12,Granule-immature
+TTCCAAACTATTCC,Granule mature,35,Granule-mature
+TTCCAAACTGCTTT,nIPC,35,nIPC
+TTCCATGAAACAGA,Granule mature,12,Granule-mature
+TTCCCACTTAACGC,Granule mature,35,Granule-mature
+TTCCCACTTCAGGT,Astrocytes,12,Astrocytes
+TTCCTAGACCACCT,Granule mature,35,Granule-mature
+TTCGAGGAACTACG,Granule mature,35,Granule-mature
+TTCGATTGCTGCTC,Granule immature,12,Granule-immature
+TTCGTATGCCATGA,Microglia,35,Microglia
+TTCGTATGCCTTCG,Neuroblast,35,Neuroblast 2
+TTCGTATGCTTGAG,Granule mature,35,Granule-mature
+TTCGTATGGAATCC,Granule immature,35,Granule-immature
+TTCTACGACGATAC,Granule mature,35,Granule-mature
+TTCTCAGAGCGTAT,Granule mature,35,Granule-mature
+TTCTCAGAGGTTCA,Granule immature,12,Granule-immature
+TTCTGATGTCGTAG,Granule mature,35,Granule-mature
+TTCTGATGTCGTTT,Granule immature,35,Granule-immature
+TTGAACCTACGGAG,Granule mature,35,Granule-mature
+TTGAACCTAGATCC,Neuroblast,12,Neuroblast 2
+TTGAACCTGACGTT,Granule mature,35,Granule-mature
+TTGAATGACCTTCG,Granule mature,35,Granule-mature
+TTGAATGATAGCGT,Neuroblast,12,Neuroblast 2
+TTGAATGATGTGAC,Neuroblast,12,Neuroblast 2
+TTGACACTTGTCCC,Granule mature,35,Granule-mature
+TTGAGGACTGCACA,Granule mature,35,Granule-mature
+TTGAGGACTGCTCC,Neuroblast,35,Neuroblast 2
+TTGAGGACTTGTCT,OL,35,OL
+TTGAGGTGGACGGA,Granule mature,35,Granule-mature
+TTGAGGTGGTATCG,Granule mature,35,Granule-mature
+TTGATCTGGGTAGG,Granule mature,35,Granule-mature
+TTGCTAACACAGCT,Granule immature,35,Granule-immature
+TTGCTAACGGAGGT,Granule mature,35,Granule-mature
+TTGGAGACAACGAA,OL,35,OL
+TTGGAGACATCGAC,Astrocytes,12,Astrocytes
+TTGGAGACCTTCCG,OL,35,OL
+TTGGAGTGGCCCTT,Granule mature,35,Granule-mature
+TTGGGAACGAGGCA,Neuroblast,12,Neuroblast 2
+TTGGTACTCGTGTA,Granule immature,35,Granule-immature
+TTGGTACTCTCGCT,Granule immature,35,Granule-immature
+TTGGTACTGATAAG,Granule immature,35,Granule-immature
+TTGTACACAGGCGA,Granule mature,35,Granule-mature
+TTGTACACCATGGT,Granule mature,35,Granule-mature
+TTGTACACGATACC,Granule mature,35,Granule-mature
+TTGTAGCTGAATGA,Granule immature,12,Granule-immature
+TTGTAGCTTTACTC,Granule immature,35,Granule-immature
+TTTAGAGAACGGAG,Granule immature,12,Granule-immature
+TTTAGAGATCACCC,Granule immature,35,Granule-immature
+TTTAGCTGAGTCTG,Granule immature,35,Granule-immature
+TTTAGGCTATGCTG,Granule mature,35,Granule-mature
+TTTAGGCTTTTCGT,Granule mature,35,Granule-mature
+TTTATCCTAGAAGT,Neuroblast,12,Neuroblast 2
+TTTATCCTCCTTGC,Neuroblast,35,Neuroblast 2
+TTTATCCTGTTAGC,Mossy,12,Mossy-Adcyap1
+TTTATCCTTTCATC,Granule mature,35,Granule-mature
+TTTCACGACGTTAG,Neuroblast,12,Neuroblast 2
+TTTCAGTGACACGT,Granule mature,35,Granule-mature
+TTTCAGTGAGATCC,Granule mature,35,Granule-mature
+TTTCAGTGCTGACA,Granule mature,35,Granule-mature
+TTTCAGTGTACGAC,Granule immature,12,Granule-immature
+TTTCAGTGTCAGAC,Neuroblast,12,Neuroblast 2
+TTTCCAGAATCGTG,Granule mature,35,Granule-mature
+TTTCGAACAGTCAC,Granule mature,35,Granule-mature
+TTTCGAACTAAGCC,Granule immature,35,Granule-immature
+TTTCTACTGAACTC,nIPC,12,nIPC
+TTTCTACTTCCCGT,Granule immature,35,Granule-immature
+TTTGACTGCCTGTC,Neuroblast,12,Neuroblast 2
+TTTGACTGTCTGGA,Granule mature,35,Granule-mature
+TTTGCATGGGAGTG,Microglia,35,Microglia
+TTTGCATGTTCTTG,Granule immature,35,Granule-immature

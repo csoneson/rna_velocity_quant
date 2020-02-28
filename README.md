@@ -17,7 +17,7 @@ For each of these data sets, the corresponding subfolder of this repository cont
 
 ## Data preprocessing
 
-The downloaded data were preprocessed as follows:
+The downloaded data were preprocessed as follows before being used in this evaluation:
 
 ### Dentate gyrus
 
@@ -32,8 +32,8 @@ adata.obs.to_csv("cells_kept_in_scvelo_exampledata.csv")
 
 ### Pancreas
 
-* FASTQ files for the 15.5 sample were downloaded from [ENA](https://www.ebi.ac.uk/ena/data/view/SRR9201794) (accession date November 24, 2019)
-* The FASTQ files were subsequently renamed, replacing `_X` with `S1_L001_RX_001` (for X = 1,2)
+* FASTQ files for the E15.5 sample were downloaded from [ENA](https://www.ebi.ac.uk/ena/data/view/SRR9201794) (accession date November 24, 2019)
+* The FASTQ files were subsequently renamed, replacing `_X` with `S1_L001_RX_001` (for `X` = 1,2)
 * The sample annotation file ([`cells_kept_in_scvel_exampledata.csv`](pancreas_mouse/data_preprocessing/cells_kept_in_scvelo_exampledata.csv)) was obtained via the [scVelo](https://scvelo.readthedocs.io/) Python package (v0.1.24):
 
 ```
@@ -44,8 +44,8 @@ aadata.obs.to_csv("cells_kept_in_scvelo_exampledata.csv")
 
 ### PFC
 
-* The BAM file was downloaded from GEO
-* FASTQ files were extracted with [bamtofastq]() v1.1.2:
+* The BAM file with the reads was downloaded from [SRA](https://sra-pub-src-2.s3.amazonaws.com/SRR8433692/PFC_Sample2.bam.1)
+* FASTQ files were extracted from the BAM file using [bamtofastq](https://github.com/10XGenomics/bamtofastq) v1.1.2:
 
 ```
 bamtofastq_1.1.2/bamtofastq --reads-per-fastq=500000000 PFC_Sample2.bam FASTQtmp
@@ -83,7 +83,7 @@ FASTQtmp/PFC_sample2_MissingLibrary_1_HNGGMBCXY/bamtofastq_S1_L002_R2_001.fastq.
 FASTQ/PFCsample2_S1_L001_R2_001.fastq.gz
 ```
 
-* The sample annotation file (`GSE124952_meta_data.csv`) was downloaded from the [GEO record](). It was processed to retain only cells from PFCsample2 using the following R code, generating the final [`cells_in_pfcsample2.csv`](pfc_mouse/data_preprocessing/cells_in_pfcsample2.csv) file:
+* The sample annotation file (`GSE124952_meta_data.csv`) was downloaded from the [GEO record](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE124952). It was processed to retain only cells from PFCsample2 using the following R code, generating the final [`cells_in_pfcsample2.csv`](pfc_mouse/data_preprocessing/cells_in_pfcsample2.csv) file:
 
 ```
 suppressPackageStartupMessages({
@@ -107,9 +107,8 @@ write.table(csv, file = "cells_in_pfcsample2.csv",
 
 ### Spermatogenesis
 
-* The BAM file from the AdultMouse_Rep3 sample was downloaded (accession date January 23, 2020) from the [SRA](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR6459157
-Direct link: https://sra-pub-src-1.s3.amazonaws.com/SRR6459157/AdultMouse_Rep3_possorted_genome_bam.bam.1).
-* FASTQ files were extracted with [bamtofastq]() v1.1.2:
+* The BAM file from the AdultMouse_Rep3 sample was downloaded (accession date January 23, 2020) from [SRA](https://sra-pub-src-1.s3.amazonaws.com/SRR6459157/AdultMouse_Rep3_possorted_genome_bam.bam.1).
+* FASTQ files were extracted from the BAM file using [bamtofastq](https://github.com/10XGenomics/bamtofastq) v1.1.2:
 
 ```
 bamtofastq_1.1.2/bamtofastq --reads-per-fastq=500000000 AdultMouse_Rep3_possorted_genome_bam.bam FASTQtmp

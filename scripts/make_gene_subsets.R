@@ -25,19 +25,9 @@ geneinfo <- lapply(methods, function(nm) {
 })
 
 ## Extract all genes that are selected with all methods, and have valid fits with all methods
-allgenes <- as.character(Reduce(union, lapply(geneinfo, function(w) w$index[!is.na(w$fit_alpha)])))
-selgenes <- do.call(cbind, lapply(geneinfo, function(w) as.numeric(allgenes %in% w$index[!is.na(w$fit_alpha)])))
-rownames(selgenes) <- allgenes
-selgenes <- data.frame(selgenes)
-
-n_methods <- ncol(selgenes)
-genes_in_all <- selgenes %>% 
-  tibble::rownames_to_column("gene") %>%
-  tidyr::gather(key = "method", value = "selected", -gene) %>%
-  dplyr::group_by(gene) %>%
-  dplyr::summarize(n = sum(selected)) %>% 
-  dplyr::filter(n == n_methods) %>%
-  dplyr::pull(gene)
+genes_in_all <- Reduce(intersect, lapply(
+  geneinfo, function(w) as.character(w$index[!is.na(w$fit_alpha)])
+))
 
 write.table(genes_in_all, file = outtxt, row.names = FALSE, col.names = FALSE,
             quote = FALSE, sep = "\t")

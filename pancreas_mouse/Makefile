@@ -63,7 +63,7 @@ methodsselc := $(subst $(space),$(comma),$(methodssel))
 
 all: ref quantific veloc plot
 
-ref: $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) \
+ref: $(foreach m,prepref busparse,$(foreach v,collapse separate,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/introns_cDNA.fa.gz)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/tr2g_modified.tsv)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns.kidx)) \
@@ -129,7 +129,8 @@ plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
 plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds \
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
 plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
-plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds
+plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds \
+plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds
 
 
 ## -----------------------------------------------------------------------------------------------------
@@ -226,8 +227,16 @@ $(scriptdir)/generate_cdna_intron_fa_$(2).R $(3) $(4)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args scriptdir='$(scriptdir)' gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=$(5) outdir='$$(@D)'" $(scriptdir)/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1)$(6).Rout
 endef
+$(foreach v,collapse separate,$(eval $(call farefrule,$(v),busparse,,,$(flanklength),)))
 $(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklength),)))
 $(foreach u,20 40,$(foreach v,separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklengthL$(u)),_flankL$(u)))))
+
+plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds: $(txome) $(gtf) $(scriptdir)/plot_compare_busparse_prepref.R \
+$(foreach v,collapse separate,$(foreach m,busparse prepref,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) 
+	mkdir -p Rout
+	mkdir -p $(@D)
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args txomefa='$(txome)' gtffile='$(gtf)' refdir='reference' flanklength=$(flanklength) outrds='$(@)'" $(scriptdir)/plot_compare_busparse_prepref.R Rout/compare_busparse_prepref.Rout
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 define swaprule

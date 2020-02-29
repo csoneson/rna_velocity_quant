@@ -94,9 +94,9 @@ prepref_collapse_tb <-
 
 dftx <- dplyr::bind_rows(
   as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse"),
-  as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "prepref"),
+  as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "eisaR"),
   as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse"),
-  as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "prepref")
+  as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "eisaR")
 )
 
 g1 <- ggplot(
@@ -190,9 +190,9 @@ prepref_collapse_tb <-
 
 dfintr <- dplyr::bind_rows(
   as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse"),
-  as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "prepref"),
+  as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "eisaR"),
   as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse"),
-  as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "prepref")
+  as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "eisaR")
 )
 
 g2 <- ggplot(dfintr %>% dplyr::filter(type == "separate") %>% 

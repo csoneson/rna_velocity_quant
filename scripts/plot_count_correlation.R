@@ -165,6 +165,31 @@ gene_corrs_within <- do.call(
   dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
 gene_corrs_within$method <- factor(gene_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
 
+## To plot correlation between gene likelihood and total abundance
+gene_corrs_lh_total_within <- do.call(
+  dplyr::bind_rows, 
+  lapply(seq_len(length(methods)), function(j) {
+    jj <- methods[j]
+    
+    stopifnot(all(rownames(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced")))) == 
+                    rownames(seurats[[jj]]@assays[["RNA"]]@meta.features)))
+    a <- rowMeans(as.matrix(GetAssayData(GetAssay(seurats[[jj]], "spliced"))) + 
+                   as.matrix(GetAssayData(GetAssay(seurats[[jj]], "unspliced"))))
+    b <- seurats[[jj]]@assays[["RNA"]]@meta.features$fit.likelihood
+    
+    data.frame(method = jj,
+               gene = rownames(seurats[[jj]]@assays[["RNA"]]@meta.features), 
+               ctype = "total - gene likelihood",
+               dtype = "gene",
+               total = a,
+               likelihood = b,
+               stringsAsFactors = FALSE)
+  })) %>%
+  dplyr::mutate(method = methods_short$method_short[match(method, methods_short$method)])
+gene_corrs_lh_total_within$method <- 
+  factor(gene_corrs_lh_total_within$method, 
+         levels = methods_short$method_short[match(methods, methods_short$method)])
+
 ## Same but for cells
 cell_corrs <- do.call(
   dplyr::bind_rows, 
@@ -326,6 +351,27 @@ gene_cell_corrs_within <- dplyr::bind_rows(
     dplyr::select(method, ctype, dtype, cdtype, corrs)
 )
 gene_cell_corrs_within$method <- factor(gene_cell_corrs_within$method, levels = methods_short$method_short[match(methods, methods_short$method)])
+
+
+pdf(gsub("\\.rds$", "_total_likelihood.pdf", outrds), width = 9, height = 7)
+tmpcorrs <- gene_corrs_lh_total_within %>%
+  dplyr::group_by(method) %>%
+  dplyr::summarize(spearman = paste0("Spearman = ", 
+                                     round(cor(log10(total + 1), likelihood, method = "spearman"), 
+                                           3)))
+ggplot(gene_corrs_lh_total_within) + 
+  geom_point(aes(x = log10(total + 1), y = likelihood),
+             alpha = 0.5, size = 0.5) + 
+  geom_smooth(aes(x = log10(total + 1), y = likelihood)) + 
+  facet_wrap(~ method) + 
+  geom_text(data = tmpcorrs, x = -Inf, y = Inf, hjust = -0.05, vjust = 1.25,
+            aes(label = spearman)) + 
+  theme_bw() + 
+  labs(x = "log10(average total abundance + 1)",
+       y = "fit likelihood",
+       title = "Fit likelihood vs average total abundance",
+       subtitle = "For genes selected by all methods")
+dev.off()
 
 
 pdf(gsub("rds$", "pdf", outrds), width = 0.75 * length(methods) + 6.5, 

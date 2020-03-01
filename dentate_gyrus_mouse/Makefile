@@ -98,8 +98,6 @@ $(foreach q,$(samples),quants/$(q)/alevin_spliced_gentrome/lib_format_counts.jso
 $(foreach q,$(samples),quants/$(q)/starsolo/Solo.out/Gene/Summary.csv) \
 output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds)
-#quants/cellranger/p12/outs/web_summary.html \
-#quants/cellranger/p12/velocyto/p12.loom \
 
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
@@ -123,7 +121,7 @@ plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedd
 define starsolorule
 quants/$(1)/starsolo/Solo.out/Gene/Summary.csv: \
 $(datadir)/$(1)/$(1)_S1_L001_R1_001.fastq.gz $(datadir)/$(1)/$(1)_S1_L001_R2_001.fastq.gz \
-reference/cellranger-2.0.0-737K-april-2014_rc.txt
+reference/cellranger-2.0.0-737K-april-2014_rc.txt $(starindex)/SA
 	mkdir -p quants/$(1)/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
 	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(1)/$(1)_S1_L001_R2_001.fastq.gz $(datadir)/$(1)/$(1)_S1_L001_R1_001.fastq.gz \
@@ -177,7 +175,8 @@ $(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval 
 
 ## Generate fasta file with spliced + unspliced transcripts
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
-$(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R
+$(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R \
+$(scriptdir)/extractTxSeqs.R
 	mkdir -p Rout
 	mkdir -p reference
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -199,7 +198,7 @@ endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessrule,$(v),$(m)))))
 
 define uniquenessruleoverall
-reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
+reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/tr2g.tsv \
 $(scriptdir)/frac_unique.py
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
@@ -312,7 +311,7 @@ reference/spliced.sidx/seq.bin: $(txome)
 	salmon index -k 31 -i $(@D) -t $< --gencode -p $(ncores) --type puff 
 
 ## From only the regular (spliced) transcripts, for comparison, genome as decoys
-reference/spliced_gentrome.sidx/seq.bin: $(txome)
+reference/spliced_gentrome.sidx/seq.bin: $(txome) $(genome) $(chrnames)
 	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $(@D) -t <(cat $< $(genome)) \
 	--gencode -p $(ncores) --type puff  -d $(chrnames)
@@ -509,7 +508,7 @@ $(foreach q,p12 p35,quants/$(q)/alevin_spliced_unspliced_gentrome/lib_format_cou
 $(foreach q,p12 p35,quants/$(q)/alevin_spliced/lib_format_counts.json) \
 $(foreach q,p12 p35,quants/$(q)/alevin_spliced_gentrome/lib_format_counts.json) \
 $(foreach q,p12 p35,quants/$(q)/starsolo/Solo.out/Gene/Summary.csv) \
-$(cellfile)
+$(cellfile) $(tx2genefull)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -548,7 +547,8 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: $(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: \
+$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -565,7 +565,7 @@ $(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
 
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -582,6 +582,7 @@ $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
+output/sce/sces_spliced_unspliced.rds \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
@@ -591,7 +592,7 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
 
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout

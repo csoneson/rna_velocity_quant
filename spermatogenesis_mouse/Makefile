@@ -221,7 +221,7 @@ $(genome) $(gtf) $(scriptdir)/plot_polyAT_coverage.R
 ## -----------------------------------------------------------------------------------------------------
 quants/starsolo/Solo.out/Gene/Summary.csv: \
 $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
-reference/cellranger2.2.0-737K-august-2016.txt
+reference/cellranger2.2.0-737K-august-2016.txt $(starindex)/SA
 	mkdir -p quants/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
 	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
@@ -274,7 +274,8 @@ $(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval 
 
 ## Generate fasta file with spliced + unspliced transcripts
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
-$(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R
+$(gtf) $(genome) $(tx2genefull) $(scriptdir)/generate_spliced_unspliced_fa.R \
+$(scriptdir)/extractTxSeqs.R
 	mkdir -p Rout
 	mkdir -p reference
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -296,7 +297,7 @@ endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessrule,$(v),$(m)))))
 
 define uniquenessruleoverall
-reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
+reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/tr2g.tsv \
 $(scriptdir)/frac_unique.py
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
@@ -409,7 +410,7 @@ reference/spliced.sidx/seq.bin: $(txome)
 	salmon index -k 31 -i $(@D) -t $< --gencode -p $(ncores) --type puff 
 
 ## From only the regular (spliced) transcripts, for comparison, genome as decoys
-reference/spliced_gentrome.sidx/seq.bin: $(txome)
+reference/spliced_gentrome.sidx/seq.bin: $(txome) $(genome) $(chrnames)
 	module load Salmon/1.0.0 && \
 	salmon index -k 31 -i $(@D) -t <(cat $< $(genome)) \
 	--gencode -p $(ncores) --type puff  -d $(chrnames)
@@ -487,7 +488,8 @@ $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(
 ## kb-python
 quants/kb_python_lamanno/inspect.unspliced.json: \
 reference/kb_python_lamanno/kb_python_lamanno.kbidx \
-$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
+reference/cellranger2.2.0-737K-august-2016.txt
 	mkdir -p $(@D)
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate kb-python-0.24.4 && \
@@ -600,7 +602,7 @@ quants/alevin_spliced_gentrome/lib_format_counts.json \
 quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
 quants/starsolo/Solo.out/Gene/Summary.csv \
 quants/kb_python_lamanno/inspect.unspliced.json \
-$(cellfile)
+$(cellfile) $(tx2genefull)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -650,7 +652,8 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: $(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: \
+$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -692,6 +695,7 @@ $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
+output/sce/sces_spliced_unspliced.rds \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
@@ -719,6 +723,7 @@ $(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
 define plotgenerule
 plots/genes/$(outprefix)_$(1).pdf: quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
+output/sce/sces_spliced_unspliced.rds \
 $(gtf) $(scriptdir)/plot_helpers.R $(scriptdir)/plot_gene_model.R $(tx2genefull) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)

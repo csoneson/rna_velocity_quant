@@ -26,7 +26,7 @@ print(outrds)
 
 methods_short <- shorten_methods(methods)
 
-## Read velocities from scVelo run on shared genes
+## Read velocities from scVelo
 seurats <- lapply(methods, function(nm) {
   w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
                                          nm, "_with_velocity.h5ad")))
@@ -52,6 +52,7 @@ d_vel_shared <- do.call(dplyr::bind_rows, lapply(names(velocities_shared), funct
   }))
 }))
 
+## Reshape to distance matrix
 d_vel_shared <- d_vel_shared %>% dplyr::select(m1, m2, dist) %>% 
   tidyr::spread(key = m2, value = dist) %>%
   as.data.frame() %>%
@@ -59,10 +60,12 @@ d_vel_shared <- d_vel_shared %>% dplyr::select(m1, m2, dist) %>%
   as.matrix()
 stopifnot(all(rownames(d_vel_shared) == colnames(d_vel_shared)))
 
+## Apply classical MDS
 cmd_vel_shared <- as.data.frame(cmdscale(d = d_vel_shared, k = 2)) %>%
   tibble::rownames_to_column("method") %>%
   dplyr::left_join(methods_short, by = "method")
 
+## Define plot settings
 plset <- list(
   aes(x = V1, y = V2, shape = rtype, label = method_short),
   geom_point(aes(color = mtype), size = 7, alpha = 0.7),

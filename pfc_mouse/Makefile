@@ -176,7 +176,7 @@ $(genome) $(gtf) $(scriptdir)/plot_polyAT_coverage.R
 ## -----------------------------------------------------------------------------------------------------
 quants/starsolo/Solo.out/Gene/Summary.csv: \
 $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
-reference/cellranger2.2.0-737K-august-2016.txt
+reference/cellranger2.2.0-737K-august-2016.txt $(starindex)/SA
 	mkdir -p quants/starsolo
 	module load STAR/2.7.3a-foss-2019b && \
 	STAR --genomeDir $(starindex) --readFilesIn $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz \
@@ -258,7 +258,8 @@ $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(
 ## kb-python
 quants/kb_python_lamanno/inspect.unspliced.json: \
 $(refdir)/kb_python_lamanno/kb_python_lamanno.kbidx \
-$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz
+$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
+reference/cellranger2.2.0-737K-august-2016.txt
 	mkdir -p $(@D)
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate kb-python-0.24.4 && \
@@ -371,7 +372,7 @@ quants/alevin_spliced_gentrome/lib_format_counts.json \
 quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
 quants/starsolo/Solo.out/Gene/Summary.csv \
 quants/kb_python_lamanno/inspect.unspliced.json \
-$(cellfile)
+$(cellfile) $(tx2genefull)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -412,7 +413,8 @@ $(foreach v,separate collapse,$(refdir)/prepref_iso$(v)_uniqueness_overall.txt)
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='$(refdir)' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
-plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: $(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
+plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: \
+$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -429,7 +431,7 @@ $(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
 
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -446,6 +448,7 @@ $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='TSNE' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
+output/sce/sces_spliced_unspliced.rds \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
 $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
@@ -455,7 +458,7 @@ $(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
 
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
 $(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R
 	mkdir -p $(@D)
 	mkdir -p Rout
@@ -473,6 +476,7 @@ $(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
 define plotgenerule
 plots/genes/$(outprefix)_$(1).pdf: quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
+output/sce/sces_spliced_unspliced.rds \
 $(gtf) $(scriptdir)/plot_helpers.R $(scriptdir)/plot_gene_model.R $(tx2genefull) \
 $(foreach v,separate collapse,$(refdir)/prepref_iso$(v)_uniqueness.txt) \
 $(foreach v,separate collapse,$(refdir)/prepref_iso$(v)_uniqueness_overall.txt)

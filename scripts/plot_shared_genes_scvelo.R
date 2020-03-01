@@ -47,9 +47,9 @@ colnames(selgenes) <- methods_short$method_short[match(colnames(selgenes), metho
 pdf(gsub("rds$", "pdf", outrds), width = 9, height = 5)
 g <- upset(selgenes, nsets = length(geneinfo), keep.order = TRUE, 
            order.by = "freq", decreasing = TRUE)
-print(cowplot::plot_grid(ggdraw() + draw_label(dataset, size = 8),
+print(cowplot::plot_grid(ggdraw() + draw_label(dataset, size = 13),
                          g$Main_bar, g$Matrix, ncol = 1, align = "v", 
-                         rel_heights = c(0.1, 2.5, 1)))
+                         rel_heights = c(0.2, 2.5, 1)))
 dev.off()
 
 saveRDS(NULL, file = outrds)

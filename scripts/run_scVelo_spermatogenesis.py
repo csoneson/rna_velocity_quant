@@ -118,7 +118,7 @@ pd.DataFrame(adata2.obsm['velocity_UMAP_alevin_spliced_gentrome'], index = adata
 try:
 	scv.tl.recover_latent_time(adata2)
 	top_genes = adata2.var_names[adata2.var.fit_likelihood.argsort()[::-1]][:300]
-	scv.pl.heatmap(adata2, var_names=top_genes, tkey='latent_time', n_convolve=100, save="top_genes_heatmap.png", show=False)
+	scv.pl.heatmap(adata2, var_names=top_genes, tkey='latent_time', n_convolve=100, col_color='clusters', save="top_genes_heatmap.png", show=False)
 	scv.pl.scatter(adata2, basis=top_genes[:10], legend_loc='none', size=80, frameon=False, ncols=5, fontsize=20, save="top_genes_scatter.png", show=False)
 	scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
 	scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
@@ -127,7 +127,7 @@ except:
 	print('Latent time/top genes could not be extracted')
 
 try:
-	scv.tl.rank_velocity_genes(adata2, match_with = "clusters", n_genes = 25)
+	scv.tl.rank_velocity_genes(adata2, groupby = "clusters", n_genes = 25)
 	generank = pd.DataFrame(adata2.uns['rank_velocity_genes']['names']).head(25)
 	genescore = pd.DataFrame(adata2.uns['rank_velocity_genes']['scores']).head(25)
 	adata2.var.to_csv(plotdir + "/" + base + basegs + "/" + base + basegs + "_gene_info.csv")

@@ -66,7 +66,7 @@ if ("clusters" %in% colnames(velocity_confidence)) {
     facet_wrap(~ method) + 
     theme(legend.position = "none",
           axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
-    labs(title = "Latent time vs cluster")
+    labs(title = paste0(gsub("_", " ", dataset), ", latent time vs cluster"))
 }
 
 ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence)) + 
@@ -75,7 +75,7 @@ ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence)) +
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Velocity confidence, per cell",
+  labs(title = paste0(gsub("_", " ", dataset), ", velocity confidence, per cell"),
        subtitle = paste0("The velocity confidence checks whether the velocities ", 
                          "agree with the neighboring velocities, \ni.e. ", 
                          "a kind of smoothness score"))
@@ -87,7 +87,7 @@ ggplot(velocity_confidence, aes(x = method_short, y = velocity_length)) +
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Velocity length, per cell",
+  labs(title = paste0(gsub("_", " ", dataset), ", velocity length, per cell"),
        subtitle = "")
 
 ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence_transition)) + 
@@ -96,7 +96,7 @@ ggplot(velocity_confidence, aes(x = method_short, y = velocity_confidence_transi
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Velocity confidence (transition), per cell",
+  labs(title = paste0(gsub("_", " ", dataset), ", velocity confidence (transition), per cell"),
        subtitle = paste0("The velocity transition confidence checks whether ", 
                          "the embedded velocities obtained from the \ntransition ", 
                          "probabilities truly reflect the velocities ", 
@@ -108,7 +108,7 @@ ggplot(velocity_confidence, aes(x = method_short, y = max_cosine_corr)) +
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Max cosine correlation, per cell",
+  labs(title = paste0(gsub("_", " ", dataset), ", max cosine correlation, per cell"),
        subtitle = paste0(""))
 
 if ("clusters" %in% colnames(velocity_confidence)) {
@@ -120,7 +120,7 @@ if ("clusters" %in% colnames(velocity_confidence)) {
       scale_fill_manual(values = base_method_colors, name = "") + 
       theme(legend.position = "none",
             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-      labs(title = "Max cosine correlation, per cell",
+      labs(title = paste0(gsub("_", " ", dataset), ", max cosine correlation, per cell"),
            x = "",
            y = "Max cosine correlation"))
   
@@ -132,7 +132,7 @@ if ("clusters" %in% colnames(velocity_confidence)) {
       scale_fill_manual(values = base_method_colors, name = "") + 
       theme(legend.position = "none",
             axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-      labs(title = "Max cosine correlation, per cell",
+      labs(title = paste0(gsub("_", " ", dataset), ", max cosine correlation, per cell"),
            x = "",
            y = "Max cosine correlation"))
 }
@@ -144,7 +144,7 @@ ggplot(velocity_genes, aes(x = method_short, y = velocity_score)) +
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Velocity score, per gene",
+  labs(title = paste0(gsub("_", " ", dataset), ", velocity score, per gene"),
        subtitle = paste0(""))
 
 ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) + 
@@ -153,7 +153,7 @@ ggplot(velocity_genes, aes(x = method_short, y = fit_likelihood)) +
   scale_fill_manual(values = base_method_colors, name = "") + 
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
-  labs(title = "Fit likelihood, per gene",
+  labs(title = paste0(gsub("_", " ", dataset), ", fit likelihood, per gene"),
        subtitle = paste0(""))
 
 dev.off()

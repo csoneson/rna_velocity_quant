@@ -19,9 +19,11 @@ source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(plothelperscript)
 print(topdir)
+print(dataset)
 print(refdir)  ## directory where uniqueness files are
 print(tx2gene)
 print(methods)
@@ -127,7 +129,7 @@ for (ct in c("exonic", "intronic", "overall")) {
             legend.position = "none") + 
       labs(x = "",
            y = "Total UMI count across genes in bin",
-           title = paste0("Total count, stratified by ", ct, " uniqueness (", at, ")")))
+           title = paste0(dataset, ", total count, stratified by ", ct, " uniqueness (", at, ")")))
   }
 }
 dev.off()
@@ -152,7 +154,7 @@ for (i in c("spliced", "unspliced")) {
       tibble::column_to_rownames("gene") %>%
       dplyr::mutate_all(.funs = log1p),
     lower = list(continuous = wrap(lowerfun)),
-    title = i, xlab = "log(total gene count + 1)", 
+    title = paste0(dataset, ", ", i), xlab = "log(total gene count + 1)", 
     ylab = "log(total gene count + 1)") + 
       theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)))
   )
@@ -213,7 +215,7 @@ print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
               strip.text = element_text(size = 8.75 - 0.25 * length(methods))) + 
         scale_fill_manual(values = c(spliced = "red", unspliced = "blue"),
                           name = "") + 
-        labs(title = "Differences in total gene count across cells",
+        labs(title = paste0(dataset, ", differences in total gene count across cells"),
              x = "", y = "Fraction of genes")
 )
 dev.off()

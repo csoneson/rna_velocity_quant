@@ -30,7 +30,8 @@ names(methods) <- methods
 ## ------------------------------------------------------------------------- ##
 ## Read data
 ## ------------------------------------------------------------------------- ##
-sce <- readRDS(file.path(topdir, paste0("output/sce/sce_starsolo.rds")))
+## Get UMAP representation
+sce <- readRDS(file.path(topdir, paste0("output/sce/sce_", methods[1], ".rds")))
 umap <- reducedDim(sce, "UMAP_alevin_spliced_gentrome")
 
 cellinfo_all <- lapply(methods, function(nm) {

@@ -18,9 +18,11 @@ source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(plothelperscript)
 print(topdir)
+print(dataset)
 print(refdir)  ## directory where uniqueness files are
 print(tx2gene)
 print(methods)
@@ -129,7 +131,7 @@ png(gsub("\\.rds$", "_fracunspliced_clustering.png", outrds),
     width = 10, height = 10, unit = "in", res = 400)
 print(pheatmap::pheatmap(
   clstdata, cluster_rows = hcl, cutree_rows = 10, 
-  scale = "none", fontsize_row = 4,
+  scale = "none", fontsize_row = 4, main = dataset,
   show_rownames = FALSE, show_colnames = TRUE, 
   annotation_row = data.frame(clusters = factor(clusters), row.names = names(clusters)),
   color = colorRampPalette(colors = c("grey95", "steelblue"))(100),

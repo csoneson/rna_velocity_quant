@@ -16,8 +16,10 @@ source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(dataset)
 print(plothelperscript)
 print(methods)
 print(outrds)
@@ -369,7 +371,7 @@ ggplot(gene_corrs_lh_total_within) +
   theme_bw() + 
   labs(x = "log10(average total abundance + 1)",
        y = "fit likelihood",
-       title = "Fit likelihood vs average total abundance",
+       title = paste0(dataset, ", fit likelihood vs average total abundance"),
        subtitle = "For genes selected by all methods")
 dev.off()
 
@@ -383,9 +385,9 @@ ggplot(gene_corrs, aes(x = ctype, y = corrs, fill = ctype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 5),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 20),
+        title = element_text(size = 15),
         legend.position = "none") + 
-  labs(title = "Correlation, abundances and velocities, by gene",
+  labs(title = paste0(dataset, ", correlation, abundances and velocities, by gene"),
        subtitle = "For genes selected by all methods")
 
 ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) + 
@@ -394,8 +396,8 @@ ggplot(cell_corrs, aes(x = ctype, y = corrs, fill = ctype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 5),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 20)) + 
-  labs(title = "Correlation, abundances and velocities, by cell",
+        title = element_text(size = 15)) + 
+  labs(title = paste0(dataset, ", correlation, abundances and velocities, by cell"),
        subtitle = "Over genes selected by all methods")
 
 if (!any(is.na(cell_corrs$cluster))) {
@@ -407,8 +409,8 @@ if (!any(is.na(cell_corrs$cluster))) {
             theme_bw() + 
             theme(strip.text = element_text(size = 5),
                   axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-                  title = element_text(size = 20)) + 
-            labs(title = paste0("Correlation, counts and velocities, by cell (", ct, ")"),
+                  title = element_text(size = 15)) + 
+            labs(title = paste0(dataset, ", correlation, counts and velocities, by cell (", ct, ")"),
                  subtitle = "Over genes selected by all methods"))
   }
 }
@@ -424,8 +426,8 @@ ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 18)) + 
-  labs(title = "Correlation, abundances and velocities, by gene and cell",
+        title = element_text(size = 15)) + 
+  labs(title = paste0(dataset, ", correlation, abundances and velocities, by gene and cell"),
        subtitle = "Using genes selected by all methods",
        x = "", y = "Correlation") + 
   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")
@@ -440,8 +442,8 @@ ggplot(gene_cell_corrs_within, aes(x = cdtype, y = corrs, fill = dtype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 8),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 18)) + 
-  labs(title = "Correlation, abundances and velocities, by gene and cell",
+        title = element_text(size = 15)) + 
+  labs(title = paste0(dataset, ", correlation, abundances and velocities, by gene and cell"),
        subtitle = "Using genes selected by all methods",
        x = "", y = "Correlation") + 
   scale_fill_manual(values = c(cell = "red", gene = "blue"), name = "")

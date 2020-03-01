@@ -16,8 +16,10 @@ source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(dataset)
 print(plothelperscript)
 print(methods)
 print(outrds)
@@ -73,15 +75,13 @@ ggplot(res, aes(x = dimred, y = velocity_length, fill = mtype)) +
   theme_bw() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
   labs(x = "", y = "Embedded velocity length",
-       title = "Length of embedded velocity vector")
+       title = paste0(dataset, ", length of embedded velocity vector"))
 dev.off()
 
 ## Calculate the average dot product between the velocity projection of 
 ## a cell and those of its nearest neighbors. 
 ## The idea is that if the low-dimensional representation is good, the 
 ## dynamics should be visible in there (and the dot product should be high)
-## Then do the same for the high-dimensional velocities, checking whether
-## points mapping close together in the low-dim space also have similar velocities
 ## Distances are always the same for a given dimension reduction, so pre-calculate these
 sce <- readRDS(dfiles$sce[1])
 tmp <- unique(dfiles$Var2)
@@ -111,67 +111,16 @@ resdot <- do.call(dplyr::bind_rows, lapply(seq_len(nrow(dfiles)), function(i) {
                    dimred = dfiles$Var2[i],
                    dtype = "Embedding",
                    nn = nn,
-                   ave_dot = rowSums(dots * t(apply(dists, 1, function(x) {
+                   ave_dot = rowMeans(dots * t(apply(dists, 1, function(x) {
                      seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
                    }))),
-                   ave_dot_shuffled = rowSums(dots * t(apply(dists, 1, function(x) {
+                   ave_dot_shuffled = rowMeans(dots * t(apply(dists, 1, function(x) {
                      seq_len(ncol(dists)) %in% order(x)[s][2:(nn + 1)]
                    }))),
                    stringsAsFactors = FALSE) %>%
     dplyr::left_join(methods_short, by = "method") %>%
     dplyr::select(cell, method_short, mtype, rtype, dimred, dtype, ave_dot, ave_dot_shuffled)
   
-  # ## high-dimensional velocities, individual genes
-  # a <- Seurat::ReadH5AD(dfiles$veloall[i])
-  # a <- as.matrix(GetAssayData(GetAssay(a, "velocity")))
-  # a <- a[rowSums(is.na(a)) == 0, ]
-  # ## scale, to get more manageable values
-  # a <- a/sqrt(nrow(a))
-  # ## dot product of velocities
-  # dots <- t(a) %*% a
-  # stopifnot(all(rownames(dots) == rownames(dists)))
-  # stopifnot(all(colnames(dots) == colnames(dists)))
-  # d2 <- data.frame(cell = rownames(dists),
-  #                  method = dfiles$Var1[i],
-  #                  dimred = dfiles$Var2[i],
-  #                  dtype = "Velocities, all genes",
-  #                  nn = nn,
-  #                  ave_dot = rowSums(dots * t(apply(dists, 1, function(x) {
-  #                    seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
-  #                  }))),
-  #                  ave_dot_shuffled = rowSums(dots * t(apply(dists, 1, function(x) {
-  #                    seq_len(ncol(dists)) %in% order(x)[s][2:(nn + 1)]
-  #                  }))),
-  #                  stringsAsFactors = FALSE) %>%
-  #   dplyr::left_join(methods_short, by = "method") %>%
-  #   dplyr::select(cell, method_short, mtype, rtype, dimred, dtype, ave_dot, ave_dot_shuffled)
-  
-  # ## high-dimensional velocities, shared genes
-  # a <- Seurat::ReadH5AD(dfiles$veloshared[i])
-  # a <- as.matrix(GetAssayData(GetAssay(a, "velocity")))
-  # a <- a[rowSums(is.na(a)) == 0, ]
-  # ## scale, to get more manageable values
-  # a <- a/sqrt(nrow(a))
-  # ## dot product of velocities
-  # dots <- t(a) %*% a
-  # stopifnot(all(rownames(dots) == rownames(dists)))
-  # stopifnot(all(colnames(dots) == colnames(dists)))
-  # d3 <- data.frame(cell = rownames(dists),
-  #                  method = dfiles$Var1[i],
-  #                  dimred = dfiles$Var2[i],
-  #                  dtype = "Velocities, shared genes",
-  #                  nn = nn,
-  #                  ave_dot = rowSums(dots * t(apply(dists, 1, function(x) {
-  #                    seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
-  #                  }))),
-  #                  ave_dot_shuffled = rowSums(dots * t(apply(dists, 1, function(x) {
-  #                    seq_len(ncol(dists)) %in% order(x)[s][2:(nn + 1)]
-  #                  }))),
-  #                  stringsAsFactors = FALSE) %>%
-  #   dplyr::left_join(methods_short, by = "method") %>%
-  #   dplyr::select(cell, method_short, mtype, rtype, dimred, dtype, ave_dot, ave_dot_shuffled)
-  
-  # dplyr::bind_rows(d1, d2, d3)
   d1
 }))
 
@@ -189,7 +138,7 @@ ggplot(resdot %>% tidyr::gather(key = "drtype", value = "ave_dot",
   theme_bw() + 
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
   labs(x = "", y = "Average dot product",
-       title = "Average dot product with velocities of neighboring cells")
+       title = paste0(dataset, ", average dot product with velocities of neighboring cells"))
 
 dev.off()
 

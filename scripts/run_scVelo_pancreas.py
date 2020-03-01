@@ -157,7 +157,7 @@ try:
 	scv.tl.recover_latent_time(adata2)
 	top_genes = adata2.var_names[adata2.var.fit_likelihood.argsort()[::-1]][:300]
 	scv.pl.heatmap(adata2, var_names=top_genes, tkey='latent_time', n_convolve=100, col_color='clusters', save="top_genes_heatmap.png", show=False)
-	scv.pl.scatter(adata2, basis=top_genes[:10], legend_loc='none', size=80, frameon=False, ncols=5, fontsize=20, save="top_genes_scatter.png", show=False, title=mname)
+	scv.pl.scatter(adata2, basis=top_genes[:10], legend_loc='none', size=80, frameon=False, ncols=5, fontsize=20, save="top_genes_scatter.png", show=False)
 	scv.pl.velocity_embedding_stream(adata2, basis='X_umap', save="UMAP_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
 	scv.pl.velocity_embedding_stream(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_stream_latent_time.png", figsize=(12,9), show=False, color='latent_time', title=mname)
 	scv.pl.scatter(adata2, basis='UMAP_alevin_spliced_gentrome', save="UMAP_alevin_spliced_gentrome_latent_time.png", figsize=(12,9), size=100, show=False, color='latent_time', color_map='gnuplot', perc=[2,98], rescale_color=[0,1], title=mname)

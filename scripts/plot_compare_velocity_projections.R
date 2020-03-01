@@ -13,6 +13,7 @@ suppressPackageStartupMessages({
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(topdir)
 print(plothelperscript)

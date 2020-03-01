@@ -30,20 +30,6 @@ methods_short <- shorten_methods(methods)
 ## ------------------------------------------------------------------------- ##
 ## Overall similarity
 ## ------------------------------------------------------------------------- ##
-## RMSE of count matrices
-# rmse <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
-#   do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
-#     stopifnot(all(rownames(sces[[s1]]) == rownames(sces[[s2]])))
-#     stopifnot(all(colnames(sces[[s1]]) == colnames(sces[[s2]])))
-#     data.frame(m1 = s1, m2 = s2, 
-#                RMSEspliced = sqrt(mean((assay(sces[[s1]], "spliced") - 
-#                                           assay(sces[[s2]], "spliced"))^2)),
-#                RMSEunspliced = sqrt(mean((assay(sces[[s1]], "unspliced") - 
-#                                             assay(sces[[s2]], "unspliced"))^2)),
-#                stringsAsFactors = FALSE)
-#   }))
-# }))
-
 ## Spearman correlations of row/column sums
 corrs <- do.call(dplyr::bind_rows, lapply(names(sces), function(s1) {
   do.call(dplyr::bind_rows, lapply(names(sces), function(s2) {
@@ -114,7 +100,7 @@ cmdgeneunspliced <- as.data.frame(cmdscale(d = sqrt(2 - 2 * corrgeneu), k = 2)) 
 plset <- list(
   aes(x = V1, y = V2, shape = rtype, label = method_short),
   geom_point(aes(color = mtype), size = 7, alpha = 0.7),
-  geom_label_repel(size = 3),
+  geom_label_repel(size = 1.5),
   theme_minimal(),
   scale_color_manual(values = base_method_colors, name = ""),
   scale_shape_discrete(name = ""),

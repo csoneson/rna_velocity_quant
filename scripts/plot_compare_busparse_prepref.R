@@ -196,11 +196,11 @@ dfintr <- dplyr::bind_rows(
 )
 
 g2 <- ggplot(dfintr %>% dplyr::filter(type == "separate") %>% 
-         dplyr::mutate(single_exon = ifelse(single_exon == TRUE, "Single exon", "Multiple exons")) %>%
-         dplyr::mutate(strand = ifelse(strand == "+", "Positive strand", "Negative strand")) %>%
-         dplyr::mutate(correct_length = ifelse(correct_length == TRUE, "Correct", "Incorrect")) %>%
-         dplyr::filter(single_exon == "Multiple exons"), 
-       aes(x = method, y = Freq, fill = correct_length)) + geom_bar(stat = "identity") + 
+               dplyr::mutate(single_exon = ifelse(single_exon == TRUE, "Single exon", "Multiple exons")) %>%
+               dplyr::mutate(strand = ifelse(strand == "+", "Positive strand", "Negative strand")) %>%
+               dplyr::mutate(correct_length = ifelse(correct_length == TRUE, "Correct", "Incorrect")) %>%
+               dplyr::filter(single_exon == "Multiple exons"), 
+             aes(x = method, y = Freq, fill = correct_length)) + geom_bar(stat = "identity") + 
   facet_grid(type ~ paste(single_exon, strand, sep = ", ")) + 
   theme_bw() + 
   theme(legend.position = "bottom") + 

@@ -16,6 +16,7 @@ source(plothelperscript)
 
 methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
+dataset <- gsub("_", " ", dataset)
 
 print(plothelperscript)
 print(topdir)
@@ -74,7 +75,7 @@ plset <- list(
 
 pdf(gsub("\\.rds$", "_mds.pdf", outrds), width = 7, height = 0.85 * 7)
 print(ggplot(cmd_vel_shared) + 
-        plset + ggtitle("MDS, velocities, shared genes") + 
+        plset + ggtitle(paste0(dataset, ", MDS, velocities, shared genes")) + 
         theme(legend.position = "bottom") + 
         guides(color = guide_legend(nrow = 2, byrow = TRUE)))
 dev.off()

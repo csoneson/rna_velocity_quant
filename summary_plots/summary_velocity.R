@@ -27,11 +27,13 @@ files <- lapply(datasets, function(ds) {
                            "_plot_velocity_confidence.rds")))
 })
 
-cellinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$cell_vel))
-geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel))
+cellinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$cell_vel)) %>%
+  dplyr::mutate(dataset = gsub("_", " ", dataset))
+geneinfo <- do.call(dplyr::bind_rows, lapply(files, function(f) f$gene_vel)) %>%
+  dplyr::mutate(dataset = gsub("_", " ", dataset))
 
 pdf("velocity_sd_latent_time.pdf")
-ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>% 
+ggplot(cellinfo %>% dplyr::filter(dataset != "Neuron") %>%
          dplyr::group_by(dataset, method_short, mtype, clusters) %>% 
          dplyr::summarize(ltsd = sd(latent_time)), 
        aes(x = dataset, y = ltsd)) + 

@@ -168,7 +168,7 @@ quants/cellranger/$(samplename)/outs/web_summary.html $(gtf)
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
 	velocyto run10x --samtools-threads $(ncores) quants/cellranger/$(samplename) $(gtf) && \
-	source deactivate
+	conda deactivate
 
 ## Subset bam file to only reads from retained cell barcodes
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam: \
@@ -292,7 +292,7 @@ $(scriptdir)/frac_unique.py
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
 	python $(scriptdir)/frac_unique.py <(zcat reference/$(2)_iso$(1)/cDNA_introns.fa.gz) reference/$(2)_iso$(1)/tr2g_modified.tsv $(flanklength) > $$@ && \
-	source deactivate && module purge
+	conda deactivate && module purge
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessrule,$(v),$(m)))))
 
@@ -302,7 +302,7 @@ $(scriptdir)/frac_unique.py
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
 	python $(scriptdir)/frac_unique.py <(zcat reference/$(2)_iso$(1)/cDNA_introns.fa.gz) reference/$(2)_iso$(1)/tr2g.tsv $(flanklength) > $$@ && \
-	source deactivate && module purge
+	conda deactivate && module purge
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessruleoverall,$(v),$(m)))))
 
@@ -327,7 +327,7 @@ $(genome) $(gtf)
 	kb ref --workflow lamanno -i $@ -g $(@D)/t2g.tsv \
 	-f1 $(@D)/kb_python_lamanno_cdna.fa -f2 $(@D)/kb_python_lamanno_intron.fa \
 	-c1 $(@D)/cdna_tx_to_capture.txt -c2 $(@D)/intron_tx_to_capture.txt $(genome) $(gtf) && \
-	source deactivate && module purge
+	conda deactivate && module purge
 
 ## Build Salmon index
 define sidxrule1
@@ -496,7 +496,7 @@ reference/cellranger2.2.0-737K-august-2016.txt
 	kb count -o $(@D) -w reference/cellranger2.2.0-737K-august-2016.txt -t $(ncores) --workflow lamanno \
 	-i $< -g $(<D)/t2g.tsv -x 10XV2 -c1 $(<D)/cdna_tx_to_capture.txt -c2 $(<D)/intron_tx_to_capture.txt \
 	$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz && \
-	source deactivate && module purge
+	conda deactivate && module purge
 
 ## -----------------------------------------------------------------------------------------------------
 ## Salmon/alevin
@@ -756,7 +756,7 @@ $(scriptdir)/convert_sce_to_anndata.py
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call anndatarule,$(x))))
 
@@ -770,7 +770,7 @@ $(scriptdir)/run_scVelo_$(outprefix).py
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call scvelorule,$(x))))
 
@@ -792,6 +792,6 @@ $(scriptdir)/run_scVelo_$(outprefix).py output/genesets/shared_genes$(2).txt
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ output/genesets/shared_genes$(2).txt >pylog/$(1).scvelo_shared_genes$(2).log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methodssel),$(eval $(call scveloruleshared,$(x),)))

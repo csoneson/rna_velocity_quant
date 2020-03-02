@@ -123,7 +123,7 @@ quants/cellranger/$(samplename)/outs/web_summary.html $(gtf)
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \
 	velocyto run10x --samtools-threads $(ncores) quants/cellranger/$(samplename) $(gtf) && \
-	source deactivate
+	conda deactivate
 
 ## Subset bam file to only reads from retained cell barcodes
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam: \
@@ -266,7 +266,7 @@ reference/cellranger2.2.0-737K-august-2016.txt
 	kb count -o $(@D) -w reference/cellranger2.2.0-737K-august-2016.txt -t $(ncores) --workflow lamanno \
 	-i $< -g $(<D)/t2g.tsv -x 10XV2 -c1 $(<D)/cdna_tx_to_capture.txt -c2 $(<D)/intron_tx_to_capture.txt \
 	$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz && \
-	source deactivate && module purge
+	conda deactivate && module purge
 
 ## -----------------------------------------------------------------------------------------------------
 ## Salmon/alevin
@@ -497,7 +497,7 @@ $(scriptdir)/convert_sce_to_anndata.py
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/convert_sce_to_anndata.py $$< $$@ >pylog/$(1).anndata.log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call anndatarule,$(x))))
 
@@ -511,7 +511,7 @@ $(scriptdir)/run_scVelo_$(outprefix).py
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methods),$(eval $(call scvelorule,$(x))))
 
@@ -533,6 +533,6 @@ $(scriptdir)/run_scVelo_$(outprefix).py output/genesets/shared_genes$(2).txt
 	module purge && module load Anaconda3/5.3.0 && \
 	set +u && source activate scvelo_0.1.24 && set -u && \
 	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ output/genesets/shared_genes$(2).txt >pylog/$(1).scvelo_shared_genes$(2).log 2>&1 && \
-	set +u && source deactivate && set -u && module purge
+	set +u && conda deactivate && set -u && module purge
 endef
 $(foreach x,$(methodssel),$(eval $(call scveloruleshared,$(x),)))

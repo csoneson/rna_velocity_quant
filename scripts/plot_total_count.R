@@ -195,7 +195,7 @@ res <- do.call(dplyr::bind_rows, lapply(c("spliced", "unspliced"), function(tp) 
 }))
 
 pdf(gsub("\\.rds$", "_frac_diff_btw_methods.pdf", outrds), 
-    width = 0.85*(0.75 * length(methods) + 6.5), height = 0.85*(0.75 * length(methods) + 6.5))
+    width = 0.85*(0.75 * length(methods) + 6.5), height = 0.85*(0.75 * length(methods) + 7.5))
 print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
         tidyr::gather(key = "ftype", value = "fraction", -m1, -m2, -ctype) %>%
         dplyr::mutate(ftype = replace(ftype, ftype == "frac_equal", "Equal"),
@@ -212,7 +212,7 @@ print(res %>% dplyr::select(c("m1", "m2", "ctype", contains("frac"))) %>%
         facet_grid(m1 ~ m2) + 
         theme_bw() + 
         theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-              strip.text = element_text(size = 8.75 - 0.25 * length(methods))) + 
+              strip.text = element_text(size = 7.75 - 0.25 * length(methods))) + 
         scale_fill_manual(values = c(spliced = "red", unspliced = "blue"),
                           name = "") + 
         labs(title = paste0(dataset, ", differences in total gene count across cells"),

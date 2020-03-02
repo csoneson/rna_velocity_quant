@@ -418,13 +418,13 @@ if (!any(is.na(cell_corrs$cluster))) {
 dev.off()
 
 png(gsub("\\.rds$", "_genes_plus_cells.png", outrds), width = 0.75 * length(methods) + 6.5, 
-    height = 0.85*(0.75 * length(methods) + 6.5), unit = "in", res = 300)
+    height = 0.85*(0.75 * length(methods) + 7.5), unit = "in", res = 300)
 ggplot(gene_cell_corrs, aes(x = ctype, y = corrs, fill = dtype)) + 
   geom_hline(yintercept = 0, linetype = "dashed", color = "grey") + 
   geom_boxplot() + 
   facet_grid(method1 ~ method2) + 
   theme_bw() + 
-  theme(strip.text = element_text(size = 8.75 - 0.25 * length(methods)),
+  theme(strip.text = element_text(size = 7.75 - 0.25 * length(methods)),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
         title = element_text(size = 15)) + 
   labs(title = paste0(dataset, ", correlation, abundances and velocities, by gene and cell"),
@@ -442,7 +442,7 @@ ggplot(gene_cell_corrs_within, aes(x = cdtype, y = corrs, fill = dtype)) +
   theme_bw() + 
   theme(strip.text = element_text(size = 8),
         axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
-        title = element_text(size = 15)) + 
+        title = element_text(size = 12)) + 
   labs(title = paste0(dataset, ", correlation, abundances and velocities, by gene and cell"),
        subtitle = "Using genes selected by all methods",
        x = "", y = "Correlation") + 

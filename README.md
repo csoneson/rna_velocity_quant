@@ -162,6 +162,8 @@ cellranger mkref --nthreads 64 \
 --ref-version=GRCm38.primary_assembly_gencodeM21_spliced
 ```
 
+### STAR index
+
 The `STAR` index used for quantification was generated using `STAR` v 2.7.3a:
 
 ```
@@ -176,6 +178,8 @@ STAR \
   --sjdbGTFfile gencode.vM21.annotation.gtf \
   --sjdbOverhang 150
 ```
+
+### Transcript-to-gene mapping
 
 Finally, the transcript-to-gene mapping files (in `.rds` and `.txt` format) were generated with R v3.6/Bioconductor release 3.9 as follows: 
 

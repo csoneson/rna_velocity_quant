@@ -1,8 +1,8 @@
-# Preprocessing choices affect RNA velocity results for droplet-based scRNA-seq data
+# Preprocessing choices affect RNA velocity results for droplet scRNA-seq data
 
 This repository contains the scripts used to generate the results in 
 
-* C Soneson, A Srivastava, R Patro, MB Stadler: Preprocessing choices affect RNA velocity results for droplet-based scRNA-seq data. bioRxiv (2020).
+* C Soneson, A Srivastava, R Patro, MB Stadler: Preprocessing choices affect RNA velocity results for droplet scRNA-seq data. bioRxiv (2020).
 
 ## Repository structure
 
@@ -17,7 +17,7 @@ For each of these data sets, the corresponding subfolder of this repository cont
 
 ## Data preprocessing
 
-The downloaded data were preprocessed as follows before being used in this evaluation:
+The downloaded data was preprocessed as follows before being used in the evaluation:
 
 ### Dentate gyrus
 
@@ -34,7 +34,7 @@ adata.obs.to_csv("cells_kept_in_scvelo_exampledata.csv")
 
 * FASTQ files for the E15.5 sample were downloaded from [ENA](https://www.ebi.ac.uk/ena/data/view/SRR9201794) (accession date November 24, 2019)
 * The FASTQ files were subsequently renamed, replacing `_X` with `S1_L001_RX_001` (for `X` = 1,2)
-* The sample annotation file ([`cells_kept_in_scvel_exampledata.csv`](pancreas_mouse/data_preprocessing/cells_kept_in_scvelo_exampledata.csv)) was obtained via the [scVelo](https://scvelo.readthedocs.io/) Python package (v0.1.24):
+* The sample annotation file ([`cells_kept_in_scvelo_exampledata.csv`](pancreas_mouse/data_preprocessing/cells_kept_in_scvelo_exampledata.csv)) was obtained via the [scVelo](https://scvelo.readthedocs.io/) Python package (v0.1.24):
 
 ```
 import scvelo as scv
@@ -44,7 +44,7 @@ aadata.obs.to_csv("cells_kept_in_scvelo_exampledata.csv")
 
 ### PFC
 
-* The BAM file with the reads was downloaded from [SRA](https://sra-pub-src-2.s3.amazonaws.com/SRR8433692/PFC_Sample2.bam.1)
+* The BAM file with the reads was downloaded (accession date December 19, 2019) from [SRA](https://sra-pub-src-2.s3.amazonaws.com/SRR8433692/PFC_Sample2.bam.1)
 * FASTQ files were extracted from the BAM file using [bamtofastq](https://github.com/10XGenomics/bamtofastq) v1.1.2:
 
 ```
@@ -118,7 +118,7 @@ mv FASTQtmp/Ad-Ms-Total-Sorted_20k_count_MissingLibrary_1_HK2GNBBXX/bamtofastq_S
 mv FASTQtmp/Ad-Ms-Total-Sorted_20k_count_MissingLibrary_1_HK2GNBBXX/bamtofastq_S1_L006_R2_001.fastq.gz FASTQ/AdultMouseRep3_S1_L001_R2_001.fastq.gz
 ```
 
-* The sample annotation file ([`spermatogenesis_loupe_celltypes_repl3.csv`](spermatogenesis_mouse/data_preprocessing/spermatogenesis_loupe_celltypes_repl3.csv)) was obtained by downloading the loupe file `Mouse Unselected Spermatogenic cells.cloupe` from [here](https://data.mendeley.com/datasets/kxd5f8vpt4/1#file-fe79c10b-c42e-472e-9c7e-9a9873d9b3d8), loading it into the 10x Genomics Loupe browser and exporting the "Cell Type" labels. The resulting file was subset to only include replicate 3 and cell types with at least 5 cells, using the following R code:
+* The sample annotation file ([`spermatogenesis_loupe_celltypes_repl3.csv`](spermatogenesis_mouse/data_preprocessing/spermatogenesis_loupe_celltypes_repl3.csv)) was obtained by downloading the loupe file `Mouse Unselected Spermatogenic cells.cloupe` from [here](https://data.mendeley.com/datasets/kxd5f8vpt4/1#file-fe79c10b-c42e-472e-9c7e-9a9873d9b3d8), loading it into the 10x Genomics [Loupe browser](https://support.10xgenomics.com/single-cell-gene-expression/software/visualization/latest/what-is-loupe-cell-browser) and exporting the "Cell Type" labels. The resulting file was subset to only include replicate 3 and cell types with at least 5 cells, using the following R code:
 
 ```
 suppressPackageStartupMessages({
@@ -143,4 +143,69 @@ csv <- csv %>% dplyr::filter(clusters %in% kp)
 write.table(csv, file = "spermatogenesis_loupe_celltypes_repl3.csv",
             row.names = FALSE, col.names = TRUE,
             sep = ",", quote = FALSE)
+```
+
+## Reference generation
+
+All reference files were obtained from [GENCODE, mouse release M21](https://www.gencodegenes.org/mouse/release_M21.html). 
+In addition to the reference files and indices generated in the respective Makefiles, the following indices were prepared:
+
+### CellRanger index
+
+The `CellRanger` index was generated as follows (with `CellRanger` v3.0.2):
+
+```
+cellranger mkref --nthreads 64 \
+--genome=cellranger3_0_2_GRCm38.primary_assembly_gencodeM21_spliced \
+--fasta=GRCm38.primary_assembly.genome.fa \
+--genes=gencode.vM21.annotation.gtf \
+--ref-version=GRCm38.primary_assembly_gencodeM21_spliced
+```
+
+The `STAR` index used for quantification was generated using `STAR` v 2.7.3a:
+
+```
+mkdir star2_7_3a_GRCm38.primary_assembly_gencodeM21_spliced_sjdb150
+STAR \
+  --runThreadN 48 \
+  --runMode genomeGenerate \
+  --genomeDir ./star2_7_3a_GRCm38.primary_assembly_gencodeM21_spliced_sjdb150 \
+  --genomeFastaFiles GRCm38.primary_assembly.genome.fa \
+  --genomeSAindexNbases 14 \
+  --genomeChrBinNbits 18 \
+  --sjdbGTFfile gencode.vM21.annotation.gtf \
+  --sjdbOverhang 150
+```
+
+Finally, the transcript-to-gene mapping files (in `.rds` and `.txt` format) were generated with R v3.6/Bioconductor release 3.9 as follows: 
+
+```
+suppressPackageStartupMessages({
+  library(rtracklayer)
+  library(dplyr)
+})
+
+entrez <- read.delim("gencode.vM21.metadata.EntrezGene", header = FALSE, as.is = TRUE) %>%
+  setNames(c("transcript_id","entrez_id"))
+gtf <- rtracklayer::import("gencode.vM21.annotation.gtf")
+gtftx <- subset(gtf, type == "transcript")
+gtfex <- subset(gtf, type == "exon")
+
+df <- data.frame(gtftx, stringsAsFactors = FALSE) %>%
+  dplyr::select(transcript_id, seqnames, start, end, strand, source, 
+                gene_id, gene_type, gene_name, level, havana_gene, transcript_type,
+                transcript_name, transcript_support_level, tag, havana_transcript) %>%
+  dplyr::left_join(data.frame(gtfex, stringsAsFactors = FALSE) %>%
+                     dplyr::group_by(transcript_id) %>% 
+                     dplyr::summarize(transcript_length = sum(width)),
+                   by = "transcript_id") %>%
+  dplyr::left_join(entrez, by = "transcript_id")
+
+dfsub <- df %>% dplyr::select(transcript_id, gene_id)
+
+write.table(dfsub, file = "gencode.vM21.annotation.tx2gene.txt", 
+            sep = "\t", quote = FALSE, row.names = FALSE, 
+            col.names = FALSE)
+saveRDS(dfsub, file = "gencode.vM21.annotation.tx2gene.rds")
+saveRDS(df, file = "gencode.vM21.annotation.tx2gene_full.rds")
 ```

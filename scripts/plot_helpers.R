@@ -23,6 +23,7 @@ shorten_methods <- function(methods) {
       )
     ) %>%
     dplyr::mutate(mtype = replace(mtype, method_short == "kb_python", "kallisto|bus")) %>%
+    dplyr::mutate(rtype = replace(rtype, method_short == "kb_python", "separate")) %>% 
     dplyr::mutate(rtype = replace(rtype, is.na(rtype), "N/A")) %>%
     dplyr::mutate(rtype = factor(rtype, levels = c("collapse", "separate", "N/A")))
 }

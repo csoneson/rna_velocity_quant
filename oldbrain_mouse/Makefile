@@ -17,25 +17,22 @@ starindex := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/refstar_sp
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
 subsetbam := /tungstenfs/groups/gbioinfo/sonechar/Software/subset-bam-1.0-x86_64-linux/subset-bam
 
-datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE109033_sperm_mouse/GSM2928341/FASTQ
-topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/spermatogenesis_mouse
+datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE129788_brain_mouse/GSM3722108/FASTQ
+topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/oldbrain_mouse
 scriptdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/scripts
 ## file with assigned cell types
-cellfile := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE109033_sperm_mouse/GSM2928341/spermatogenesis_loupe_celltypes_repl3.csv
-samplename := AdultMouseRep3
+cellfile := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE129788_brain_mouse/GSM3722108/cells_in_sample37.csv
+samplename := OX1X
 ## prefix for plot output files. Should also be the suffix of the scVelo.py file
-outprefix := spermatogenesis
+outprefix := oldbrain
 ## dataset label for plots
-datalabel := Spermatogenesis
+datalabel := OldBrain
 
-flanklength := 99
-flanklengthL20 := 79
-flanklengthL40 := 59
+flanklength := 56
 
-ncores := 48
+ncores := 24
 
-genestoplot := Id4 Gfra1 Zbtb16 Stra8 Magea4 Rhox13 Sycp3 Dmc1 Piwil1 Pgk2 Acr Gapdhs Prm1 \
-Gm498 Spaca9 1700008N11Rik Gm11978 Gm5893
+genestoplot := 
 
 ## All methods to run quantification and create SCEs for
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
@@ -44,10 +41,7 @@ $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_intro
 alevin_spliced_unspliced starsolo starsolo_subtr \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
-alevin_spliced_unspliced_gentrome kb_python_lamanno \
-alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
-alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
-alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
+alevin_spliced_unspliced_gentrome
 methodsc := $(subst $(space),$(comma),$(methods))
 
 ## Main set of methods for figures
@@ -57,26 +51,6 @@ $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_intro
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
 alevin_spliced_unspliced_gentrome
 methodsselc := $(subst $(space),$(comma),$(methodssel))
-
-## Methods to compare flank length
-methodssel2 := kallisto_bustools_prepref_isoseparate_exclude \
-kb_python_lamanno \
-alevin_prepref_isoseparate_cdna_introns_gentrome \
-alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
-alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
-alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
-methodssel2c := $(subst $(space),$(comma),$(methodssel2))
-
-methodssel3 := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
-starsolo starsolo_subtr \
-$(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
-$(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
-alevin_spliced_unspliced_gentrome \
-kb_python_lamanno \
-alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded \
-alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome \
-alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
-methodssel3c := $(subst $(space),$(comma),$(methodssel3))
 
 ## scVelo version to use for plots (either $(empty) or _scvelo_v2)
 ## When changing this, also do 'touch scvelo_version' to trigger a regeneration of the plots
@@ -88,11 +62,8 @@ ref: $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/cD
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/introns_cDNA.fa.gz)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/tr2g_modified.tsv)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns.kidx)) \
-reference/kb_python_lamanno/kb_python_lamanno.kbidx \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_introns_gentrome.sidx/seq.bin)) \
-reference/prepref_isoseparate_flankL20_cdna_introns_gentrome.sidx/seq.bin \
-reference/prepref_isoseparate_flankL40_cdna_introns_gentrome.sidx/seq.bin \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_intronsasdecoy.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_cdna_intronsasdecoy_gentrome.sidx/seq.bin)) \
 $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)_introns_cdnaasdecoy.sidx/seq.bin)) \
@@ -108,12 +79,8 @@ quantific: $(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bus
 $(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/output.correct.sort.bus)) \
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).bus)))) \
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).mtx)))) \
-quants/kb_python_lamanno/inspect.unspliced.json \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome/lib_format_counts.json)) \
-quants/alevin_prepref_isoseparate_cdna_introns_gentrome_unstranded/lib_format_counts.json \
-quants/alevin_prepref_isoseparate_flankL20_cdna_introns_gentrome/lib_format_counts.json \
-quants/alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome/lib_format_counts.json \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy_gentrome/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
@@ -122,14 +89,14 @@ quants/alevin_spliced_unspliced/lib_format_counts.json \
 quants/alevin_spliced_unspliced_gentrome/lib_format_counts.json \
 quants/alevin_spliced/lib_format_counts.json \
 quants/alevin_spliced_gentrome/lib_format_counts.json \
+quants/starsolo/Solo.out/Gene/Summary.csv \
 quants/cellranger/$(samplename)/outs/web_summary.html \
 quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
+output/sce/sces_spliced_unspliced.rds \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
-quants/starsolo/Solo.out/Gene/Summary.csv \
-output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds) \
 output/sce/retained_cell_barcodes.csv
 
@@ -147,9 +114,7 @@ $(foreach x,$(methodssel),plots/velocity_perturb_scvelo_v2/anndata_$(x)/velocity
 
 plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
-plots/count_correlation/$(outprefix)_plot_count_correlation_flanklength.rds \
 plots/total_count/$(outprefix)_plot_total_count.rds \
-plots/total_count/$(outprefix)_plot_total_count_flanklength.rds \
 plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds \
 plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds \
 $(foreach g,$(genestoplot),plots/genes/$(outprefix)_$(g).pdf) \
@@ -157,8 +122,6 @@ plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds \
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds \
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
 plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds \
-plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
-$(foreach g,$(genestoplot),plots/fracunspliced_velocity_singlegene/$(outprefix)_$(g)_velocity.png) \
 plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
 plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds \
 plots/velocity_shuffled/$(outprefix)_plot_velocity_shuffled.rds
@@ -259,7 +222,6 @@ $(scriptdir)/generate_cdna_intron_fa_$(2).R $(3) $(4)
 	R CMD BATCH --no-save --no-restore "--args scriptdir='$(scriptdir)' gtf='$(gtf)' genome='$(genome)' isoform_action='$(1)' flanklength=$(5) outdir='$$(@D)'" $(scriptdir)/generate_cdna_intron_fa_$(2).R Rout/generate_cdna_intron_fa_$(2)_$(1)$(6).Rout
 endef
 $(foreach v,collapse separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklength),)))
-$(foreach u,20 40,$(foreach v,separate,$(eval $(call farefrule,$(v),prepref,$(scriptdir)/extractIntronSeqs.R,$(scriptdir)/extractTxSeqs.R,$(flanklengthL$(u)),_flankL$(u)))))
 
 ## Swap order of cDNAs and introns, to allow quantifying introns with cDNAs as decoy sequences
 define swaprule
@@ -283,7 +245,6 @@ $(scriptdir)/identify_unspliced_genes_in_tx2gene.R
 	R CMD BATCH --no-save --no-restore "--args intsv='$$(<D)/tr2g.tsv' outtsv='$$@'" $(scriptdir)/identify_unspliced_genes_in_tx2gene.R Rout/identify_unspliced_genes_in_tx2gene_$(2)_$(1)$(3).Rout
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call suffixrule,$(v),$(m),))))
-$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call suffixrule,$(v),$(m),$(u))))))
 
 ## Generate fasta file with spliced + unspliced transcripts
 reference/gencode.vM21.transcripts.spliced.and.unspliced.fa: \
@@ -331,17 +292,6 @@ reference/$(2)_iso$(1)/cDNA_introns.fa.gz
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call kidxrule,$(v),$(m)))))
 
-## Build kallisto index with kb-python
-reference/kb_python_lamanno/kb_python_lamanno.kbidx: \
-$(genome) $(gtf)
-	mkdir -p $(@D)
-	module purge && module load Anaconda3/5.3.0 && \
-	source activate kb-python-0.24.4 && \
-	kb ref --workflow lamanno -i $@ -g $(@D)/t2g.tsv \
-	-f1 $(@D)/kb_python_lamanno_cdna.fa -f2 $(@D)/kb_python_lamanno_intron.fa \
-	-c1 $(@D)/cdna_tx_to_capture.txt -c2 $(@D)/intron_tx_to_capture.txt $(genome) $(gtf) && \
-	conda deactivate && module purge
-
 ## Build Salmon index
 define sidxrule1
 reference/$(2)_iso$(1)_cdna_introns.sidx/seq.bin: \
@@ -360,7 +310,6 @@ reference/$(2)_iso$(1)$(3)/cDNA_introns.fa.gz $(genome) $(chrnames)
 	--gencode -p $(ncores) --type puff -d $(chrnames) 
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call sidxrule1genome,$(v),$(m),))))
-$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call sidxrule1genome,$(v),$(m),$(u))))))
 
 ## cDNAs, introns as decoys
 define sidxrule2
@@ -498,19 +447,6 @@ quants/kallisto_bustools_$(2)_iso$(1)_cdna_introns/$(4).$(3).bus
 endef
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call kallistocountrule,$(v),$(m),$(d),$(s)))))))
 
-## kb-python
-quants/kb_python_lamanno/inspect.unspliced.json: \
-reference/kb_python_lamanno/kb_python_lamanno.kbidx \
-$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz \
-reference/cellranger2.2.0-737K-august-2016.txt
-	mkdir -p $(@D)
-	module purge && module load Anaconda3/5.3.0 && \
-	source activate kb-python-0.24.4 && \
-	kb count -o $(@D) -w reference/cellranger2.2.0-737K-august-2016.txt -t $(ncores) --workflow lamanno \
-	-i $< -g $(<D)/t2g.tsv -x 10XV2 -c1 $(<D)/cdna_tx_to_capture.txt -c2 $(<D)/intron_tx_to_capture.txt \
-	$(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L001_R2_001.fastq.gz && \
-	conda deactivate && module purge
-
 ## -----------------------------------------------------------------------------------------------------
 ## Salmon/alevin
 ## -----------------------------------------------------------------------------------------------------
@@ -529,8 +465,6 @@ $(datadir)/$(samplename)_S1_L001_R1_001.fastq.gz $(datadir)/$(samplename)_S1_L00
 endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),,,,ISR))))
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,,,ISR))))
-$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,$(u),,ISR)))))
-$(foreach m,prepref,$(foreach v,separate,$(eval $(call alevincdnaintronrule,$(v),$(m),_gentrome,,_unstranded,IU))))
 
 define alevincdnaintrondecoyrule
 quants/alevin_$(2)_iso$(1)_cdna_intronsasdecoy$(3)/lib_format_counts.json: \
@@ -598,12 +532,10 @@ $(eval $(call alevinsplicedrule,_gentrome))
 ## Analysis
 ## -----------------------------------------------------------------------------------------------------
 ## Create SCEs with shared genes/cells
-output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/summarize_spliced_unspliced.R \
+output/sce/sces_spliced_unspliced.rds: $(scriptdir)/sce_helpers.R $(scriptdir)/summarize_spliced_unspliced_oldbrain.R \
 $(foreach s,spliced unspliced,$(foreach d,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,quants/kallisto_bustools_$(m)_iso$(v)_cdna_introns/$(s).$(d).mtx)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome/lib_format_counts.json)) \
-$(foreach m,prepref,$(foreach v,separate,quants/alevin_$(m)_iso$(v)_cdna_introns_gentrome_unstranded/lib_format_counts.json)) \
-$(foreach u,_flankL20 _flankL40,$(foreach m,prepref,$(foreach v,separate,quants/alevin_$(m)_iso$(v)$(u)_cdna_introns_gentrome/lib_format_counts.json))) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_cdna_intronsasdecoy_gentrome/lib_format_counts.json)) \
 $(foreach m,prepref,$(foreach v,collapse separate,quants/alevin_$(m)_iso$(v)_introns_cdnaasdecoy/lib_format_counts.json)) \
@@ -614,12 +546,11 @@ quants/alevin_spliced/lib_format_counts.json \
 quants/alevin_spliced_gentrome/lib_format_counts.json \
 quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
 quants/starsolo/Solo.out/Gene/Summary.csv \
-quants/kb_python_lamanno/inspect.unspliced.json \
 $(cellfile) $(tx2genefull)
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='$(cellfile)' samplename='$(samplename)' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced.R Rout/summarize_spliced_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' helperscript='$(scriptdir)/sce_helpers.R' tx2gene='$(tx2genefull)' cellfile='$(cellfile)' samplename='$(samplename)' outrds='$@'" $(scriptdir)/summarize_spliced_unspliced_oldbrain.R Rout/summarize_spliced_unspliced.Rout
 
 define scerule
 output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
@@ -638,15 +569,6 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count.Rout
-
-plots/total_count/$(outprefix)_plot_total_count_flanklength.rds: output/sce/sces_spliced_unspliced.rds \
-$(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
-$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
-$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
-	mkdir -p $(@D)
-	mkdir -p Rout
-	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodssel2c)' outrds='$@'" $(scriptdir)/plot_total_count.R Rout/plot_total_count_flanklength.Rout
 
 plots/spliced_unspliced_mds/$(outprefix)_plot_spliced_unspliced_mds.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
@@ -690,14 +612,6 @@ $(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R scvelo_version
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/count_correlation/$(outprefix)_plot_count_correlation_flanklength.rds: output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel2),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R scvelo_version
-	mkdir -p $(@D)
-	mkdir -p Rout
-	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodssel2c)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation_flanklength.Rout
-
 plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
 $(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
 $(scriptdir)/plot_helpers.R scvelo_version
@@ -724,14 +638,6 @@ $(scriptdir)/plot_compare_dimred_velocities.R $(scriptdir)/plot_helpers.R scvelo
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_dimred_velocities.R Rout/plot_compare_dimred_velocities.Rout
-
-plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: \
-$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R scvelo_version
-	mkdir -p $(@D)
-	mkdir -p Rout
-	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodssel3c)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
 
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds: \
 $(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
@@ -764,18 +670,6 @@ $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' gtf='$(gtf)' bigwigfileplus='$$(word 1,$$^)' bigwigfileminus='$$(word 2,$$^)' samplename='$(datalabel)' showgene='$(1)' outpdf='$$@'" $(scriptdir)/plot_gene_model.R Rout/plot_gene_model_$(1).Rout
 endef
 $(foreach g,$(genestoplot),$(eval $(call plotgenerule,$(g))))
-
-define plotfuvgenerule
-plots/fracunspliced_velocity_singlegene/$(outprefix)_$(1)_velocity.png: \
-output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_fracunspliced_velocity_singlegene.R $(scriptdir)/plot_helpers.R scvelo_version
-	mkdir -p $$(@D)
-	mkdir -p Rout
-	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' showgene='$(1)' outvelopng='$$@'" $(scriptdir)/plot_fracunspliced_velocity_singlegene.R Rout/plot_fracunspliced_velocity_singlegene_$(1).Rout
-endef
-$(foreach g,$(genestoplot),$(eval $(call plotfuvgenerule,$(g))))
 
 ## Convert SCE to anndata
 define anndatarule

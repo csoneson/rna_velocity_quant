@@ -211,7 +211,7 @@ endef
 $(foreach m,prepref,$(foreach v,collapse separate,$(eval $(call uniquenessrule,$(v),$(m)))))
 
 define uniquenessruleoverall
-reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz reference/$(2)_iso$(1)/tr2g.tsv \
+reference/$(2)_iso$(1)_uniqueness_overall.txt: reference/$(2)_iso$(1)/cDNA_introns.fa.gz \
 $(scriptdir)/frac_unique.py
 	module purge && module load Anaconda3/5.3.0 && \
 	source activate velocyto_0.17 && \

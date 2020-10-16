@@ -56,6 +56,10 @@ $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_intro
 alevin_spliced_unspliced_gentrome
 methodsselc := $(subst $(space),$(comma),$(methodssel))
 
+## scVelo version to use for plots (either $(empty) or _scvelo_v2)
+## When changing this, also do 'touch scvelo_version' to trigger a regeneration of the plots
+plotvelosuffix := $(empty)
+
 all: ref quantific veloc plot
 
 ref: $(foreach m,prepref,$(foreach v,collapse separate,reference/$(m)_iso$(v)/cDNA_introns.fa.gz)) \
@@ -102,7 +106,14 @@ $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 output/genesets/shared_genes.txt \
-$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
+$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+$(foreach x,$(methodssel),plots/velocity_shuffle/anndata_$(x)/velocity_shuffle.out) \
+$(foreach x,$(methodssel),plots/velocity_perturb/anndata_$(x)/velocity_perturb.out) \
+$(foreach x,$(methods),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_with_velocity.h5ad) \
+output/genesets/shared_genes_scvelo_v2.txt \
+$(foreach x,$(methodssel),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+$(foreach x,$(methodssel),plots/velocity_shuffle_scvelo_v2/anndata_$(x)/velocity_shuffle.out) \
+$(foreach x,$(methodssel),plots/velocity_perturb_scvelo_v2/anndata_$(x)/velocity_perturb.out)
 
 plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
@@ -112,8 +123,10 @@ plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds \
 plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds \
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds \
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds \
+plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds \
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
-plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds
+plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
+plots/velocity_shuffled/$(outprefix)_plot_velocity_shuffled.rds
 
 ## -----------------------------------------------------------------------------------------------------
 ## STARsolo
@@ -539,73 +552,90 @@ $(scriptdir)/plot_spliced_unspliced_mds.R $(scriptdir)/plot_helpers.R
 
 plots/frac_unspliced/$(outprefix)_plot_frac_unspliced.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_frac_unspliced.R $(scriptdir)/plot_helpers.R $(tx2genefull) \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
 $(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness.txt) \
-$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt)
+$(foreach v,separate collapse,reference/prepref_iso$(v)_uniqueness_overall.txt) scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' refdir='reference' plothelperscript='$(scriptdir)/plot_helpers.R' tx2gene='$(tx2genefull)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_frac_unspliced.R Rout/plot_frac_unspliced.Rout
 
 plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds: \
-$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R
+$(foreach x,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(x)_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='$(datalabel)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' plothelperscript='$(scriptdir)/plot_helpers.R' dataset='$(datalabel)' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence.R Rout/plot_velocity_confidence.Rout
 
 plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds: output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_confidence_embedding.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_velocity_confidence_embedding.R Rout/plot_velocity_confidence_embedding.Rout
 
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds: output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_count_correlation.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_count_correlation.R Rout/plot_count_correlation.Rout
 
-plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
-$(scriptdir)/plot_helpers.R
+plots/merge_umaps/$(outprefix)_plot_merge_umaps.rds: $(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_shared_genes_with_velocity.h5ad) $(scriptdir)/plot_merge_umaps.R \
+$(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load ImageMagick/7.0.9-8-GCCcore-8.3.0 && \
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' plothelperscript='$(scriptdir)/plot_helpers.R' dimred='UMAP' methods='$(methodsselc)' outrds='$@'" $(scriptdir)/plot_merge_umaps.R Rout/plot_merge_umaps.Rout
 
 plots/compare_velocity_projections/$(outprefix)_plot_compare_velocity_projections.rds: \
 output/sce/sces_spliced_unspliced.rds \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_shared_genes_with_velocity.h5ad) \
-$(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_shared_genes_with_velocity.h5ad) \
+$(scriptdir)/plot_compare_velocity_projections.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' methods='$(methodsselc)' dataset='$(datalabel)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_velocity_projections.R Rout/plot_compare_velocity_projections.Rout
+
+plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds: \
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_compare_dimred_velocities.R $(scriptdir)/plot_helpers.R scvelo_version
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_compare_dimred_velocities.R Rout/plot_compare_dimred_velocities.Rout
 
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds: \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_velocity_mds.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_mds.R Rout/plot_velocity_mds.Rout
 
 plots/shared_genes_scvelo/$(outprefix)_plot_shared_genes_scvelo.rds: \
-$(foreach m,$(methodssel),output/anndata_with_velocity/anndata_$(m)_with_velocity.h5ad) \
-$(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R
+$(foreach m,$(methodssel),output/anndata_with_velocity$(plotvelosuffix)/anndata_$(m)_with_velocity.h5ad) \
+$(scriptdir)/plot_shared_genes_scvelo.R $(scriptdir)/plot_helpers.R scvelo_version
 	mkdir -p $(@D)
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
-	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_shared_genes_scvelo.R Rout/plot_shared_genes_scvelo.Rout
+
+plots/velocity_shuffled/$(outprefix)_plot_velocity_shuffled.rds: \
+$(foreach m,$(methodssel), plots/velocity_shuffle$(plotvelosuffix)/anndata_$(m)/velocity_shuffle.out) \
+$(foreach m,$(methodssel), plots/velocity_perturb$(plotvelosuffix)/anndata_$(m)/velocity_perturb.out) \
+$(scriptdir)/plot_velocity_shuffled.R $(scriptdir)/plot_helpers.R scvelo_version
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velosuffix='$(plotvelosuffix)' dataset='$(datalabel)' methods='$(methodsselc)' plothelperscript='$(scriptdir)/plot_helpers.R' outrds='$@'" $(scriptdir)/plot_velocity_shuffled.R Rout/plot_velocity_shuffled.Rout
 
 ## Convert SCE to anndata
 define anndatarule
@@ -622,17 +652,18 @@ $(foreach x,$(methods),$(eval $(call anndatarule,$(x))))
 
 ## Calculate velocity with scVelo
 define scvelorule
-output/anndata_with_velocity/anndata_$(1)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
+output/anndata_with_velocity$(2)/anndata_$(1)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
 $(scriptdir)/run_scVelo_$(outprefix).py
-	mkdir -p plots/velocity/anndata_$(1)
+	mkdir -p plots/velocity$(2)/anndata_$(1)
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
-	set +u && source activate scvelo_0.1.24 && set -u && \
-	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ "None" >pylog/$(1).scvelo.log 2>&1 && \
+	set +u && source activate $(3) && set -u && \
+	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity$(2) $$@ "None" >pylog/$(1).scvelo$(4).log 2>&1 && \
 	set +u && conda deactivate && set -u && module purge
 endef
-$(foreach x,$(methods),$(eval $(call scvelorule,$(x))))
+$(foreach x,$(methods),$(eval $(call scvelorule,$(x),,scvelo_0.1.24,)))
+$(foreach x,$(methods),$(eval $(call scvelorule,$(x),_scvelo_v2,scvelo_0.2.0,.v2)))
 
 ## Make text file with genes retained by all methods
 output/genesets/shared_genes.txt: $(scriptdir)/make_gene_subsets.R \
@@ -642,16 +673,52 @@ $(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_with_velocit
 	module load R-BioC/3.6-3.10-foss-2019b && \
 	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' methods='$(methodsselc)' outtxt='$@'" $(scriptdir)/make_gene_subsets.R Rout/make_gene_subsets.Rout
 
+output/genesets/shared_genes_scvelo_v2.txt: $(scriptdir)/make_gene_subsets_scvelo_v2.R \
+$(foreach x,$(methodssel),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_with_velocity.h5ad)
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args topdir='$(topdir)' velodirname='plots/velocity_scvelo_v2' methods='$(methodsselc)' outtxt='$@'" $(scriptdir)/make_gene_subsets_scvelo_v2.R Rout/make_gene_subsets_scvelo_v2.Rout
+
 ## Velocity, based on genes selected by all methods
 define scveloruleshared
-output/anndata_with_velocity/anndata_$(1)_shared_genes$(2)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
-$(scriptdir)/run_scVelo_$(outprefix).py output/genesets/shared_genes$(2).txt
-	mkdir -p plots/velocity/anndata_$(1)_shared_genes$(2)
+output/anndata_with_velocity$(3)/anndata_$(1)_shared_genes$(2)_with_velocity.h5ad: output/anndata/anndata_$(1).h5ad \
+$(scriptdir)/run_scVelo_$(outprefix).py output/genesets/shared_genes$(2)$(3).txt
+	mkdir -p plots/velocity$(3)/anndata_$(1)_shared_genes$(2)
 	mkdir -p $$(@D)
 	mkdir -p pylog
 	module purge && module load Anaconda3/5.3.0 && \
-	set +u && source activate scvelo_0.1.24 && set -u && \
-	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity $$@ output/genesets/shared_genes$(2).txt >pylog/$(1).scvelo_shared_genes$(2).log 2>&1 && \
+	set +u && source activate $(4) && set -u && \
+	python $(scriptdir)/run_scVelo_$(outprefix).py $$< plots/velocity$(3) $$@ output/genesets/shared_genes$(2)$(3).txt >pylog/$(1).scvelo_shared_genes$(2)$(5).log 2>&1 && \
 	set +u && conda deactivate && set -u && module purge
 endef
-$(foreach x,$(methodssel),$(eval $(call scveloruleshared,$(x),)))
+$(foreach x,$(methodssel),$(eval $(call scveloruleshared,$(x),,,scvelo_0.1.24,)))
+$(foreach x,$(methodssel),$(eval $(call scveloruleshared,$(x),,_scvelo_v2,scvelo_0.2.0,.v2)))
+
+## Velocity after shuffling cells in unspliced count matrix
+define scveloshufflerule
+plots/velocity_shuffle$(2)/anndata_$(1)/velocity_shuffle.out: output/anndata/anndata_$(1).h5ad \
+$(scriptdir)/run_scVelo_shuffle.py
+	mkdir -p $$(@D)
+	mkdir -p pylog
+	module purge && module load Anaconda3/5.3.0 && \
+	set +u && source activate $(3) && set -u && \
+	python $(scriptdir)/run_scVelo_shuffle.py $$< plots/velocity_shuffle$(2) "None" >pylog/$(1).scvelo_shuffle$(4).log 2>&1 && \
+	set +u && conda deactivate && set -u && module purge
+endef
+$(foreach x,$(methods),$(eval $(call scveloshufflerule,$(x),,scvelo_0.1.24,)))
+$(foreach x,$(methods),$(eval $(call scveloshufflerule,$(x),_scvelo_v2,scvelo_0.2.0,.v2)))
+
+## Velocity after perturbing expression values in spliced and unspliced count matrix
+define scveloperturbrule
+plots/velocity_perturb$(2)/anndata_$(1)/velocity_perturb.out: output/anndata/anndata_$(1).h5ad \
+$(scriptdir)/run_scVelo_perturb.py
+	mkdir -p $$(@D)
+	mkdir -p pylog
+	module purge && module load Anaconda3/5.3.0 && \
+	set +u && source activate $(3) && set -u && \
+	python $(scriptdir)/run_scVelo_perturb.py $$< plots/velocity_perturb$(2) "None" >pylog/$(1).scvelo_perturb$(4).log 2>&1 && \
+	set +u && conda deactivate && set -u && module purge
+endef
+$(foreach x,$(methods),$(eval $(call scveloperturbrule,$(x),,scvelo_0.1.24,)))
+$(foreach x,$(methods),$(eval $(call scveloperturbrule,$(x),_scvelo_v2,scvelo_0.2.0,.v2)))

@@ -6,6 +6,7 @@ summary_velocity.pdf: ../spermatogenesis_mouse/plots/velocity_confidence/spermat
 ../pancreas_mouse/plots/velocity_confidence/pancreas_plot_velocity_confidence.rds \
 ../dentate_gyrus_mouse/plots/velocity_confidence/dentate_gyrus_plot_velocity_confidence.rds \
 ../pfc_mouse/plots/velocity_confidence/pfc_plot_velocity_confidence.rds \
+../oldbrain_mouse/plots/velocity_confidence/oldbrain_plot_velocity_confidence.rds \
 summary_velocity.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \
@@ -15,6 +16,7 @@ fraction_decoys.txt: ../spermatogenesis_mouse/output/sce/sces_spliced_unspliced.
 ../pancreas_mouse/output/sce/sces_spliced_unspliced.rds \
 ../dentate_gyrus_mouse/output/sce/sces_spliced_unspliced.rds \
 ../pfc_mouse/output/sce/sces_spliced_unspliced.rds \
+../oldbrain_mouse/output/sce/sces_spliced_unspliced.rds \
 get_frac_decoys.R
 	mkdir -p Rout
 	module load R-BioC/3.6-3.10-foss-2019b && \

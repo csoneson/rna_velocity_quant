@@ -12,7 +12,8 @@ suppressPackageStartupMessages({
 })
 
 topdir <- ".."
-datasets <- c("spermatogenesis_mouse", "dentate_gyrus_mouse", "pancreas_mouse", "pfc_mouse")
+datasets <- c("spermatogenesis_mouse", "dentate_gyrus_mouse", 
+              "pancreas_mouse", "pfc_mouse", "oldbrain_mouse")
 
 dirs <- do.call(c, lapply(datasets, function(ds) {
   list.files(file.path(topdir, ds, "quants"), pattern = "gentrome", 

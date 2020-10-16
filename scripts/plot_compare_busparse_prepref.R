@@ -59,13 +59,22 @@ busparse_separate <- Biostrings::readDNAStringSet(
   file.path(refdir, "busparse_isoseparate/cDNA_introns.fa.gz")
 )
 names(busparse_separate) <- gsub("\\.-I", "-I", gsub("\\.$", "", names(busparse_separate)))
+busparse1.2_separate <- Biostrings::readDNAStringSet(
+  file.path(refdir, "busparse1.2_isoseparate/cDNA_introns.fa.gz")
+)
+names(busparse1.2_separate) <- gsub("\\.-I", "-I", gsub("\\.$", "", names(busparse1.2_separate)))
 prepref_separate <- Biostrings::readDNAStringSet(
   file.path(refdir, "prepref_isoseparate/cDNA_introns.fa.gz")
 )
+
 busparse_collapse <- Biostrings::readDNAStringSet(
   file.path(refdir, "busparse_isocollapse/cDNA_introns.fa.gz")
 )
 names(busparse_collapse) <- gsub("\\.-I", "-I", gsub("\\.$", "", names(busparse_collapse)))
+busparse1.2_collapse <- Biostrings::readDNAStringSet(
+  file.path(refdir, "busparse1.2_isocollapse/cDNA_introns.fa.gz")
+)
+names(busparse1.2_collapse) <- gsub("\\.-I", "-I", gsub("\\.$", "", names(busparse1.2_collapse)))
 prepref_collapse <- Biostrings::readDNAStringSet(
   file.path(refdir, "prepref_isocollapse/cDNA_introns.fa.gz")
 )
@@ -75,27 +84,39 @@ prepref_collapse <- Biostrings::readDNAStringSet(
 ## ----------------------------------------------------------------------------
 gtftx <- gtftx[match(names(txome), gtftx$transcript_id), ]
 busparse_separate_txome <- busparse_separate[match(names(txome), names(busparse_separate))]
+busparse1.2_separate_txome <- busparse1.2_separate[match(names(txome), names(busparse1.2_separate))]
 prepref_separate_txome <- prepref_separate[match(names(txome), names(prepref_separate))]
+
 busparse_collapse_txome <- busparse_collapse[match(names(txome), names(busparse_collapse))]
+busparse1.2_collapse_txome <- busparse1.2_collapse[match(names(txome), names(busparse1.2_collapse))]
 prepref_collapse_txome <- prepref_collapse[match(names(txome), names(prepref_collapse))]
 
 busparse_separate_tb <- 
   table(correct_seq = factor(busparse_separate_txome == txome, levels = c(FALSE, TRUE)), 
         single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
+busparse1.2_separate_tb <- 
+  table(correct_seq = factor(busparse1.2_separate_txome == txome, levels = c(FALSE, TRUE)), 
+        single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
 prepref_separate_tb <- 
   table(correct_seq = factor(prepref_separate_txome == txome, levels = c(FALSE, TRUE)),
         single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
+
 busparse_collapse_tb <- 
   table(correct_seq = factor(busparse_collapse_txome == txome, levels = c(FALSE, TRUE)), 
+        single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
+busparse1.2_collapse_tb <- 
+  table(correct_seq = factor(busparse1.2_collapse_txome == txome, levels = c(FALSE, TRUE)), 
         single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
 prepref_collapse_tb <- 
   table(correct_seq = factor(prepref_collapse_txome == txome, levels = c(FALSE, TRUE)),
         single_exon = gtftx$nbr_exons == 1, strand = gtftx$strand)
 
 dftx <- dplyr::bind_rows(
-  as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse"),
+  as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse v1.0"),
+  as.data.frame(busparse1.2_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse v1.2"),
   as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "eisaR"),
-  as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse"),
+  as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse v1.0"),
+  as.data.frame(busparse1.2_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse v1.2"),
   as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "eisaR")
 )
 
@@ -106,8 +127,9 @@ g1 <- ggplot(
   aes(x = method, y = Freq, fill = correct_seq)) + geom_bar(stat = "identity") + 
   facet_grid(type ~ paste(single_exon, strand, sep = ", ")) + 
   theme_bw() + 
-  theme(legend.position = "bottom") + 
-  labs(y = "Number of transcripts", title = "Transcripts") + 
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(y = "Number of transcripts", title = "Transcripts", x = "") + 
   scale_fill_manual(values = c(Incorrect = "pink", Correct = "lightblue"), name = "Inferred sequence")
 
 ## ----------------------------------------------------------------------------
@@ -118,12 +140,15 @@ g1 <- ggplot(
 ## ----------------------------------------------------------------------------
 intrs_separate <- grep("-I", names(busparse_separate), value = TRUE)
 stopifnot(all(intrs_separate %in% names(prepref_separate)))
+stopifnot(all(intrs_separate %in% names(busparse1.2_separate)))
 busparse_separate_intrs <- busparse_separate[match(intrs_separate, names(busparse_separate))]
+busparse1.2_separate_intrs <- busparse1.2_separate[match(intrs_separate, names(busparse1.2_separate))]
 prepref_separate_intrs <- prepref_separate[match(intrs_separate, names(prepref_separate))]
 
 ## Example of problematic transcript
 ebt$ENSMUST00000195885.1
 busparse_separate_intrs[grep("ENSMUST00000195885.1", names(busparse_separate_intrs))]
+busparse1.2_separate_intrs[grep("ENSMUST00000195885.1", names(busparse1.2_separate_intrs))]
 prepref_separate_intrs[grep("ENSMUST00000195885.1", names(prepref_separate_intrs))]
 
 ## Get introns per transcript and extract their lengths
@@ -132,16 +157,24 @@ busparse_separate_widths <- sapply(
   split(width(busparse_separate_intrs), 
         f = sapply(strsplit(names(busparse_separate_intrs), "-"), .subset, 1)), 
   function(w) paste(sort(w), collapse = ","))
+busparse1.2_separate_widths <- sapply(
+  split(width(busparse1.2_separate_intrs), 
+        f = sapply(strsplit(names(busparse1.2_separate_intrs), "-"), .subset, 1)), 
+  function(w) paste(sort(w), collapse = ","))
 prepref_separate_widths <- sapply(
   split(width(prepref_separate_intrs), 
         f = sapply(strsplit(names(prepref_separate_intrs), "-"), .subset, 1)), 
   function(w) paste(sort(w), collapse = ","))
 busparse_separate_widths <- busparse_separate_widths[match(names(ann_intr), names(busparse_separate_widths))]
+busparse1.2_separate_widths <- busparse1.2_separate_widths[match(names(ann_intr), names(busparse1.2_separate_widths))]
 prepref_separate_widths <- prepref_separate_widths[match(names(ann_intr), names(prepref_separate_widths))]
 gtfintr <- gtftx[match(names(ann_intr), gtftx$transcript_id), ]
 
 busparse_separate_tb <- 
   table(correct_length = factor(busparse_separate_widths == ann_intr, levels = c(FALSE, TRUE)), 
+        single_exon = gtfintr$nbr_exons == 1, strand = gtfintr$strand)
+busparse1.2_separate_tb <- 
+  table(correct_length = factor(busparse1.2_separate_widths == ann_intr, levels = c(FALSE, TRUE)), 
         single_exon = gtfintr$nbr_exons == 1, strand = gtfintr$strand)
 prepref_separate_tb <- 
   table(correct_length = factor(prepref_separate_widths == ann_intr, levels = c(FALSE, TRUE)),
@@ -151,18 +184,25 @@ prepref_separate_tb <-
 ## ----------------------------------------------------------------------------
 intrs_collapse <- grep("-I", names(busparse_collapse), value = TRUE)
 stopifnot(all(intrs_collapse %in% names(prepref_collapse)))
+stopifnot(all(intrs_collapse %in% names(busparse1.2_collapse)))
 busparse_collapse_intrs <- busparse_collapse[match(intrs_collapse, names(busparse_collapse))]
+busparse1.2_collapse_intrs <- busparse1.2_collapse[match(intrs_collapse, names(busparse1.2_collapse))]
 prepref_collapse_intrs <- prepref_collapse[match(intrs_collapse, names(prepref_collapse))]
 
 ## Example of problematic gene
 ebg$ENSMUSG00000103757.1
 busparse_collapse_intrs[grep("ENSMUSG00000103757.1", names(busparse_collapse_intrs))]
+busparse1.2_collapse_intrs[grep("ENSMUSG00000103757.1", names(busparse1.2_collapse_intrs))]
 prepref_collapse_intrs[grep("ENSMUSG00000103757.1", names(prepref_collapse_intrs))]
 
 ## Get introns per gene and extract their lengths
 busparse_collapse_widths <- sapply(
   split(width(busparse_collapse_intrs), 
         f = sapply(strsplit(names(busparse_collapse_intrs), "-"), .subset, 1)), 
+  function(w) paste(sort(w), collapse = ","))
+busparse1.2_collapse_widths <- sapply(
+  split(width(busparse1.2_collapse_intrs), 
+        f = sapply(strsplit(names(busparse1.2_collapse_intrs), "-"), .subset, 1)), 
   function(w) paste(sort(w), collapse = ","))
 prepref_collapse_widths <- sapply(
   split(width(prepref_collapse_intrs), 
@@ -175,6 +215,8 @@ ann_intr1 <- ann_intr[match(ints, names(ann_intr))]
 single_tx_genes <- gtfg1$gene_id[match(names(ann_intr1), gtfg1$transcript_id)]
 busparse_collapse_widths <- busparse_collapse_widths[match(single_tx_genes, names(busparse_collapse_widths))]
 busparse_collapse_widths[is.na(busparse_collapse_widths)] <- ""
+busparse1.2_collapse_widths <- busparse1.2_collapse_widths[match(single_tx_genes, names(busparse1.2_collapse_widths))]
+busparse1.2_collapse_widths[is.na(busparse1.2_collapse_widths)] <- ""
 prepref_collapse_widths <- prepref_collapse_widths[match(single_tx_genes, names(prepref_collapse_widths))]
 prepref_collapse_widths[is.na(prepref_collapse_widths)] <- ""
 
@@ -183,15 +225,20 @@ gtfintr <- gtftx[match(names(ann_intr1), gtftx$transcript_id), ]
 busparse_collapse_tb <- 
   table(correct_length = factor(busparse_collapse_widths == ann_intr1, levels = c(FALSE, TRUE)), 
         single_exon = gtfintr$nbr_exons == 1, strand = gtfintr$strand)
+busparse1.2_collapse_tb <- 
+  table(correct_length = factor(busparse1.2_collapse_widths == ann_intr1, levels = c(FALSE, TRUE)), 
+        single_exon = gtfintr$nbr_exons == 1, strand = gtfintr$strand)
 prepref_collapse_tb <- 
   table(correct_length = factor(prepref_collapse_widths == ann_intr1, levels = c(FALSE, TRUE)),
         single_exon = gtfintr$nbr_exons == 1, strand = gtfintr$strand)
 
 
 dfintr <- dplyr::bind_rows(
-  as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse"),
+  as.data.frame(busparse_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse v1.0"),
+  as.data.frame(busparse1.2_separate_tb) %>% dplyr::mutate(type = "separate", method = "BUSpaRse v1.2"),
   as.data.frame(prepref_separate_tb) %>% dplyr::mutate(type = "separate", method = "eisaR"),
-  as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse"),
+  as.data.frame(busparse_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse v1.0"),
+  as.data.frame(busparse1.2_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "BUSpaRse v1.2"),
   as.data.frame(prepref_collapse_tb) %>% dplyr::mutate(type = "collapse", method = "eisaR")
 )
 
@@ -203,8 +250,9 @@ g2 <- ggplot(dfintr %>% dplyr::filter(type == "separate") %>%
              aes(x = method, y = Freq, fill = correct_length)) + geom_bar(stat = "identity") + 
   facet_grid(type ~ paste(single_exon, strand, sep = ", ")) + 
   theme_bw() + 
-  theme(legend.position = "bottom") + 
-  labs(y = "Number of transcripts", title = "Introns") + 
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(y = "Number of transcripts", title = "Introns", x = "") + 
   scale_fill_manual(values = c(Incorrect = "pink", Correct = "lightblue"), name = "Inferred intron lengths")
 g3 <- ggplot(dfintr %>% dplyr::filter(type == "collapse") %>% 
                dplyr::mutate(single_exon = ifelse(single_exon == TRUE, "Single exon", "Multiple exons")) %>%
@@ -214,8 +262,9 @@ g3 <- ggplot(dfintr %>% dplyr::filter(type == "collapse") %>%
              aes(x = method, y = Freq, fill = correct_length)) + geom_bar(stat = "identity") + 
   facet_grid(type ~ paste(single_exon, strand, sep = ", ")) + 
   theme_bw() + 
-  theme(legend.position = "bottom") + 
-  labs(y = "Number of genes", title = "Introns") + 
+  theme(legend.position = "bottom",
+        axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1)) + 
+  labs(y = "Number of genes", title = "Introns", x = "") + 
   scale_fill_manual(values = c(Incorrect = "pink", Correct = "lightblue"), name = "Inferred intron lengths")
 
 pdf(gsub("rds$", "pdf", outrds), width = 11, height = 9)

@@ -19,6 +19,7 @@ names(methods) <- methods
 dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(velosuffix)
 print(dataset)
 print(plothelperscript)
 print(methods)
@@ -43,13 +44,21 @@ dfiles <- c("PCA_alevin_spliced_gentrome", "TSNE_alevin_spliced_gentrome",
 dfiles <- expand.grid(methods, dfiles) %>%
   dplyr::mutate(Var1 = as.character(Var1),
                 Var2 = as.character(Var2)) %>% 
-  dplyr::mutate(veloemb = paste0(topdir, "/plots/velocity/anndata_", Var1, 
+  dplyr::mutate(veloemb = paste0(topdir, "/plots/velocity", velosuffix, 
+                                 "/anndata_", Var1, 
                                  "/anndata_", Var1, "_velocity_", Var2, ".csv"),
-                veloall = paste0(topdir, "/output/anndata_with_velocity/anndata_", 
+                veloall = paste0(topdir, "/output/anndata_with_velocity", 
+                                 velosuffix, "/anndata_", 
                                  Var1, "_with_velocity.h5ad"),
-                veloshared = paste0(topdir, "/output/anndata_with_velocity/anndata_",
+                veloshared = paste0(topdir, "/output/anndata_with_velocity", 
+                                    velosuffix, "/anndata_",
                                     Var1, "_shared_genes_with_velocity.h5ad"),
-                sce = paste0(topdir, "/output/sce/sce_", Var1, ".rds"))
+                sce = paste0(topdir, "/output/sce/sce_", Var1, ".rds")) %>%
+  dplyr::filter(file.exists(veloemb) & 
+                  file.exists(veloall) & 
+                  file.exists(veloshared) & 
+                  file.exists(sce))
+print(dim(dfiles))
 stopifnot(all(file.exists(dfiles$veloemb)))
 stopifnot(all(file.exists(dfiles$veloall)))
 stopifnot(all(file.exists(dfiles$veloshared)))
@@ -102,31 +111,40 @@ resdot <- do.call(dplyr::bind_rows, lapply(seq_len(nrow(dfiles)), function(i) {
   a <- read.csv(dfiles$veloemb[i], header = TRUE, as.is = TRUE) %>%
     tibble::column_to_rownames("index") %>%
     as.matrix()
+  ## scale each row so that dot products equal cos(theta)
+  asc <- t(scale(t(a), center = FALSE, scale = TRUE))
   ## dot product of velocity projections
   dots <- a %*% t(a)
+  dotssc <- asc %*% t(asc)
   stopifnot(all(rownames(dots) == rownames(dists)))
   stopifnot(all(colnames(dots) == colnames(dists)))
+  stopifnot(all(rownames(dotssc) == rownames(dists)))
+  stopifnot(all(colnames(dotssc) == colnames(dists)))
   d1 <- data.frame(cell = rownames(dists),
                    method = dfiles$Var1[i],
                    dimred = dfiles$Var2[i],
                    dtype = "Embedding",
                    nn = nn,
-                   ave_dot = rowMeans(dots * t(apply(dists, 1, function(x) {
+                   ave_dot = rowSums(dots * t(apply(dists, 1, function(x) {
                      seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
-                   }))),
-                   ave_dot_shuffled = rowMeans(dots * t(apply(dists, 1, function(x) {
+                   })))/nn,
+                   ave_dot_scaled = rowSums(dotssc * t(apply(dists, 1, function(x) {
+                     seq_len(ncol(dists)) %in% order(x)[2:(nn + 1)]
+                   })))/nn,
+                   ave_dot_shuffled = rowSums(dots * t(apply(dists, 1, function(x) {
                      seq_len(ncol(dists)) %in% order(x)[s][2:(nn + 1)]
-                   }))),
+                   })))/nn,
                    stringsAsFactors = FALSE) %>%
     dplyr::left_join(methods_short, by = "method") %>%
-    dplyr::select(cell, method_short, mtype, rtype, dimred, dtype, ave_dot, ave_dot_shuffled)
+    dplyr::select(cell, method_short, mtype, rtype, dimred, dtype, 
+                  ave_dot, ave_dot_scaled, ave_dot_shuffled)
   
   d1
 }))
 
 pdf(gsub("\\.rds", "_ave_dot.pdf", outrds), width = 9, height = 9)
 ggplot(resdot %>% tidyr::gather(key = "drtype", value = "ave_dot", 
-                                ave_dot, ave_dot_shuffled) %>%
+                                ave_dot, ave_dot_scaled, ave_dot_shuffled) %>%
          dplyr::filter(drtype == "ave_dot") %>%
          tidyr::unite("dimred", dimred, drtype, sep = "_") %>%
          dplyr::mutate(dimred = gsub("_ave_dot", "", dimred)), 
@@ -139,9 +157,25 @@ ggplot(resdot %>% tidyr::gather(key = "drtype", value = "ave_dot",
   theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
   labs(x = "", y = "Average dot product",
        title = paste0(dataset, ", average dot product with velocities of neighboring cells"))
-
 dev.off()
 
-saveRDS(NULL, file = outrds)
+pdf(gsub("\\.rds", "_ave_dot_scaled.pdf", outrds), width = 9, height = 9)
+ggplot(resdot %>% tidyr::gather(key = "drtype", value = "ave_dot_scaled", 
+                                ave_dot, ave_dot_scaled, ave_dot_shuffled) %>%
+         dplyr::filter(drtype == "ave_dot_scaled") %>%
+         tidyr::unite("dimred", dimred, drtype, sep = "_") %>%
+         dplyr::mutate(dimred = gsub("_ave_dot_scaled", "", dimred)), 
+       aes(x = dimred, y = ave_dot_scaled, fill = mtype)) + 
+  geom_boxplot() + 
+  facet_wrap(~ method_short) + 
+  # facet_wrap(method_short ~ dtype, scales = "free_y", ncol = 3) + 
+  scale_fill_manual(values = base_method_colors, name = "") + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+  labs(x = "", y = "Average dot product",
+       title = paste0(dataset, ", average dot product with scaled velocities of neighboring cells"))
+dev.off()
+
+saveRDS(resdot %>% dplyr::mutate(dataset = dataset), file = outrds)
 date()
 sessionInfo()

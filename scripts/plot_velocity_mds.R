@@ -19,6 +19,7 @@ names(methods) <- methods
 dataset <- gsub("_", " ", dataset)
 
 print(plothelperscript)
+print(velosuffix)
 print(topdir)
 print(dataset)
 print(methods)
@@ -28,8 +29,9 @@ methods_short <- shorten_methods(methods)
 
 ## Read velocities from scVelo
 seurats <- lapply(methods, function(nm) {
-  w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
-                                         nm, "_with_velocity.h5ad")))
+  w <- ReadH5AD(file.path(topdir, paste0(
+    "output/anndata_with_velocity", velosuffix, "/anndata_", 
+    nm, "_with_velocity.h5ad")))
   w
 })
 velocities_shared <- lapply(seurats, function(w) as.matrix(GetAssayData(GetAssay(w, "velocity"))))

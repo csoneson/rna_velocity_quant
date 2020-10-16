@@ -18,6 +18,7 @@ names(methods) <- methods
 
 print(plothelperscript)
 print(topdir)
+print(velosuffix)
 print(methods)
 print(outrds)
 
@@ -35,12 +36,13 @@ sce <- readRDS(file.path(topdir, paste0("output/sce/sce_", methods[1], ".rds")))
 umap <- reducedDim(sce, "UMAP_alevin_spliced_gentrome")
 
 cellinfo_all <- lapply(methods, function(nm) {
-  readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", 
+  readr::read_csv(paste0(topdir, "/plots/velocity", velosuffix, 
+                         "/anndata_", nm, "/anndata_", 
                          nm, "_cell_info.csv")) %>%
     dplyr::mutate(method = nm)
 })
 cellinfo_shared <- lapply(methods, function(nm) {
-  readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, 
+  readr::read_csv(paste0(topdir, "/plots/velocity", velosuffix, "/anndata_", nm, 
                          "_shared_genes/anndata_", nm, 
                          "_shared_genes_cell_info.csv")) %>%
     dplyr::mutate(method = nm)
@@ -74,10 +76,12 @@ plotlist_all <- lapply(methods, function(m) {
   sm <- methods_short$method_short[match(m, methods_short$method)]
   df <- data.frame(umap)
   df$confidence <- 
-    cellinfo_all[[m]]$velocity_confidence[match(rownames(df), cellinfo_all[[m]]$index)]
+    cellinfo_all[[m]]$velocity_confidence[match(rownames(df), 
+                                                cellinfo_all[[m]]$index)]
   ggplot(df, aes(x = X1, y = X2, fill = confidence)) + 
     geom_point(shape = 21) + 
-    scale_fill_gradient(low = "white", high = "red", na.value = "grey50", limits = c(0, 1),
+    scale_fill_gradient(low = "white", high = "red",
+                        na.value = "grey50", limits = c(0, 1),
                         name = "Velocity confidence") + 
     labs(x = "", y = "", title = sm) + 
     theme_void() + theme(legend.position = "bottom")

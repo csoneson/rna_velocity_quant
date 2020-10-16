@@ -17,6 +17,7 @@ methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
 
 print(plothelperscript)
+print(velosuffix)
 print(topdir)
 print(methods)
 print(showgene)
@@ -41,7 +42,8 @@ umap <- data.frame(reducedDim(sces[[1]], "UMAP_alevin_spliced_gentrome"),
 stopifnot(rownames(umap) == cells)
 
 seurats <- lapply(methods, function(nm) {
-  ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
+  ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity", velosuffix, 
+                                    "/anndata_", 
                                     nm, "_with_velocity.h5ad")))
 })
 velocities <- lapply(seurats, function(w) {

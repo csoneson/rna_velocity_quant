@@ -19,6 +19,7 @@ names(methods) <- methods
 dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(velosuffix)
 print(dataset)
 print(plothelperscript)
 print(methods)
@@ -35,8 +36,9 @@ sces <- lapply(methods, function(nm) {
 })
 
 seurats <- lapply(methods, function(nm) {
-  w <- ReadH5AD(file.path(topdir, paste0("output/anndata_with_velocity/anndata_", 
-                                         nm, "_with_velocity.h5ad")))
+  w <- ReadH5AD(file.path(topdir, paste0(
+    "output/anndata_with_velocity", velosuffix, "/anndata_", 
+    nm, "_with_velocity.h5ad")))
   w
 })
 velocities_shared <- lapply(seurats, function(w) as.matrix(GetAssayData(GetAssay(w, "velocity"))))

@@ -14,6 +14,7 @@ methods <- strsplit(methods, ",")[[1]]
 names(methods) <- methods
 
 print(topdir)
+print(velosuffix)
 print(plothelperscript)
 print(dimred)
 print(methods)
@@ -27,7 +28,7 @@ names(methods) <- methods
 
 ## Individually chosen genes
 umaps <- lapply(methods, function(m) {
-  file.path(topdir, "plots/velocity",
+  file.path(topdir, paste0("plots/velocity", velosuffix),
             paste0("anndata_", m), 
             paste0("anndata_", m, "_scvelo_", dimred,
                    "_alevin_spliced_gentrome_stream.png"))
@@ -45,7 +46,7 @@ dev.off()
 
 ## Shared genes
 umapss <- lapply(methods, function(m) {
-  file.path(topdir, "plots/velocity",
+  file.path(topdir, paste0("plots/velocity", velosuffix), 
             paste0("anndata_", m, "_shared_genes"), 
             paste0("anndata_", m, "_shared_genes_scvelo_", dimred,
                    "_alevin_spliced_gentrome_stream.png"))

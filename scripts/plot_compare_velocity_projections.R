@@ -16,6 +16,7 @@ names(methods) <- methods
 dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(velosuffix)
 print(plothelperscript)
 print(dataset)
 print(methods)
@@ -34,11 +35,13 @@ sce <- readRDS(file.path(topdir, paste0("output/sce/sce_", methods[1], ".rds")))
 plotlist <- lapply(methods, function(m) {
   sm <- methods_short$method_short[match(m, methods_short$method)]
   v_all <- read.delim(
-    file.path(topdir, paste0("plots/velocity/anndata_", m, "/anndata_", 
+    file.path(topdir, paste0("plots/velocity", velosuffix, 
+                             "/anndata_", m, "/anndata_", 
                              m, "_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",")
   v_shared <- read.delim(
-    file.path(topdir, paste0("plots/velocity/anndata_", m, "_shared_genes/anndata_", 
+    file.path(topdir, paste0("plots/velocity", velosuffix, 
+                             "/anndata_", m, "_shared_genes/anndata_", 
                              m, "_shared_genes_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",")
   
@@ -104,7 +107,8 @@ summarize_res <- function(res) {
 ## ------------------------------------------------------------------------- ##
 res <- do.call(dplyr::bind_rows, lapply(methods, function(m) {
   read.delim(
-    file.path(topdir, paste0("plots/velocity/anndata_", m, "/anndata_", 
+    file.path(topdir, paste0("plots/velocity", velosuffix, 
+                             "/anndata_", m, "/anndata_", 
                              m, "_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",") %>%
     tidyr::gather(key = "coord", value = "value", X0, X1) %>%
@@ -131,7 +135,8 @@ g1 <- ggplot(df, aes(x = X1, y = X2, color = speed_ratio)) +
 ## ------------------------------------------------------------------------- ##
 res <- do.call(dplyr::bind_rows, lapply(methods, function(m) {
   read.delim(
-    file.path(topdir, paste0("plots/velocity/anndata_", m, "_shared_genes/anndata_", 
+    file.path(topdir, paste0("plots/velocity", velosuffix, 
+                             "/anndata_", m, "_shared_genes/anndata_", 
                              m, "_shared_genes_velocity_UMAP_alevin_spliced_gentrome.csv")), 
     header = TRUE, as.is = TRUE, sep = ",") %>%
     tidyr::gather(key = "coord", value = "value", X0, X1) %>%

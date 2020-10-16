@@ -20,6 +20,7 @@ names(methods) <- methods
 dataset <- gsub("_", " ", dataset)
 
 print(topdir)
+print(velosuffix)
 print(plothelperscript)
 print(dataset)
 print(methods)
@@ -33,7 +34,7 @@ methods <- methods_short$method
 names(methods) <- methods
 
 geneinfo <- lapply(methods, function(nm) {
-  readr::read_csv(file.path(topdir, paste0("plots/velocity/anndata_",
+  readr::read_csv(file.path(topdir, paste0("plots/velocity", velosuffix, "/anndata_",
                                            nm, "/anndata_", nm, 
                                            "_gene_info.csv")))
 })

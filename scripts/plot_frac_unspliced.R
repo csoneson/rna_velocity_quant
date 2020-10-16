@@ -22,6 +22,7 @@ dataset <- gsub("_", " ", dataset)
 
 print(plothelperscript)
 print(topdir)
+print(velosuffix)
 print(dataset)
 print(refdir)  ## directory where uniqueness files are
 print(tx2gene)
@@ -43,7 +44,7 @@ sumdf_bygene <- do.call(dplyr::bind_rows, lapply(sces, function(w) {
              spliced = rowSums(assay(w, "spliced")),
              unspliced = rowSums(assay(w, "unspliced")),
              total = rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced")),
-             frac_unspliced = rowSums(assay(w, "unspliced"))/
+             frac_unspliced = rowSums(assay(w, "unspliced")) /
                (rowSums(assay(w, "unspliced")) + rowSums(assay(w, "spliced"))),
              stringsAsFactors = FALSE
   )
@@ -58,7 +59,8 @@ uniq <- merge_uniq(refdir = refdir, tx2gene = tx2gene,
 ## ------------------------------------------------------------------------- ##
 ## Read genes used for velocity calculations (2,000 per method)
 geneinfo <- lapply(methods, function(nm) {
-  readr::read_csv(paste0(topdir, "/plots/velocity/anndata_", nm, "/anndata_", nm, 
+  readr::read_csv(paste0(topdir, "/plots/velocity", velosuffix,
+                         "/anndata_", nm, "/anndata_", nm, 
                          "_gene_info.csv")) %>%
     dplyr::mutate(method = nm)
 })

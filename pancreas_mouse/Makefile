@@ -120,14 +120,14 @@ output/sce/retained_cell_barcodes.csv
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
 output/genesets/shared_genes.txt \
-$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad) \
-$(foreach x,$(methodssel),plots/velocity_shuffle/anndata_$(x)/velocity_shuffle.out) \
-$(foreach x,$(methodssel),plots/velocity_perturb/anndata_$(x)/velocity_perturb.out) \
-$(foreach x,$(methods),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_with_velocity.h5ad) \
-output/genesets/shared_genes_scvelo_v2.txt \
-$(foreach x,$(methodssel),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_shared_genes_with_velocity.h5ad) \
-$(foreach x,$(methodssel),plots/velocity_shuffle_scvelo_v2/anndata_$(x)/velocity_shuffle.out) \
-$(foreach x,$(methodssel),plots/velocity_perturb_scvelo_v2/anndata_$(x)/velocity_perturb.out)
+$(foreach x,$(methodssel),output/anndata_with_velocity/anndata_$(x)_shared_genes_with_velocity.h5ad)
+#$(foreach x,$(methodssel),plots/velocity_shuffle/anndata_$(x)/velocity_shuffle.out) \
+#$(foreach x,$(methodssel),plots/velocity_perturb/anndata_$(x)/velocity_perturb.out) \
+#$(foreach x,$(methods),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_with_velocity.h5ad) \
+#output/genesets/shared_genes_scvelo_v2.txt \
+#$(foreach x,$(methodssel),output/anndata_with_velocity_scvelo_v2/anndata_$(x)_shared_genes_with_velocity.h5ad) \
+#$(foreach x,$(methodssel),plots/velocity_shuffle_scvelo_v2/anndata_$(x)/velocity_shuffle.out) \
+#$(foreach x,$(methodssel),plots/velocity_perturb_scvelo_v2/anndata_$(x)/velocity_perturb.out)
 
 plot: plots/velocity_confidence/$(outprefix)_plot_velocity_confidence.rds \
 plots/count_correlation/$(outprefix)_plot_count_correlation.rds \
@@ -142,8 +142,8 @@ plots/compare_dimred_velocities/$(outprefix)_plot_compare_dimred_velocities.rds 
 plots/velocity_mds/$(outprefix)_plot_velocity_mds.rds \
 plots/velocity_confidence_embedding/$(outprefix)_plot_velocity_confidence_embedding.rds \
 plots/polyAT_coverage/$(outprefix)_plot_polyAT_coverage.rds \
-plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds \
-plots/velocity_shuffled/$(outprefix)_plot_velocity_shuffled.rds
+plots/busparse_prepref/$(outprefix)_plot_busparse_prepref.rds
+#plots/velocity_shuffled/$(outprefix)_plot_velocity_shuffled.rds
 
 
 ## -----------------------------------------------------------------------------------------------------

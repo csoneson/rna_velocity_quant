@@ -22,6 +22,37 @@ read_velocyto <- function(loomfile, sampleid) {
   velocyto
 }
 
+read_dropest <- function(dropestdir, allgenes = NULL) {
+  dropestlist <- readRDS(file.path(dropestdir, "cell.counts.matrices.rds"))
+  
+  ## First combine intronic and intron/exon spanning reads (both unspliced)
+  ## 'spliced' assay will be intronic counts, 'unspliced' assay spanning ones
+  ## Add them up to get total unspliced count
+  unspliced <- sce_from_scounts_ucounts(
+    scounts = dropestlist$intron,
+    ucounts = dropestlist$spanning
+  )
+  unspliced <- assay(unspliced, "spliced") + assay(unspliced, "unspliced")
+  
+  ## Add missing genes from allgenes
+  if (!is.null(allgenes)) {
+    tmp <- matrix(0, nrow = length(setdiff(allgenes, rownames(unspliced))),
+                  ncol = ncol(unspliced),
+                  dimnames = list(setdiff(allgenes, rownames(unspliced)),
+                                  colnames(unspliced)))
+    unspliced <- as(rbind(as.matrix(unspliced), tmp), "dgCMatrix")
+  }
+  
+  ## Then combine exonic and unspliced counts
+  sce <- sce_from_scounts_ucounts(
+    scounts = dropestlist$exon, 
+    ucounts = unspliced
+  )
+  
+  colnames(sce) <- sapply(strsplit(colnames(sce), "-"), .subset, 1)
+  sce
+}
+
 read_starsolo <- function(solodir, sampleid) {
   genes <- readr::read_delim(file.path(solodir, "features.tsv"), col_names = FALSE, delim = "\t")
   cells <- readr::read_delim(file.path(solodir, "barcodes.tsv"), col_names = FALSE, delim = "\t")

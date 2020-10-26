@@ -38,13 +38,19 @@ sces$velocyto <- read_velocyto(
 
 ## STARsolo
 sces$starsolo <- read_starsolo(
-  solodir = file.path(topdir, paste0("quants/starsolo/Solo.out/Velocyto/raw")),
+  solodir = file.path(topdir, "quants/starsolo/Solo.out/Velocyto/raw"),
   sampleid = samplename
 )
 
 sces$starsolo_subtr <- read_starsolo_subtract(
-  solodir = file.path(topdir, paste0("quants/starsolo/Solo.out")),
+  solodir = file.path(topdir, "quants/starsolo/Solo.out"),
   sampleid = samplename
+)
+
+## dropEst
+sces$dropest <- read_dropest(
+  dropestdir = file.path(topdir, "quants/dropest"),
+  allgenes = rownames(sces$starsolo)
 )
 
 ## cDNA/introns separately (with decoys)
@@ -80,16 +86,26 @@ for (m in c("prepref")) {
         sampleid = samplename, tx2gene = tx2gene)
     
     if (v == "separate") {
-      sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded")]] <- 
-        read_alevin_cdna_introns(
-          alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded/alevin")),
-          sampleid = samplename, tx2gene = tx2gene)
+      if (file.exists(file.path(topdir, paste0("quants/alevin_", m, "_iso", v, 
+                                               "_cdna_introns_gentrome_unstranded/alevin"),
+                                "quants_mat.gz"))) {
+        sces[[paste0("alevin_", m, "_iso", v, "_cdna_introns_gentrome_unstranded")]] <- 
+          read_alevin_cdna_introns(
+            alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, 
+                                                 "_cdna_introns_gentrome_unstranded/alevin")),
+            sampleid = samplename, tx2gene = tx2gene)
+      }
       
       for (u in c("_flankL20", "_flankL40")) {
-        sces[[paste0("alevin_", m, "_iso", v, u, "_cdna_introns_gentrome")]] <- 
-          read_alevin_cdna_introns(
-            alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, u, "_cdna_introns_gentrome/alevin")),
-            sampleid = samplename, tx2gene = tx2gene)
+        if (file.exists(file.path(topdir, paste0("quants/alevin_", m, "_iso", v, u, 
+                                                 "_cdna_introns_gentrome/alevin"),
+                                  "quants_mat.gz"))) {
+          sces[[paste0("alevin_", m, "_iso", v, u, "_cdna_introns_gentrome")]] <- 
+            read_alevin_cdna_introns(
+              alevindir = file.path(topdir, paste0("quants/alevin_", m, "_iso", v, u,
+                                                   "_cdna_introns_gentrome/alevin")),
+              sampleid = samplename, tx2gene = tx2gene)
+        }
       }
     }
   }
@@ -135,12 +151,15 @@ for (m in c("prepref")) {
 }
 
 ## kb-python
-sces[["kb_python_lamanno"]] <- 
-  read_kallisto_bustools(
-    kallistodir = file.path(topdir, "quants/kb_python_lamanno/counts_unfiltered"),
-    splicedname = "spliced",
-    unsplicedname = "unspliced"
-  )
+if (file.exists(file.path(topdir, "quants/kb_python_lamanno/counts_unfiltered",
+                          "spliced.mtx"))) {
+  sces[["kb_python_lamanno"]] <- 
+    read_kallisto_bustools(
+      kallistodir = file.path(topdir, "quants/kb_python_lamanno/counts_unfiltered"),
+      splicedname = "spliced",
+      unsplicedname = "unspliced"
+    )
+}
 
 ## ========================================================================= ##
 ## subset to shared cells/genes

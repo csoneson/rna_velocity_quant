@@ -16,7 +16,7 @@ shorten_methods <- function(methods) {
     dplyr::mutate(method_short = gsub("gentrome", "gtr", method_short)) %>%
     dplyr::mutate(
       mtype = stringr::str_extract(
-        method_short, "alevin|kallisto\\|bus|starsolo|velocyto"
+        method_short, "alevin|kallisto\\|bus|starsolo|velocyto|dropest"
       ),
       rtype = stringr::str_extract(
         method, "separate|collapse"
@@ -29,7 +29,7 @@ shorten_methods <- function(methods) {
 }
 
 base_method_colors <- c(alevin = "#999999", `kallisto|bus` = "#009E73",
-                        starsolo = "#0072B2", velocyto = "#CC79A7")
+                        starsolo = "#0072B2", velocyto = "#CC79A7", dropest = "#CFAE2B")
 
 merge_uniq <- function(refdir, tx2gene, keepgenes) {
   uniq <- dplyr::bind_rows(

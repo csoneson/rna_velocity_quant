@@ -16,6 +16,7 @@ starindex := /tungstenfs/groups/gbioinfo/DB/GENCODE/Mouse/release_M21/refstar_sp
 
 bustools := /tungstenfs/groups/gbioinfo/sonechar/Software/bustools_0.39.3/bustools
 subsetbam := /tungstenfs/groups/gbioinfo/sonechar/Software/subset-bam-1.0-x86_64-linux/subset-bam
+dropest := /tungstenfs/groups/gbioinfo/sonechar/Software/dropEst/dropEst/bin/dropest
 
 datadir := /tungstenfs/groups/gbioinfo/sonechar/Data/GSE109033_sperm_mouse/GSM2928341/FASTQ
 topdir := /tungstenfs/groups/gbioinfo/sonechar/Projects/alevin_velocity/spermatogenesis_mouse
@@ -35,13 +36,13 @@ flanklengthL40 := 59
 ncores := 48
 
 genestoplot := Id4 Gfra1 Zbtb16 Stra8 Magea4 Rhox13 Sycp3 Dmc1 Piwil1 Pgk2 Acr Gapdhs Prm1 \
-Gm498 Spaca9 1700008N11Rik Gm11978 Gm5893
+Gm498 Spaca9 1700008N11Rik Gm11978 Gm5893 Chkb Gm21983 Gm12191 Tmem120b Cnot6 Rpl31-ps9 Gm16165 Gm13436 Gm12346 Rps13-ps5
 
 ## All methods to run quantification and create SCEs for
 methods := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy)) \
-alevin_spliced_unspliced starsolo starsolo_subtr \
+alevin_spliced_unspliced starsolo starsolo_subtr dropest \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
 alevin_spliced_unspliced_gentrome kb_python_lamanno \
@@ -52,7 +53,7 @@ methodsc := $(subst $(space),$(comma),$(methods))
 
 ## Main set of methods for figures
 methodssel := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
-starsolo starsolo_subtr \
+starsolo starsolo_subtr dropest \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
 alevin_spliced_unspliced_gentrome
@@ -68,7 +69,7 @@ alevin_prepref_isoseparate_flankL40_cdna_introns_gentrome
 methodssel2c := $(subst $(space),$(comma),$(methodssel2))
 
 methodssel3 := velocyto $(foreach k,exclude include,$(foreach m,prepref,$(foreach v,collapse separate,kallisto_bustools_$(m)_iso$(v)_$(k)))) \
-starsolo starsolo_subtr \
+starsolo starsolo_subtr dropest \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_gentrome)) \
 $(foreach m,prepref,$(foreach v,collapse separate,alevin_$(m)_iso$(v)_cdna_introns_decoy_gentrome)) \
 alevin_spliced_unspliced_gentrome \
@@ -129,6 +130,7 @@ quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
 quants/starsolo/Solo.out/Gene/Summary.csv \
+quants/dropest/cell.counts.matrices.rds \
 output/sce/sces_spliced_unspliced.rds \
 $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds) \
 output/sce/retained_cell_barcodes.csv
@@ -182,6 +184,20 @@ quants/cellranger/$(samplename)/outs/web_summary.html $(gtf)
 	source activate velocyto_0.17 && \
 	velocyto run10x --samtools-threads $(ncores) quants/cellranger/$(samplename) $(gtf) && \
 	conda deactivate
+
+## Run dropEst
+quants/dropest/cell.counts.matrices.rds: \
+quants/cellranger/$(samplename)/outs/web_summary.html $(gtf) \
+reference/10x_$(outprefix).xml
+	mkdir -p $(topdir)/$(@D)
+	cd $(topdir)/$(@D) && \
+	module purge && module load Anaconda3/5.3.0 && \
+	source activate dropEst_0.8.6 && \
+	$(dropest) -V -C 4500 -g $(gtf) -f \
+	-c $(topdir)/reference/10x_$(outprefix).xml \
+	$(topdir)/quants/cellranger/$(samplename)/outs/possorted_genome_bam.bam && \
+	conda deactivate && \
+	cd $(topdir)
 
 ## Subset bam file to only reads from retained cell barcodes
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bam: \
@@ -614,6 +630,7 @@ quants/alevin_spliced/lib_format_counts.json \
 quants/alevin_spliced_gentrome/lib_format_counts.json \
 quants/cellranger/$(samplename)/velocyto/$(samplename).loom \
 quants/starsolo/Solo.out/Gene/Summary.csv \
+quants/dropest/cell.counts.matrices.rds \
 quants/kb_python_lamanno/inspect.unspliced.json \
 $(cellfile) $(tx2genefull)
 	mkdir -p $(@D)

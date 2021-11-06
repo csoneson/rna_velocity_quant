@@ -100,7 +100,8 @@ quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_plusstrand.bw \
 quants/cellranger/$(samplename)/outs/possorted_genome_bam_retcells_minusstrand.bw \
 $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds) \
-output/sce/retained_cell_barcodes.csv
+output/sce/retained_cell_barcodes.csv \
+output/sce/$(datalabel)_sce_quantifications_combined.rds
 
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
@@ -577,6 +578,13 @@ $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,$(eval $(call scer
 
 output/sce/retained_cell_barcodes.csv: output/sce/sces_spliced_unspliced.rds
 	touch $@
+
+## Combine quantifications into a single SCE
+output/sce/$(datalabel)_sce_quantifications_combined.rds: $(scriptdir)/combine_all_quantifications.R $(foreach x,$(methodssel) alevin_spliced_gentrome, output/sce/sce_$(x).rds)
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args scedir='output/sce' methods='$(methodsselc),alevin_spliced_gentrome' outfile='$@'" $(scriptdir)/combine_all_quantifications.R Rout/combine_all_quantifications.Rout
 
 plots/total_count/$(outprefix)_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \

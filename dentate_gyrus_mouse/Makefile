@@ -101,7 +101,8 @@ $(foreach q,$(samples),quants/$(q)/alevin_spliced/lib_format_counts.json) \
 $(foreach q,$(samples),quants/$(q)/alevin_spliced_gentrome/lib_format_counts.json) \
 $(foreach q,$(samples),quants/$(q)/starsolo/Solo.out/Gene/Summary.csv) \
 output/sce/sces_spliced_unspliced.rds \
-$(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds)
+$(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,output/sce/sce_$(x).rds) \
+output/sce/$(datalabel)_sce_quantifications_combined.rds
 
 veloc: $(foreach x,$(methods),output/anndata/anndata_$(x).h5ad) \
 $(foreach x,$(methods),output/anndata_with_velocity/anndata_$(x)_with_velocity.h5ad) \
@@ -532,6 +533,13 @@ output/sce/sce_$(1).rds: output/sce/sces_spliced_unspliced.rds
 	touch $$@
 endef
 $(foreach x,$(methods) alevin_spliced alevin_spliced_gentrome,$(eval $(call scerule,$(x))))
+
+## Combine quantifications into a single SCE
+output/sce/$(datalabel)_sce_quantifications_combined.rds: $(scriptdir)/combine_all_quantifications.R $(foreach x,$(methodssel) alevin_spliced_gentrome, output/sce/sce_$(x).rds)
+	mkdir -p $(@D)
+	mkdir -p Rout
+	module load R-BioC/3.6-3.10-foss-2019b && \
+	R CMD BATCH --no-save --no-restore "--args scedir='output/sce' methods='$(methodsselc),alevin_spliced_gentrome' outfile='$@'" $(scriptdir)/combine_all_quantifications.R Rout/combine_all_quantifications.Rout
 
 plots/total_count/$(outprefix)_plot_total_count.rds: output/sce/sces_spliced_unspliced.rds \
 $(scriptdir)/plot_total_count.R $(tx2genefull) $(scriptdir)/plot_helpers.R \
